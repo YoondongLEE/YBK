@@ -4,7 +4,7 @@
 <template>
   <header>
     <div class="header-container">
-      <router-link to="/" class="logo">금융길</router-link>
+      <router-link to="/" class="logo">윤봉길</router-link>
       <div class="auth-links">
         <router-link to="/login">로그인</router-link>
         <span class="separator">|</span>
