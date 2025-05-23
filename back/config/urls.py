@@ -7,4 +7,6 @@ urlpatterns = [
     path('api/accounts/signup/', include('dj_rest_auth.registration.urls')),
     path('api/finance-academy/', include('finance_academy.urls')),
     path('api/finance-info/', include('finance_info.urls')),
+    path('api/', include('deposits.urls')),
+
 ]

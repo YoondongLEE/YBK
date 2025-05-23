@@ -6,6 +6,8 @@ import FinanceAcademyView from '../views/FinanceAcademyView.vue'
 import FinanceInfoView from '../views/FinanceInfoView.vue'
 import MyPageView from '../views/MyPageView.vue'
 import { useAuthStore } from '../stores/auth'
+import DepositList from '../views/DepositList.vue'
+import DepositDetail from '../views/DepositDetail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,7 +42,14 @@ const router = createRouter({
       name: 'mypage',
       component: MyPageView,
       meta: { requiresAuth: true }
-    }
+    },
+    {
+      path: '/deposits',
+      name: 'deposits',
+      component: DepositList
+    },
+    { path: '/deposits/:id', name: 'depositDetail', component: DepositDetail },
+
   ]
 })
 
