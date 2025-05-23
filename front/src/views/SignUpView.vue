@@ -1,7 +1,14 @@
-<!-- filepath: c:\Users\SSAFY\LYD\final-pjt\front\src\views\SignupView.vue -->
 <template>
   <div class="signup-container">
     <h1>회원가입</h1>
+    
+    <!-- 오류 메시지 표시 영역 추가 -->
+    <div v-if="errors.length > 0" class="error-messages">
+      <ul>
+        <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+      </ul>
+    </div>
+    
     <form @submit.prevent="signup">
       <div class="form-group">
         <label for="username">아이디</label>
@@ -19,7 +26,9 @@
         <label for="password2">비밀번호 확인</label>
         <input v-model="password2" type="password" id="password2" required>
       </div>
-      <button type="submit">가입하기</button>
+      <button type="submit" :disabled="isLoading">
+        {{ isLoading ? '처리 중...' : '가입하기' }}
+      </button>
     </form>
     <p>이미 계정이 있으신가요? <router-link to="/login">로그인</router-link></p>
   </div>
@@ -28,28 +37,66 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-// import { useAuthStore } from '../stores/auth';
+import { useAuthStore } from '../stores/auth';
 
 const username = ref('');
 const email = ref('');
 const password1 = ref('');
 const password2 = ref('');
 const router = useRouter();
-// const authStore = useAuthStore();
+const authStore = useAuthStore();
+const errors = ref([]);
+const isLoading = ref(false);
 
 const signup = async () => {
+  // 입력값 검증
+  errors.value = [];
+  
   if (password1.value !== password2.value) {
-    alert('비밀번호가 일치하지 않습니다.');
+    errors.value.push('비밀번호가 일치하지 않습니다.');
     return;
   }
   
   try {
-    // 임시로 회원가입 성공으로 처리
-    // await authStore.signup(username.value, password1.value, password2.value, email.value);
-    alert('회원가입 성공! 로그인 페이지로 이동합니다.');
-    router.push({ name: 'login' });
+    isLoading.value = true;
+    
+    // 회원가입 및 자동 로그인 (auth 스토어에서 처리)
+    await authStore.signup(username.value, password1.value, password2.value, email.value);
+    
+    // 회원가입 성공 시 바로 메인 페이지로 이동 (alert 없음)
+    router.push({ name: 'home' });
   } catch (error) {
-    alert('회원가입 실패: ' + error.message);
+    console.error('회원가입 실패:', error);
+    
+    // 서버에서 반환된 오류 메시지 처리
+    if (error.response && error.response.data) {
+      const responseData = error.response.data;
+      
+      // 각 필드별 오류 메시지를 배열에 추가
+      for (const field in responseData) {
+        if (Array.isArray(responseData[field])) {
+          responseData[field].forEach(message => {
+            errors.value.push(`${field}: ${message}`);
+          });
+        } else if (typeof responseData[field] === 'string') {
+          errors.value.push(`${field}: ${responseData[field]}`);
+        }
+      }
+      
+      // non_field_errors가 있는 경우
+      if (responseData.non_field_errors) {
+        responseData.non_field_errors.forEach(message => {
+          errors.value.push(message);
+        });
+      }
+    }
+    
+    // 오류 메시지가 없는 경우 기본 메시지 표시
+    if (errors.value.length === 0) {
+      errors.value.push('회원가입 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  } finally {
+    isLoading.value = false;
   }
 };
 </script>
@@ -61,6 +108,19 @@ const signup = async () => {
   padding: 20px;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
+}
+
+.error-messages {
+  background-color: #ffebee;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  color: #d32f2f;
+}
+
+.error-messages ul {
+  margin: 0;
+  padding-left: 20px;
 }
 
 .form-group {
@@ -89,8 +149,13 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+button:hover:not(:disabled) {
   background-color: #3a7bd5;
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 
 p {
