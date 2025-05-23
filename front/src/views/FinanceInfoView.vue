@@ -25,6 +25,15 @@
       <div v-if="activeTab === 'info'" class="info-section">
         <div class="info-list">
           <!-- 실제 데이터를 연동하면 v-for로 반복 렌더링 -->
+                <!-- 예적금 금리비교 카드 -->
+          <div class="info-card" @click="goToDepositList">
+            <div class="info-image-placeholder"></div>
+            <div class="info-content">
+            <h3>예적금 금리비교</h3>
+            <p>다양한 은행의 예금/적금 상품들의 금리를 한눈에 비교해보세요.</p>
+            </div>
+          </div>
+          
           <div class="info-card">
             <div class="info-image-placeholder"></div>
             <div class="info-content">
@@ -55,19 +64,24 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import VideoSearch from '../components/youtube/VideoSearch.vue';
-import VideoDetail from '../components/youtube/VideoDetail.vue';
-// import SavedItems from '../components/youtube/SavedItems.vue'; // 제거
-import { useYoutubeStore } from '../stores/youtube';
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import VideoSearch from '../components/youtube/VideoSearch.vue'
+import VideoDetail from '../components/youtube/VideoDetail.vue'
+import { useYoutubeStore } from '../stores/youtube'
 
-const activeTab = ref('info');
-const youtubeStore = useYoutubeStore();
+const router = useRouter()
+const activeTab = ref('info')
+const youtubeStore = useYoutubeStore()
 
-const selectedVideo = computed(() => youtubeStore.selectedVideo);
+const selectedVideo = computed(() => youtubeStore.selectedVideo)
 
 function setActiveTab(tab) {
-  activeTab.value = tab;
+  activeTab.value = tab
+}
+
+function goToDepositList() {
+  router.push({ name: 'deposits' })
 }
 </script>
 
