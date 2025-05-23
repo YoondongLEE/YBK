@@ -1,6 +1,7 @@
 import os
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -104,18 +105,29 @@ STATIC_URL = 'static/'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS 설정
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vue.js 개발 서버
-]
 
-# DRF 설정
+
+# 쿠키 설정
+SESSION_COOKIE_SECURE = False  # 개발 환경에서는 False
+CSRF_COOKIE_SECURE = False    # 개발 환경에서는 False
+
+
+# REST Framework 설정
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
     ),
 }
+
+# CORS 설정 - 필수
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Vue 개발 서버
+]
 
 # JWT 설정
 SIMPLE_JWT = {
@@ -123,13 +135,23 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
 
-# dj-rest-auth 설정
+# Django REST Auth 설정
 REST_AUTH = {
-    'USE_JWT': True,
-    'JWT_AUTH_COOKIE': 'finance-auth',
-    'JWT_AUTH_REFRESH_COOKIE': 'finance-refresh-token',
+    'TOKEN_SERIALIZER': 'dj_rest_auth.serializers.TokenSerializer',
 }
 
 # allauth 설정
 SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+
+load_dotenv()  # .env 파일 로드
+FINLIFE_API_KEY = os.environ.get('FINLIFE_API_KEY', 'eb9f3d19062bbbc32015258aabea7ed3')
+
+
+# 기본 인증 백엔드 설정
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # 기본 인증 백엔드
+]
+# 사용자 인증 모델 설정
+AUTH_USER_MODEL = 'accounts.User'
