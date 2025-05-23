@@ -1,133 +1,137 @@
-import { defineStore } from 'pinia';
-import axios from 'axios';
-import { ref } from 'vue';
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import axios from 'axios'
+import router from '../router'
+
+// 기본 API 인스턴스 생성 (인증 관련 전용)
+const authApi = axios.create({
+  baseURL: 'http://localhost:8000/api',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
 
 export const useAuthStore = defineStore('auth', () => {
-  const token = ref(localStorage.getItem('token') || null);
-  const user = ref(null);
-  const isAuthenticated = ref(!!token.value);
+  const token = ref(localStorage.getItem('token') || '')
+  const user = ref(JSON.parse(localStorage.getItem('user') || '{}'))
   
-  // API URL 설정
-  const API_URL = 'http://localhost:8000/api'; // Django 백엔드 URL
-
-  // 로그인 함수 수정
+  // 로그인 상태 확인
+  const isAuthenticated = computed(() => !!token.value)
+  
+  // 로그인
   const login = async (username, password) => {
     try {
-      // dj-rest-auth는 username과 password 필드만 필요함
-      const response = await axios.post(`${API_URL}/accounts/login/`, {
+      // withCredentials 옵션 제거 (필요하지 않음)
+      const response = await authApi.post('/accounts/login/', {
         username,
         password
-      });
+      })
       
-      // 토큰 저장 (키 이름 확인)
-      const authToken = response.data.key; // dj-rest-auth는 'key' 필드로 토큰 반환
-      token.value = authToken;
-      localStorage.setItem('token', authToken);
-      isAuthenticated.value = true;
+      console.log('로그인 응답:', response.data)
       
-      // 사용자 정보 가져오기
-      await fetchUserProfile();
-      
-      return true;
-    } catch (error) {
-      console.error('로그인 실패:', error);
-      throw error;
-    }
-  };
-
-  // 회원가입 함수 수정 - dj-rest-auth 형식에 맞게 변경
-  const signup = async (username, password1, password2, email) => {
-    try {
-      // dj-rest-auth는 이 형태로 데이터를 기대합니다
-      const response = await axios.post(`${API_URL}/accounts/signup/`, {
-        username,
-        email,
-        password1,
-        password2
-      });
-      
-      // 회원가입 성공 시 자동 로그인 처리
-      // 회원가입 응답에 바로 키가 포함되어 있을 수 있음
-      if (response.data.key) {
-        // 토큰 저장
-        const authToken = response.data.key;
-        token.value = authToken;
-        localStorage.setItem('token', authToken);
-        isAuthenticated.value = true;
+      // 토큰 저장
+      if (response.data && response.data.key) {
+        token.value = response.data.key
+        localStorage.setItem('token', response.data.key)
         
         // 사용자 정보 가져오기
-        await fetchUserProfile();
+        await fetchUserInfo()
+        return response
       } else {
-        // 키가 없으면 별도로 로그인 요청
-        await login(username, password1);
+        throw new Error('로그인 응답에 토큰이 없습니다')
       }
-      
-      return true;
     } catch (error) {
-      console.error('회원가입 실패:', error);
-      if (error.response && error.response.data) {
-        console.error('서버 응답:', error.response.data);
-      }
-      throw error;
+      console.error('로그인 실패:', error)
+      throw error
     }
-  };
-
-  // 로그아웃 함수
+  }
+  
+  // 회원가입
+  const signup = async (username, password1, password2, email) => {
+    try {
+      const response = await authApi.post('/accounts/signup/', {
+        username,
+        password1,
+        password2,
+        email
+      })
+      
+      console.log('회원가입 응답:', response.data)
+      
+      // 토큰 저장
+      if (response.data && response.data.key) {
+        token.value = response.data.key
+        localStorage.setItem('token', response.data.key)
+        
+        // 사용자 정보 가져오기
+        await fetchUserInfo()
+        return response
+      } else {
+        throw new Error('회원가입 응답에 토큰이 없습니다')
+      }
+    } catch (error) {
+      console.error('회원가입 실패:', error)
+      throw error
+    }
+  }
+  
+  // 로그아웃
   const logout = async () => {
     try {
-      // 토큰이 있는 경우에만 로그아웃 API 호출
       if (token.value) {
-        await axios.post(`${API_URL}/accounts/logout/`, {}, {
+        await authApi.post('/accounts/logout/', {}, {
           headers: {
             'Authorization': `Token ${token.value}`
           }
-        });
+        })
       }
-      
-      // 로컬 스토리지와 상태에서 토큰 제거
-      localStorage.removeItem('token');
-      token.value = null;
-      user.value = null;
-      isAuthenticated.value = false;
-      
-      return true;
     } catch (error) {
-      console.error('로그아웃 실패:', error);
-      // 로그아웃은 클라이언트 측에서라도 완료
-      localStorage.removeItem('token');
-      token.value = null;
-      user.value = null;
-      isAuthenticated.value = false;
-      throw error;
-    }
-  };
-
-  // 사용자 정보 가져오기
-  const fetchUserProfile = async () => {
-    try {
-      if (!token.value) return;
+      console.error('로그아웃 API 에러:', error)
+    } finally {
+      // 로컬 상태 초기화
+      token.value = ''
+      user.value = {}
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
       
-      const response = await axios.get(`${API_URL}/accounts/user/`, {
+      // 홈페이지로 리다이렉트
+      router.push({ name: 'home' })
+    }
+  }
+  
+  // 사용자 정보 가져오기
+  const fetchUserInfo = async () => {
+    if (!token.value) {
+      console.warn('토큰이 없어 사용자 정보를 가져올 수 없습니다.')
+      return null
+    }
+    
+    try {
+      const response = await authApi.get('/accounts/profile/', {
         headers: {
           'Authorization': `Token ${token.value}`
         }
-      });
+      })
       
-      user.value = response.data;
+      user.value = response.data
+      localStorage.setItem('user', JSON.stringify(response.data))
+      return response.data
     } catch (error) {
-      console.error('사용자 정보 가져오기 실패:', error);
-      // 토큰이 유효하지 않으면 로그아웃 처리
-      if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-        await logout();
+      console.error('사용자 정보 가져오기 실패:', error)
+      
+      if (error.response && error.response.status === 401) {
+        // 토큰이 유효하지 않은 경우 로그아웃 처리
+        token.value = ''
+        user.value = {}
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
       }
+      
+      throw error
     }
-  };
-
-  // 초기화 - 앱 시작시 사용자 정보 로드
-  if (token.value) {
-    fetchUserProfile();
   }
-
+  
   return {
     token,
     user,
@@ -135,11 +139,6 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     signup,
     logout,
-    fetchUserProfile
-  };
-}, {
-  persist: {
-    storage: localStorage,
-    paths: ['token']
+    fetchUserInfo
   }
-});
+})

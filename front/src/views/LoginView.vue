@@ -22,6 +22,7 @@
         {{ isLoading ? '처리 중...' : '로그인' }}
       </button>
     </form>
+    
     <p>계정이 없으신가요? <router-link to="/signup">회원가입</router-link></p>
   </div>
 </template>
@@ -45,9 +46,15 @@ const login = async () => {
     isLoading.value = true;
     
     // 로그인 시도
-    await authStore.login(username.value, password.value);
+    console.log('로그인 시도:', { username: username.value });
+    const response = await authStore.login(username.value, password.value);
+    console.log('로그인 성공:', response);
     
-    // 로그인 성공 시 바로 메인 페이지로 이동 (alert 없음)
+    // 토큰 확인
+    console.log('저장된 토큰:', localStorage.getItem('token'));
+    console.log('인증 상태:', authStore.isAuthenticated);
+    
+    // 로그인 성공 시 바로 메인 페이지로 이동
     router.push({ name: 'home' });
   } catch (error) {
     console.error('로그인 실패:', error);
@@ -56,28 +63,28 @@ const login = async () => {
     if (error.response && error.response.data) {
       const responseData = error.response.data;
       
-      // 각 필드별 오류 메시지를 배열에 추가
-      for (const field in responseData) {
-        if (Array.isArray(responseData[field])) {
-          responseData[field].forEach(message => {
-            errors.value.push(`${field}: ${message}`);
-          });
-        } else if (typeof responseData[field] === 'string') {
-          errors.value.push(`${field}: ${responseData[field]}`);
-        }
-      }
-      
-      // non_field_errors가 있는 경우
+      // non_field_errors가 있는 경우 (일반적인 오류)
       if (responseData.non_field_errors) {
         responseData.non_field_errors.forEach(message => {
           errors.value.push(message);
         });
+      } else {
+        // 각 필드별 오류 메시지를 배열에 추가
+        for (const field in responseData) {
+          if (Array.isArray(responseData[field])) {
+            responseData[field].forEach(message => {
+              errors.value.push(`${field.charAt(0).toUpperCase() + field.slice(1)}: ${message}`);
+            });
+          } else if (typeof responseData[field] === 'string') {
+            errors.value.push(`${field.charAt(0).toUpperCase() + field.slice(1)}: ${responseData[field]}`);
+          }
+        }
       }
     }
     
     // 오류 메시지가 없는 경우 기본 메시지 표시
     if (errors.value.length === 0) {
-      errors.value.push('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
+      errors.value.push('로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
   } finally {
     isLoading.value = false;
@@ -88,23 +95,13 @@ const login = async () => {
 <style scoped>
 .login-container {
   max-width: 400px;
-  margin: 40px auto;
+  margin: 0 auto;
   padding: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
 }
 
-.error-messages {
-  background-color: #ffebee;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 15px;
-  color: #d32f2f;
-}
-
-.error-messages ul {
-  margin: 0;
-  padding-left: 20px;
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .form-group {
@@ -114,27 +111,27 @@ const login = async () => {
 label {
   display: block;
   margin-bottom: 5px;
+  font-weight: bold;
 }
 
 input {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 16px;
 }
 
 button {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background-color: #4a90e2;
   color: white;
   border: none;
   border-radius: 4px;
+  font-size: 16px;
   cursor: pointer;
-}
-
-button:hover:not(:disabled) {
-  background-color: #3a7bd5;
+  margin-top: 10px;
 }
 
 button:disabled {
@@ -143,11 +140,23 @@ button:disabled {
 }
 
 p {
-  margin-top: 15px;
   text-align: center;
+  margin-top: 20px;
 }
 
-a {
-  color: #4a90e2;
+.error-messages {
+  background-color: #ffebee;
+  border-left: 3px solid #f44336;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+}
+
+.error-messages ul {
+  margin: 0;
+  padding-left: 15px;
+}
+
+.error-messages li {
+  color: #d32f2f;
 }
 </style>

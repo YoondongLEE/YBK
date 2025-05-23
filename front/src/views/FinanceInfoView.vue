@@ -18,71 +18,69 @@
         >
           관심 종목 영상 검색
         </button>
-        <!-- 저장된 항목 탭 제거 -->
       </div>
       
       <!-- 금융 정보 탭 -->
       <div v-if="activeTab === 'info'" class="info-section">
         <div class="info-list">
-          <!-- 실제 데이터를 연동하면 v-for로 반복 렌더링 -->
-                <!-- 예적금 금리비교 카드 -->
+          <!-- 예적금 금리비교 카드 -->
           <div class="info-card" @click="goToDepositList">
-            <div class="info-image-placeholder"></div>
+            <div class="info-image-placeholder">
+              <!-- 이미지 로딩 실패시 대체 텍스트로 표시 -->
+              <div class="placeholder-text">금리비교</div>
+            </div>
             <div class="info-content">
-            <h3>예적금 금리비교</h3>
-            <p>다양한 은행의 예금/적금 상품들의 금리를 한눈에 비교해보세요.</p>
+              <h3>금리비교 - 예금</h3>
+              <p>다양한 은행의 예금/적금 상품들의 금리를 한눈에 비교해보세요.</p>
             </div>
           </div>
           
+          <!-- 다른 금융 정보 카드들은 기존과 동일하게 유지 -->
           <div class="info-card">
-            <div class="info-image-placeholder"></div>
+            <div class="info-image-placeholder">
+              <div class="placeholder-text">금융 트렌드</div>
+            </div>
             <div class="info-content">
               <h3>최신 금융 트렌드</h3>
-              <p>최근 금융 시장의 주요 트렌드와 이슈를 소개합니다.</p>
-            </div>
-          </div>
-          
-          <div class="info-card">
-            <div class="info-image-placeholder"></div>
-            <div class="info-content">
-              <h3>재테크 팁</h3>
-              <p>효과적인 재테크 방법과 팁을 알아봅니다.</p>
+              <p>금융 시장의 최신 동향과 투자 트렌드를 알아보세요.</p>
             </div>
           </div>
         </div>
       </div>
       
-      <!-- YouTube 검색 탭 -->
-      <div v-if="activeTab === 'youtube'" class="youtube-section">
+      <!-- YouTube 탭: SavedItems 제거하고 VideoSearch만 표시 -->
+      <div v-else-if="activeTab === 'youtube'" class="youtube-section">
+        <!-- 영상 검색 컴포넌트 -->
         <VideoSearch />
-        <VideoDetail v-if="selectedVideo" :video="selectedVideo" />
+        
+        <!-- 저장된 영상/채널은 마이페이지로 이동함을 안내 -->
+        <div class="saved-info">
+          <p>
+            <strong>알림:</strong> 저장한 영상과 채널은 마이페이지에서 확인할 수 있습니다.
+            <router-link to="/mypage" class="mypage-link">마이페이지로 이동</router-link>
+          </p>
+        </div>
       </div>
-      
-      <!-- 저장된 항목 탭 제거 -->
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import VideoSearch from '../components/youtube/VideoSearch.vue'
-import VideoDetail from '../components/youtube/VideoDetail.vue'
-import { useYoutubeStore } from '../stores/youtube'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import VideoSearch from '../components/youtube/VideoSearch.vue';
 
-const router = useRouter()
-const activeTab = ref('info')
-const youtubeStore = useYoutubeStore()
+const router = useRouter();
+const activeTab = ref('info');
 
-const selectedVideo = computed(() => youtubeStore.selectedVideo)
+const setActiveTab = (tab) => {
+  activeTab.value = tab;
+};
 
-function setActiveTab(tab) {
-  activeTab.value = tab
-}
-
-function goToDepositList() {
-  router.push({ name: 'deposits' })
-}
+// 예금 금리 비교 페이지로 이동하는 함수
+const goToDepositList = () => {
+  router.push({ name: 'deposits' });
+};
 </script>
 
 <style scoped>
@@ -93,6 +91,7 @@ function goToDepositList() {
 }
 
 h1 {
+  color: #333;
   margin-bottom: 10px;
 }
 
@@ -103,23 +102,24 @@ h1 {
 
 .info-tabs {
   display: flex;
-  margin-bottom: 30px;
-  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
 }
 
 .info-tabs button {
-  padding: 10px 20px;
-  background-color: transparent;
+  background: none;
   border: none;
-  border-bottom: 3px solid transparent;
-  cursor: pointer;
-  margin-right: 20px;
+  padding: 12px 20px;
   font-size: 16px;
+  cursor: pointer;
+  margin-right: 10px;
+  color: #666;
 }
 
 .info-tabs button.active {
-  border-bottom: 3px solid #4a90e2;
   color: #4a90e2;
+  border-bottom: 3px solid #4a90e2;
+  font-weight: bold;
 }
 
 .info-list {
@@ -129,35 +129,75 @@ h1 {
 }
 
 .info-card {
-  border: 1px solid #e0e0e0;
+  border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
-  transition: transform 0.3s;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  background-color: #fff;
 }
 
 .info-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .info-image-placeholder {
   height: 150px;
-  background-color: #e0e0e0;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-image-placeholder img {
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .info-content {
   padding: 15px;
 }
 
-h3 {
-  margin-bottom: 10px;
+.info-content h3 {
+  margin: 0 0 10px;
+  color: #333;
 }
 
-p {
+.info-content p {
+  margin: 0;
   color: #666;
+  font-size: 14px;
 }
 
 .youtube-section {
   margin-top: 20px;
+}
+
+.placeholder-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  background-color: #f0f0f0;
+}
+
+.saved-info {
+  margin-top: 30px;
+  padding: 15px;
+  background-color: #f5f8ff;
+  border-radius: 8px;
+  border-left: 4px solid #4a90e2;
+}
+
+.mypage-link {
+  display: inline-block;
+  margin-left: 10px;
+  color: #4a90e2;
+  font-weight: bold;
+  text-decoration: underline;
 }
 </style>

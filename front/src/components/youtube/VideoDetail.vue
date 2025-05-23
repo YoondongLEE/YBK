@@ -1,4 +1,3 @@
-<!-- filepath: c:\Users\SSAFY\LYD\final-pjt\front\src\components\youtube\VideoDetail.vue -->
 <template>
   <div v-if="video" class="video-detail">
     <div class="video-player">
@@ -13,11 +12,12 @@
       <h2>{{ video.snippet.title }}</h2>
       <div class="channel-info">
         <strong>{{ video.snippet.channelTitle }}</strong>
-        <button @click="saveChannel(video)" class="save-channel-btn">채널 저장</button>
+        <!-- 로그인한 경우에만 채널 저장 버튼 표시 -->
+        <button v-if="isAuthenticated" @click="saveChannel(video)" class="save-channel-btn">채널 저장</button>
       </div>
       <div class="stats">
-        <span>조회수: {{ formatNumber(video.statistics.viewCount) }}</span>
-        <span>좋아요: {{ formatNumber(video.statistics.likeCount) }}</span>
+        <span v-if="video.statistics && video.statistics.viewCount">조회수: {{ formatNumber(video.statistics.viewCount) }}</span>
+        <span v-if="video.statistics && video.statistics.likeCount">좋아요: {{ formatNumber(video.statistics.likeCount) }}</span>
       </div>
       <div class="description">
         <p>{{ video.snippet.description }}</p>
@@ -36,6 +36,10 @@ const props = defineProps({
   video: {
     type: Object,
     default: null
+  },
+  isAuthenticated: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -43,7 +47,7 @@ const youtubeStore = useYoutubeStore();
 
 const saveChannel = (video) => {
   youtubeStore.saveChannel(video);
-  alert('채널이 저장되었습니다!');
+  alert('채널이 저장되었습니다! 마이페이지에서 확인하세요.');
 };
 
 // 숫자 포맷팅 함수
@@ -104,21 +108,23 @@ h2 {
 .stats {
   display: flex;
   gap: 20px;
+  color: #606060;
   margin-bottom: 15px;
-  color: #666;
 }
 
 .description {
-  white-space: pre-line;
-  color: #333;
-  line-height: 1.5;
+  padding: 15px 0;
+  border-top: 1px solid #e0e0e0;
+  line-height: 1.6;
+  color: #606060;
 }
 
 .no-video {
   text-align: center;
-  padding: 50px;
+  padding: 40px;
   background-color: #f8f9fa;
   border-radius: 8px;
-  color: #666;
+  color: #606060;
+  margin-top: 20px;
 }
 </style>

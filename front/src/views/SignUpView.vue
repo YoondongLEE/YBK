@@ -14,22 +14,27 @@
         <label for="username">아이디</label>
         <input v-model="username" type="text" id="username" required>
       </div>
+      
       <div class="form-group">
         <label for="email">이메일</label>
         <input v-model="email" type="email" id="email" required>
       </div>
+      
       <div class="form-group">
         <label for="password1">비밀번호</label>
         <input v-model="password1" type="password" id="password1" required>
       </div>
+      
       <div class="form-group">
         <label for="password2">비밀번호 확인</label>
         <input v-model="password2" type="password" id="password2" required>
       </div>
+      
       <button type="submit" :disabled="isLoading">
-        {{ isLoading ? '처리 중...' : '가입하기' }}
+        {{ isLoading ? '처리 중...' : '회원가입' }}
       </button>
     </form>
+    
     <p>이미 계정이 있으신가요? <router-link to="/login">로그인</router-link></p>
   </div>
 </template>
@@ -49,7 +54,7 @@ const errors = ref([]);
 const isLoading = ref(false);
 
 const signup = async () => {
-  // 입력값 검증
+  // 폼 검증
   errors.value = [];
   
   if (password1.value !== password2.value) {
@@ -60,10 +65,19 @@ const signup = async () => {
   try {
     isLoading.value = true;
     
-    // 회원가입 및 자동 로그인 (auth 스토어에서 처리)
-    await authStore.signup(username.value, password1.value, password2.value, email.value);
+    console.log('회원가입 시도:', {
+      username: username.value,
+      email: email.value,
+    });
     
-    // 회원가입 성공 시 바로 메인 페이지로 이동 (alert 없음)
+    // 회원가입 및 자동 로그인
+    const response = await authStore.signup(username.value, password1.value, password2.value, email.value);
+    
+    console.log('회원가입 성공:', response);
+    console.log('저장된 토큰:', localStorage.getItem('token'));
+    console.log('인증 상태:', authStore.isAuthenticated);
+    
+    // 회원가입 성공 시 바로 메인 페이지로 이동
     router.push({ name: 'home' });
   } catch (error) {
     console.error('회원가입 실패:', error);
@@ -76,7 +90,12 @@ const signup = async () => {
       for (const field in responseData) {
         if (Array.isArray(responseData[field])) {
           responseData[field].forEach(message => {
-            errors.value.push(`${field}: ${message}`);
+            const fieldName = field === 'password1' ? '비밀번호' : 
+                             field === 'password2' ? '비밀번호 확인' :
+                             field === 'username' ? '아이디' : 
+                             field === 'email' ? '이메일' : field;
+            
+            errors.value.push(`${fieldName}: ${message}`);
           });
         } else if (typeof responseData[field] === 'string') {
           errors.value.push(`${field}: ${responseData[field]}`);
@@ -104,23 +123,13 @@ const signup = async () => {
 <style scoped>
 .signup-container {
   max-width: 400px;
-  margin: 40px auto;
+  margin: 0 auto;
   padding: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
 }
 
-.error-messages {
-  background-color: #ffebee;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 15px;
-  color: #d32f2f;
-}
-
-.error-messages ul {
-  margin: 0;
-  padding-left: 20px;
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .form-group {
@@ -130,27 +139,27 @@ const signup = async () => {
 label {
   display: block;
   margin-bottom: 5px;
+  font-weight: bold;
 }
 
 input {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 16px;
 }
 
 button {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background-color: #4a90e2;
   color: white;
   border: none;
   border-radius: 4px;
+  font-size: 16px;
   cursor: pointer;
-}
-
-button:hover:not(:disabled) {
-  background-color: #3a7bd5;
+  margin-top: 10px;
 }
 
 button:disabled {
@@ -159,11 +168,23 @@ button:disabled {
 }
 
 p {
-  margin-top: 15px;
   text-align: center;
+  margin-top: 20px;
 }
 
-a {
-  color: #4a90e2;
+.error-messages {
+  background-color: #ffebee;
+  border-left: 3px solid #f44336;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+}
+
+.error-messages ul {
+  margin: 0;
+  padding-left: 15px;
+}
+
+.error-messages li {
+  color: #d32f2f;
 }
 </style>
