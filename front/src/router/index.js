@@ -9,6 +9,7 @@ import { useAuthStore } from '../stores/auth'
 import InterestRateCompare from '@/views/InterestRateCompare.vue'
 import DepositList from '@/views/DepositList.vue'
 import SavingDetail from '@/views/SavingDetail.vue'
+import MetalPriceView from '../views/MetalPriceView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -78,6 +79,16 @@ const router = createRouter({
       name: 'saving-detail',
       component: SavingDetail,
       meta: { requiresAuth: false }
+    },
+    
+    // 금/은 가격 변동 페이지 추가
+    {
+      path: '/metal-prices',
+      name: 'metal-prices',
+      component: MetalPriceView,
+      meta: {
+        title: '금/은 가격 변동'
+      }
     },
   ]
 })
