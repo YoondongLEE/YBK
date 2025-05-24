@@ -1,76 +1,72 @@
 <template>
   <div class="saved-items">
+    <!-- 탭 네비게이션 -->
     <div class="tabs">
       <button 
+        class="tab-btn" 
         :class="{ 'active': activeTab === 'videos' }"
         @click="activeTab = 'videos'"
       >
-        저장된 영상
+        저장한 영상
       </button>
       <button 
+        class="tab-btn" 
         :class="{ 'active': activeTab === 'channels' }"
         @click="activeTab = 'channels'"
       >
-        저장된 채널
+        저장한 채널
       </button>
     </div>
     
-    <div v-if="activeTab === 'videos'" class="saved-videos">
-      <h3>저장된 영상</h3>
-      <div v-if="savedVideos.length === 0" class="empty-message">
-        <p>저장된 영상이 없습니다.</p>
+    <!-- 저장한 영상 목록 -->
+    <div v-if="activeTab === 'videos'" class="tab-content">
+      <div v-if="savedVideos.length === 0" class="empty-state">
+        저장한 영상이 없습니다.
       </div>
       <div v-else class="video-grid">
-        <div 
-          v-for="video in savedVideos" 
-          :key="getVideoId(video)"
-          class="saved-video-item"
-        >
-          <!-- 안전하게 썸네일과 정보에 접근 -->
-          <div class="thumbnail-container" @click="selectVideo(video)">
+        <div v-for="video in savedVideos" :key="getVideoId(video)" class="video-card">
+          <div class="video-thumbnail" @click="selectVideo(video)">
             <img 
-              v-if="hasThumbnail(video)"
+              v-if="hasThumbnail(video)" 
               :src="getThumbnailUrl(video)" 
-              :alt="getVideoTitle(video)" 
-              class="thumbnail"
-            />
-            <div v-else class="thumbnail-placeholder">
-              <span>썸네일 없음</span>
+              :alt="getVideoTitle(video)"
+            >
+            <div v-else class="no-thumbnail">
+              <i class="fas fa-video"></i>
             </div>
           </div>
           <div class="video-info">
-            <h4>{{ getVideoTitle(video) }}</h4>
-            <p>{{ getChannelTitle(video) }}</p>
-            <button @click="removeVideo(getVideoId(video))" class="remove-btn">
-              삭제
-            </button>
+            <h3 class="video-title" @click="selectVideo(video)">{{ getVideoTitle(video) }}</h3>
+            <p class="channel-title">{{ getChannelTitle(video) }}</p>
           </div>
+          <button class="remove-btn" @click="removeVideo(getVideoId(video))">
+            <i class="fas fa-trash"></i>
+          </button>
         </div>
       </div>
     </div>
     
-    <div v-else-if="activeTab === 'channels'" class="saved-channels">
-      <h3>저장된 채널</h3>
-      <div v-if="savedChannels.length === 0" class="empty-message">
-        <p>저장된 채널이 없습니다.</p>
+    <!-- 저장한 채널 목록 -->
+    <div v-if="activeTab === 'channels'" class="tab-content">
+      <div v-if="savedChannels.length === 0" class="empty-state">
+        저장한 채널이 없습니다.
       </div>
-      <div v-else class="channel-list">
-        <div 
-          v-for="channel in savedChannels" 
-          :key="channel.id"
-          class="channel-item"
-        >
+      <div v-else class="channel-grid">
+        <div v-for="channel in savedChannels" :key="channel.id" class="channel-card">
           <div class="channel-info">
-            <h4>{{ channel.title || '제목 없음' }}</h4>
+            <h3 class="channel-title">{{ channel.title }}</h3>
+          </div>
+          <div class="channel-actions">
             <a 
               :href="`https://www.youtube.com/channel/${channel.id}`" 
-              target="_blank"
+              target="_blank" 
+              rel="noopener noreferrer"
               class="visit-btn"
             >
-              채널 방문
+              <i class="fas fa-external-link-alt"></i> 채널 방문
             </a>
-            <button @click="removeChannel(channel.id)" class="remove-btn">
-              삭제
+            <button class="remove-btn" @click="removeChannel(channel.id)">
+              <i class="fas fa-trash"></i>
             </button>
           </div>
         </div>
@@ -82,8 +78,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useYoutubeStore } from '../../stores/youtube';
+import { useAlertStore } from '../../stores/alert';
 
 const youtubeStore = useYoutubeStore();
+const alertStore = useAlertStore();
 const activeTab = ref('videos');
 
 // 저장된 영상과 채널 가져오기
@@ -135,180 +133,243 @@ const getChannelTitle = (video) => {
 const selectVideo = (video) => {
   const videoId = getVideoId(video);
   if (videoId !== 'unknown') {
-    youtubeStore.getVideoDetails(videoId);
+    window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
   }
 };
 
 // 영상 삭제
-const removeVideo = (videoId) => {
+const removeVideo = async (videoId) => {
   if (videoId === 'unknown') {
-    console.error("삭제할 영상 ID를 찾을 수 없습니다");
+    alertStore.showError("삭제 실패", "삭제할 영상 ID를 찾을 수 없습니다");
     return;
   }
   
   if (confirm('정말로 이 영상을 삭제하시겠습니까?')) {
-    youtubeStore.removeVideo(videoId);
-  }
-};
-
-// 채널 삭제
-const removeChannel = (channelId) => {
-  if (confirm('정말로 이 채널을 삭제하시겠습니까?')) {
-    youtubeStore.removeChannel(channelId);
-  }
-};
-
-// 저장된 데이터 정리 (문제가 있는 데이터 제거)
-const cleanupSavedData = () => {
-  if (savedVideos.value.length > 0) {
-    const validVideos = savedVideos.value.filter(video => 
-      video && video.snippet && typeof video.snippet === 'object'
-    );
-    
-    if (validVideos.length !== savedVideos.value.length) {
-      youtubeStore.$patch({
-        savedVideos: validVideos
-      });
-      localStorage.setItem('savedVideos', JSON.stringify(validVideos));
+    const result = await youtubeStore.removeVideo(videoId);
+    if (result.success) {
+      alertStore.showSuccess('삭제 완료', result.message);
+    } else {
+      alertStore.showError('삭제 실패', result.message);
     }
   }
 };
 
-// 컴포넌트 마운트 시 데이터 정리
+// 채널 삭제
+const removeChannel = async (channelId) => {
+  if (confirm('정말로 이 채널을 삭제하시겠습니까?')) {
+    const result = await youtubeStore.removeChannel(channelId);
+    if (result.success) {
+      alertStore.showSuccess('삭제 완료', result.message);
+    } else {
+      alertStore.showError('삭제 실패', result.message);
+    }
+  }
+};
+
 onMounted(() => {
-  cleanupSavedData();
+  // 컴포넌트 마운트 시 저장된 영상 및 채널 로드
+  youtubeStore.initialize();
 });
 </script>
 
 <style scoped>
 .saved-items {
-  margin-top: 40px;
-  padding-top: 30px;
-  border-top: 1px solid #e0e0e0;
+  margin-top: 10px;
 }
 
 .tabs {
   display: flex;
+  border-bottom: 1px solid #ddd;
   margin-bottom: 20px;
 }
 
-.tabs button {
+.tab-btn {
   padding: 10px 20px;
-  margin-right: 10px;
-  background-color: #f0f0f0;
+  background: none;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
+  color: #555;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s;
 }
 
-.tabs button.active {
-  background-color: #4a90e2;
-  color: white;
+.tab-btn.active {
+  color: #4a90e2;
+  border-bottom-color: #4a90e2;
+  font-weight: 500;
 }
 
-h3 {
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e0e0e0;
+.tab-btn:hover {
+  color: #4a90e2;
 }
 
-.empty-message {
+.tab-content {
+  margin-top: 20px;
+}
+
+.empty-state {
   text-align: center;
   padding: 30px;
-  background-color: #f8f9fa;
+  background-color: #f9f9f9;
   border-radius: 8px;
-  color: #606060;
+  color: #666;
 }
 
 .video-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
 }
 
-.saved-video-item {
-  border: 1px solid #e0e0e0;
+.video-card {
   border-radius: 8px;
   overflow: hidden;
-}
-
-.thumbnail-container {
-  height: 140px;
-  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: white;
   position: relative;
-  cursor: pointer;
-  background-color: #f0f0f0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-.thumbnail {
+.video-thumbnail {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 비율 */
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.video-thumbnail img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
 }
 
-.thumbnail-placeholder {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.video-thumbnail:hover img {
+  transform: scale(1.05);
+}
+
+.no-thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  color: #666;
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #eee;
 }
 
-.video-info, .channel-info {
+.no-thumbnail i {
+  font-size: 40px;
+  color: #999;
+}
+
+.video-info {
   padding: 15px;
 }
 
-h4 {
-  margin: 0 0 8px;
-  font-size: 14px;
+.video-title {
+  font-size: 16px;
+  margin: 0 0 5px;
   line-height: 1.4;
-  max-height: 40px;
+  font-weight: 500;
   overflow: hidden;
-  text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-}
-
-.video-info p {
-  font-size: 12px;
-  color: #606060;
-  margin-bottom: 10px;
-}
-
-.channel-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 15px;
-}
-
-.channel-item {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-}
-
-.visit-btn, .remove-btn {
-  display: inline-block;
-  padding: 6px 12px;
-  font-size: 12px;
-  margin-right: 8px;
-  border: none;
-  border-radius: 4px;
   cursor: pointer;
-  color: white;
-  text-decoration: none;
 }
 
-.visit-btn {
-  background-color: #4a90e2;
+.video-title:hover {
+  color: #4a90e2;
+}
+
+.channel-title {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
 }
 
 .remove-btn {
-  background-color: #e53935;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.remove-btn:hover {
+  opacity: 1;
+}
+
+/* 채널 카드 스타일링 */
+.channel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+.channel-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.channel-info {
+  margin-bottom: 15px;
+}
+
+.channel-title {
+  font-size: 18px;
+  margin: 0;
+  color: #333;
+}
+
+.channel-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.visit-btn {
+  padding: 8px 15px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.visit-btn:hover {
+  background-color: #3a7bc8;
+}
+
+.channel-card .remove-btn {
+  position: relative;
+  top: 0;
+  right: 0;
+  margin-left: 10px;
+  background-color: #dc3545;
 }
 </style>

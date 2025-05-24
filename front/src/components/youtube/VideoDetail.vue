@@ -1,36 +1,45 @@
 <template>
-  <div v-if="video" class="video-detail">
-    <div class="video-player">
+  <div class="video-detail" v-if="video">
+    <div class="video-player-container">
       <iframe 
-        :src="'https://www.youtube.com/embed/' + video.id" 
-        frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        class="video-player"
+        :src="`https://www.youtube.com/embed/${getVideoId()}`"
+        frameborder="0"
         allowfullscreen
       ></iframe>
     </div>
+    
     <div class="video-info">
-      <h2>{{ video.snippet.title }}</h2>
-      <div class="channel-info">
-        <strong>{{ video.snippet.channelTitle }}</strong>
-        <!-- 로그인한 경우에만 채널 저장 버튼 표시 -->
-        <button v-if="isAuthenticated" @click="saveChannel(video)" class="save-channel-btn">채널 저장</button>
+      <h2 class="video-title">{{ video.snippet.title }}</h2>
+      
+      <div class="video-meta">
+        <div class="channel-info">
+          <span class="channel-name">{{ video.snippet.channelTitle }}</span>
+          <button 
+            @click="saveChannel(video)" 
+            class="action-button"
+            :disabled="!isAuthenticated"
+          >
+            채널 저장
+          </button>
+        </div>
+        
+        <div class="video-stats" v-if="video.statistics">
+          <span>조회수 {{ formatNumber(video.statistics.viewCount) }}회</span>
+          <span>좋아요 {{ formatNumber(video.statistics.likeCount) }}</span>
+        </div>
       </div>
-      <div class="stats">
-        <span v-if="video.statistics && video.statistics.viewCount">조회수: {{ formatNumber(video.statistics.viewCount) }}</span>
-        <span v-if="video.statistics && video.statistics.likeCount">좋아요: {{ formatNumber(video.statistics.likeCount) }}</span>
-      </div>
-      <div class="description">
+      
+      <div class="video-description">
         <p>{{ video.snippet.description }}</p>
       </div>
     </div>
-  </div>
-  <div v-else class="no-video">
-    <p>선택된 영상이 없습니다.</p>
   </div>
 </template>
 
 <script setup>
 import { useYoutubeStore } from '../../stores/youtube';
+import { useAlertStore } from '../../stores/alert';
 
 const props = defineProps({
   video: {
@@ -44,10 +53,26 @@ const props = defineProps({
 });
 
 const youtubeStore = useYoutubeStore();
+const alertStore = useAlertStore();
 
-const saveChannel = (video) => {
-  youtubeStore.saveChannel(video);
-  alert('채널이 저장되었습니다! 마이페이지에서 확인하세요.');
+// 비디오 ID 추출
+const getVideoId = () => {
+  if (!props.video) return '';
+  return props.video.id;
+};
+
+const saveChannel = async (video) => {
+  if (!props.isAuthenticated) {
+    alertStore.showWarning('로그인 필요', '채널을 저장하려면 로그인이 필요합니다.');
+    return;
+  }
+  
+  const result = await youtubeStore.saveChannel(video);
+  if (result.success) {
+    alertStore.showSuccess('저장 완료', result.message);
+  } else {
+    alertStore.showError('저장 실패', result.message);
+  }
 };
 
 // 숫자 포맷팅 함수
@@ -59,19 +84,26 @@ const formatNumber = (num) => {
 
 <style scoped>
 .video-detail {
-  max-width: 1200px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.video-player-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .video-player {
-  position: relative;
-  padding-bottom: 56.25%; /* 16:9 비율 */
-  height: 0;
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-
-.video-player iframe {
   position: absolute;
   top: 0;
   left: 0;
@@ -79,52 +111,71 @@ const formatNumber = (num) => {
   height: 100%;
 }
 
-.video-info {
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
+.video-title {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  font-size: 22px;
+  line-height: 1.4;
+  color: #333;
 }
 
-h2 {
-  margin-bottom: 15px;
+.video-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
 }
 
 .channel-info {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  gap: 15px;
 }
 
-.save-channel-btn {
-  padding: 8px 15px;
-  background-color: #34a853;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.channel-name {
+  font-weight: 500;
+  color: #333;
 }
 
-.stats {
+.video-stats {
   display: flex;
   gap: 20px;
-  color: #606060;
-  margin-bottom: 15px;
+  color: #666;
 }
 
-.description {
-  padding: 15px 0;
-  border-top: 1px solid #e0e0e0;
+.video-description {
+  white-space: pre-line;
+  color: #444;
   line-height: 1.6;
-  color: #606060;
+  font-size: 15px;
 }
 
-.no-video {
-  text-align: center;
-  padding: 40px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  color: #606060;
-  margin-top: 20px;
+.action-button {
+  padding: 8px 12px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  color: #333;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.action-button:hover {
+  background-color: #e0e0e0;
+}
+
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .video-meta {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 </style>

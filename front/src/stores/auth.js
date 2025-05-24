@@ -101,36 +101,37 @@ export const useAuthStore = defineStore('auth', () => {
   }
   
   // 사용자 정보 가져오기
-  const fetchUserInfo = async () => {
-    if (!token.value) {
-      console.warn('토큰이 없어 사용자 정보를 가져올 수 없습니다.')
-      return null
+const fetchUserInfo = async () => {
+  if (!token.value) {
+    console.warn('토큰이 없어 사용자 정보를 가져올 수 없습니다.')
+    return null
+  }
+  
+  try {
+    // profile 대신 user 엔드포인트 사용
+    const response = await authApi.get('/accounts/user/', {
+      headers: {
+        'Authorization': `Token ${token.value}`
+      }
+    })
+    
+    user.value = response.data
+    localStorage.setItem('user', JSON.stringify(response.data))
+    return response.data
+  } catch (error) {
+    console.error('사용자 정보 가져오기 실패:', error)
+    
+    if (error.response && error.response.status === 401) {
+      // 토큰이 유효하지 않은 경우 로그아웃 처리
+      token.value = ''
+      user.value = {}
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
     }
     
-    try {
-      const response = await authApi.get('/accounts/profile/', {
-        headers: {
-          'Authorization': `Token ${token.value}`
-        }
-      })
-      
-      user.value = response.data
-      localStorage.setItem('user', JSON.stringify(response.data))
-      return response.data
-    } catch (error) {
-      console.error('사용자 정보 가져오기 실패:', error)
-      
-      if (error.response && error.response.status === 401) {
-        // 토큰이 유효하지 않은 경우 로그아웃 처리
-        token.value = ''
-        user.value = {}
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
-      }
-      
-      throw error
-    }
+    throw error
   }
+}
   
   return {
     token,

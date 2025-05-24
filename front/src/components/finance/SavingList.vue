@@ -5,12 +5,17 @@
     </div>
     <div v-else class="detail-content">
       <div class="product-header">
+        <div class="bank-logo">
+          <img v-if="bank && bank.logo_url" :src="bank.logo_url" alt="은행 로고" />
+          <div v-else class="bank-name-placeholder">{{ bank ? bank.kor_co_nm : '정보 없음' }}</div>
+        </div>
         <div>
           <h1>{{ product.fin_prdt_nm }}</h1>
-          <p class="bank-name">{{ getBankNameForDisplay() }}</p>
+          <p class="bank-name">{{ bank ? bank.kor_co_nm : '정보 없음' }}</p>
         </div>
       </div>
 
+      <!-- subscription-action 부분 -->
       <div class="subscription-action">
         <div v-if="isAuthenticated">
           <button 
@@ -55,6 +60,10 @@
           <div class="detail-item">
             <div class="label">금리유형</div>
             <div class="value">{{ product.intr_rate_type_nm || '정보 없음' }}</div>
+          </div>
+          <div class="detail-item">
+            <div class="label">적립유형</div>
+            <div class="value">{{ product.rsrv_type_nm || '정보 없음' }}</div>
           </div>
         </div>
       </section>
@@ -105,13 +114,11 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
-import { useAlertStore } from '../stores/alert';
 import api from '../api';
 
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
-const alertStore = useAlertStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 
 const productId = route.params.id;
@@ -120,79 +127,16 @@ const product = ref({});
 const bank = ref(null);
 const isSubscribed = ref(false);
 
-
-// 은행명 표시용 함수 추가
-const getBankNameForDisplay = () => {
-  if (bank.value && bank.value.kor_co_nm) {
-    return bank.value.kor_co_nm;
-  }
-  
-  if (product.value.bank) {
-    if (typeof product.value.bank === 'object' && product.value.bank.kor_co_nm) {
-      return product.value.bank.kor_co_nm;
-    }
-    
-    if (typeof product.value.bank === 'string') {
-      // 은행 코드에서 은행명을 찾아보기
-      const bankInfo = banks.value?.find(b => b.fin_co_no === product.value.bank);
-      if (bankInfo) {
-        return bankInfo.kor_co_nm;
-      }
-    }
-  }
-  
-  // 은행 코드가 직접 있는 경우
-  if (product.value.fin_co_no) {
-    const bankInfo = banks.value?.find(b => b.fin_co_no === product.value.fin_co_no);
-    if (bankInfo) {
-      return bankInfo.kor_co_nm;
-    }
-  }
-  
-  return ''; // "정보 없음" 대신 빈 문자열 반환
-};
-
-
-// 추가: 모든 은행 목록 가져오기
-const banks = ref([]);
-const fetchAllBanks = async () => {
-  try {
-    const response = await api.get('/banks/');
-    banks.value = response.data;
-  } catch (error) {
-    console.error('은행 목록 로드 실패:', error);
-  }
-};
-
 // 우대금리 여부 확인
 const hasIntrRate2 = computed(() => {
   if (!product.value.options) return false;
   return product.value.options.some(opt => opt.intr_rate2 && parseFloat(opt.intr_rate2) > 0);
 });
 
-// sortedOptions 계산된 속성 수정
+// 옵션을 기간순으로 정렬
 const sortedOptions = computed(() => {
   if (!product.value.options) return [];
-  
-  // 중복 제거를 위한 맵
-  const uniqueOptions = new Map();
-  
-  // 각 옵션을 순회하며 가입 기간별로 최고 금리 옵션만 저장
-  product.value.options.forEach(option => {
-    const term = option.save_trm;
-    const currentOption = uniqueOptions.get(term);
-    
-    // 현재 옵션의 금리 계산
-    const currentRate = parseFloat(option.intr_rate2) || parseFloat(option.intr_rate) || 0;
-    
-    // 기존에 저장된 옵션이 없거나, 현재 옵션의 금리가 더 높은 경우 업데이트
-    if (!currentOption || currentRate > (parseFloat(currentOption.intr_rate2) || parseFloat(currentOption.intr_rate) || 0)) {
-      uniqueOptions.set(term, option);
-    }
-  });
-  
-  // 맵에서 값만 추출하여 배열로 변환 후 기간순 정렬
-  return Array.from(uniqueOptions.values()).sort((a, b) => {
+  return [...product.value.options].sort((a, b) => {
     return parseInt(a.save_trm) - parseInt(b.save_trm);
   });
 });
@@ -232,22 +176,16 @@ const formatRate = (rate) => {
   return parseFloat(rate).toFixed(2);
 };
 
-// 상품 정보 로드 함수 수정
+// 상품 정보 로드
 const fetchProductDetail = async () => {
   try {
     loading.value = true;
-    
-    // 은행 목록을 먼저 가져옴
-    if (banks.value.length === 0) {
-      await fetchAllBanks();
-    }
-    
-    const response = await api.get(`/deposits/${productId}/`);
+    const response = await api.get(`/savings/${productId}/`);
     product.value = response.data;
+    console.log('적금 상품 정보:', product.value);
     
-    if (product.value.fin_co_no || 
-        (product.value.bank && typeof product.value.bank === 'string')) {
-      await fetchBankInfo(product.value.fin_co_no || product.value.bank);
+    if (product.value.fin_co_no) {
+      await fetchBankInfo(product.value.fin_co_no);
     }
     
     if (isAuthenticated.value) {
@@ -255,7 +193,6 @@ const fetchProductDetail = async () => {
     }
   } catch (error) {
     console.error('상품 정보 로드 실패:', error);
-    alertStore.showError('상품 정보 로드 실패', '상품 정보를 가져오는 중 오류가 발생했습니다.');
   } finally {
     loading.value = false;
   }
@@ -274,7 +211,7 @@ const fetchBankInfo = async (bankId) => {
 // 가입 상태 확인
 const checkSubscriptionStatus = async () => {
   try {
-    const response = await api.get(`/deposits/${productId}/check-subscription/`);
+    const response = await api.get(`/savings/${productId}/check-subscription/`);
     isSubscribed.value = response.data.is_subscribed;
   } catch (error) {
     console.error('가입 상태 확인 실패:', error);
@@ -285,15 +222,12 @@ const checkSubscriptionStatus = async () => {
 // 가입 함수
 const subscribe = async () => {
   try {
-    const response = await api.post(`/deposits/${productId}/subscribe/`);
+    const response = await api.post(`/savings/${productId}/subscribe/`);
     if (response.data && response.data.product_id) {
       isSubscribed.value = true;
-      alertStore.showSuccess(
-        '가입 완료!', 
-        `${product.value.fin_prdt_nm} 상품에 가입되었습니다.`
-      );
+      alert('상품 가입이 완료되었습니다!');
     } else {
-      alertStore.showError('가입 실패', '가입 처리 중 오류가 발생했습니다.');
+      alert('가입 처리 중 오류가 발생했습니다.');
     }
   } catch (error) {
     console.error('가입 처리 실패:', error);
@@ -301,30 +235,25 @@ const subscribe = async () => {
     if (error.response && error.response.data && error.response.data.error) {
       errorMsg = error.response.data.error;
     }
-    alertStore.showError('가입 실패', errorMsg);
+    alert(errorMsg);
   }
 };
 
 // 가입 취소 함수
 const cancelSubscription = async () => {
-  if (!confirm('정말로 가입을 취소하시겠습니까?')) return;
-  
   try {
-    const response = await api.post(`/deposits/${productId}/subscribe/`, {
-      action: 'unsubscribe'
-    });
-    if (response.status === 200) {
-      isSubscribed.value = false;
-      alertStore.showInfo(
-        '가입 취소 완료', 
-        `${product.value.fin_prdt_nm} 상품 가입이 취소되었습니다.`
-      );
-    } else {
-      alertStore.showError('취소 실패', '취소 처리 중 오류가 발생했습니다.');
+    if (confirm('정말로 가입을 취소하시겠습니까?')) {
+      const response = await api.post(`/savings/${productId}/subscribe/`);
+      if (response.status === 200) {
+        isSubscribed.value = false;
+        alert('가입이 취소되었습니다.');
+      } else {
+        alert('취소 처리 중 오류가 발생했습니다.');
+      }
     }
   } catch (error) {
     console.error('가입 취소 처리 실패:', error);
-    alertStore.showError('취소 실패', '취소 처리 중 오류가 발생했습니다.');
+    alert('취소 처리 중 오류가 발생했습니다.');
   }
 };
 
@@ -383,6 +312,12 @@ onMounted(() => {
   object-fit: contain;
 }
 
+.bank-name-placeholder {
+  font-weight: bold;
+  color: #555;
+  font-size: 14px;
+  text-align: center;
+}
 
 h1 {
   margin: 0 0 5px;
@@ -391,18 +326,9 @@ h1 {
 }
 
 .bank-name {
-  margin: 5px 0 0;
+  margin: 0;
   color: #666;
   font-size: 16px;
-  font-weight: 500;
-}
-
-.bank-name-placeholder {
-  font-weight: bold;
-  color: #555;
-  font-size: 14px;
-  text-align: center;
-  padding: 5px;
 }
 
 .subscription-action {
@@ -423,14 +349,6 @@ h1 {
 
 .subscribe-btn:hover {
   background-color: #3a7bc8;
-}
-
-.cancel-btn {
-  background-color: #dc3545;
-}
-
-.cancel-btn:hover {
-  background-color: #c82333;
 }
 
 .subscribe-btn.subscribed {
@@ -542,5 +460,13 @@ h2 {
   .bank-logo {
     margin: 0 auto 20px;
   }
+}
+
+.subscribe-btn.cancel-btn {
+  background-color: #dc3545;
+}
+
+.subscribe-btn.cancel-btn:hover {
+  background-color: #c82333;
 }
 </style>

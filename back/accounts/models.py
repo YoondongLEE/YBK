@@ -19,10 +19,25 @@ class User(AbstractUser):
         help_text='Specific permissions for this user.'
     )
     
-    # 가입한 예금 상품 목록 (다대다 관계) - 문자열 참조로 수정
+    # 가입한 예금 상품 목록 (다대다 관계) - related_name 수정
     subscribed_deposits = models.ManyToManyField(
-        'deposits.DepositProduct',  # 문자열 참조로 변경
-        related_name='subscribers',
+        'deposits.DepositProduct',
+        related_name='user_subscribers',  # 변경
         blank=True,
         verbose_name="가입한 정기예금 상품"
     )
+    
+    # 가입한 적금 상품 추가
+    subscribed_savings = models.ManyToManyField(
+        'deposits.SavingProduct',
+        related_name='user_subscribers',  # 변경
+        blank=True,
+        verbose_name="가입한 정기적금 상품"
+    )
+
+    # 새로운 필드 추가
+    # 저장된 YouTube 영상 정보를 JSON 형태로 저장
+    saved_videos = models.JSONField(default=list, blank=True)
+    
+    # 저장된 YouTube 채널 정보를 JSON 형태로 저장
+    saved_channels = models.JSONField(default=list, blank=True)

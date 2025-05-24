@@ -56,6 +56,10 @@
             <div class="label">금리유형</div>
             <div class="value">{{ product.intr_rate_type_nm || '정보 없음' }}</div>
           </div>
+          <div class="detail-item">
+            <div class="label">적립유형</div>
+            <div class="value">{{ product.rsrv_type_nm || '정보 없음' }}</div>
+          </div>
         </div>
       </section>
 
@@ -152,7 +156,6 @@ const getBankNameForDisplay = () => {
   return ''; // "정보 없음" 대신 빈 문자열 반환
 };
 
-
 // 추가: 모든 은행 목록 가져오기
 const banks = ref([]);
 const fetchAllBanks = async () => {
@@ -242,7 +245,7 @@ const fetchProductDetail = async () => {
       await fetchAllBanks();
     }
     
-    const response = await api.get(`/deposits/${productId}/`);
+    const response = await api.get(`/savings/${productId}/`);
     product.value = response.data;
     
     if (product.value.fin_co_no || 
@@ -274,7 +277,7 @@ const fetchBankInfo = async (bankId) => {
 // 가입 상태 확인
 const checkSubscriptionStatus = async () => {
   try {
-    const response = await api.get(`/deposits/${productId}/check-subscription/`);
+    const response = await api.get(`/savings/${productId}/check-subscription/`);
     isSubscribed.value = response.data.is_subscribed;
   } catch (error) {
     console.error('가입 상태 확인 실패:', error);
@@ -285,7 +288,7 @@ const checkSubscriptionStatus = async () => {
 // 가입 함수
 const subscribe = async () => {
   try {
-    const response = await api.post(`/deposits/${productId}/subscribe/`);
+    const response = await api.post(`/savings/${productId}/subscribe/`);
     if (response.data && response.data.product_id) {
       isSubscribed.value = true;
       alertStore.showSuccess(
@@ -310,7 +313,7 @@ const cancelSubscription = async () => {
   if (!confirm('정말로 가입을 취소하시겠습니까?')) return;
   
   try {
-    const response = await api.post(`/deposits/${productId}/subscribe/`, {
+    const response = await api.post(`/savings/${productId}/subscribe/`, {
       action: 'unsubscribe'
     });
     if (response.status === 200) {
@@ -383,20 +386,6 @@ onMounted(() => {
   object-fit: contain;
 }
 
-
-h1 {
-  margin: 0 0 5px;
-  color: #333;
-  font-size: 24px;
-}
-
-.bank-name {
-  margin: 5px 0 0;
-  color: #666;
-  font-size: 16px;
-  font-weight: 500;
-}
-
 .bank-name-placeholder {
   font-weight: bold;
   color: #555;
@@ -404,6 +393,21 @@ h1 {
   text-align: center;
   padding: 5px;
 }
+
+h1 {
+  margin: 0 0 5px;
+  color: #333;
+  font-size: 24px;
+}
+
+/* 은행명 스타일 수정 */
+.bank-name {
+  margin: 5px 0 0;
+  color: #666;
+  font-size: 16px;
+  font-weight: 500;
+}
+
 
 .subscription-action {
   text-align: right;

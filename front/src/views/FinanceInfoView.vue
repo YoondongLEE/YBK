@@ -24,13 +24,13 @@
       <div v-if="activeTab === 'info'" class="info-section">
         <div class="info-list">
           <!-- 예적금 금리비교 카드 -->
-          <div class="info-card" @click="goToDepositList">
+          <div class="info-card" @click="goToInterestRateCompare">
             <div class="info-image-placeholder">
               <!-- 이미지 로딩 실패시 대체 텍스트로 표시 -->
               <div class="placeholder-text">금리비교</div>
             </div>
             <div class="info-content">
-              <h3>금리비교 - 예금</h3>
+              <h3>금리비교</h3>
               <p>다양한 은행의 예금/적금 상품들의 금리를 한눈에 비교해보세요.</p>
             </div>
           </div>
@@ -77,9 +77,9 @@ const setActiveTab = (tab) => {
   activeTab.value = tab;
 };
 
-// 예금 금리 비교 페이지로 이동하는 함수
-const goToDepositList = () => {
-  router.push({ name: 'deposits' });
+// 금리비교 페이지로 이동하는 함수
+const goToInterestRateCompare = () => {
+  router.push({ name: 'interest-compare' });
 };
 </script>
 

@@ -6,8 +6,9 @@ import FinanceAcademyView from '../views/FinanceAcademyView.vue'
 import FinanceInfoView from '../views/FinanceInfoView.vue'
 import MyPageView from '../views/MyPageView.vue'
 import { useAuthStore } from '../stores/auth'
-import DepositList from '../views/DepositList.vue'
-import DepositDetail from '../views/DepositDetail.vue'
+import InterestRateCompare from '@/views/InterestRateCompare.vue'
+import DepositList from '@/views/DepositList.vue'
+import SavingDetail from '@/views/SavingDetail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,12 @@ const router = createRouter({
       component: SignUpView 
     },
     {
+      path: '/finance/rates',
+      name: 'interest-rate-compare',
+      component: InterestRateCompare,
+      meta: { requiresAuth: false }
+    },
+    {
       path: '/finance-academy',
       name: 'financeAcademy',
       component: FinanceAcademyView
@@ -45,11 +52,33 @@ const router = createRouter({
     },
     {
       path: '/deposits',
-      name: 'deposits',
-      component: DepositList
+      name: 'deposit-list',
+      component: DepositList,
+      meta: { requiresAuth: false }
     },
-    { path: '/deposits/:id', name: 'depositDetail', component: DepositDetail },
-
+    
+    // 예금 상세 페이지 (중복된 라우트 제거)
+    {
+      path: '/deposits/:id',
+      name: 'deposit-detail',
+      component: () => import('@/views/DepositDetail.vue'),
+      meta: { requiresAuth: false }
+    },
+    
+    // 새로운 금리비교 페이지 (예금/적금 통합)
+    {
+      path: '/interest-compare',
+      name: 'interest-compare',
+      component: () => import('../views/InterestRateCompare.vue')
+    },
+    
+    // 적금 상세 페이지
+    {
+      path: '/savings/:id',
+      name: 'saving-detail',
+      component: SavingDetail,
+      meta: { requiresAuth: false }
+    },
   ]
 })
 
