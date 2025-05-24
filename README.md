@@ -47,7 +47,20 @@ pip install -r requirements.txt
 ```
 
 4. 환경 변수 설정 (.env 파일 생성)
+```bash
+경로 : 'final-pjt/back/.env'
+# 금융감독원 금융상품APIKEY
+FINLIFE_API_KEY=key
+```
 
+```bash
+경로 : 'final-pjt/front/.env'
+VITE_YOUTUBE_API_KEY="key"
+
+VITE_HUGGINGFACE_API_KEY="key"
+
+VITE_OPENAI_API_KEY="key"
+```
 
 5. 데이터베이스 마이그레이션
 
