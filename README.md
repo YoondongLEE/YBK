@@ -48,10 +48,6 @@ pip install -r requirements.txt
 
 4. 환경 변수 설정 (.env 파일 생성)
 
-```bash
-# .env 파일 생성
-echo "FINLIFE_API_KEY=eb9f3d19062bbbc32015258aabea7ed3" > .env
-```
 
 5. 데이터베이스 마이그레이션
 
