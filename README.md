@@ -1,144 +1,154 @@
-# 5/23
-- 협업 경험이 적은 2명이 만나 개발프로젝트를 진행하려니 어떻게 역할을 나눠야 할지 잘 몰랐다.
-- 그래서 프론트와 백 둘 다 같이 하면서 학습하자는 의미로 프론트, 백 으로 역할을 나누지 않고 기능별로 역할을 분담했다.
-- git branch로 기능을 나눠서 구현 후 master branch에서 병합하면 안전하게 작업할 수 있다고 생각했다.
-- 하지만 branch로 기능을 나눴다고 생각했지만 완벽히 독립적으로 진행되지 않았던 것 같다.
-- 각자의 기능을 구현한 후 병합하였는데 각자의 기능이 성공적으로 구현된 걸 합쳤지만 합쳤을 때는 두 기능 모두 작동하지 않았다.
-- 이러한 경험을 함으로써 git branch에 대해 더 알아야 앞으로 프로젝트할 때 큰 문제가 없을 것 같고 협업을 조금 더 경험해봐야 할 것 같다.
+# 금융 정보 서비스 프로젝트
 
-# 5/24
-# 프로젝트 기능 구현 설명 - README
+이 프로젝트는 사용자에게 다양한 금융 정보와 서비스를 제공하는 웹 애플리케이션입니다.
 
-## 1. 사용자 인증 시스템
+## 기능 소개
 
-### 회원가입 및 로그인
-- Vue 3와 Vuex를 활용한 상태 관리
-- JWT 토큰 기반 인증 시스템 구현
-- 로컬 스토리지를 활용한 토큰 저장 및 자동 로그인 기능
-- 로그인 상태에 따른 조건부 UI 렌더링
+- **금융 상품 정보**: 예금 및 적금 상품 정보 조회 및 비교
+- **금/은 가격 추이**: 금과 은의 가격 변동 추이 시각화
+- **금융 아카데미**: 금융 교육 콘텐츠 제공
+- **회원 기능**: 회원가입, 로그인, 마이페이지
+- **금융 상품 가입**: 관심 있는 금융 상품 가입 및 관리
 
-```javascript
-// 토큰 기반 인증
-api.interceptors.request.use(config => {
-  const token = localStorage.getItem('token')
-  if (token) {
-    config.headers.Authorization = `Token ${token}`
-  }
-  return config
-})
+## 프로젝트 설치 및 실행 가이드
+
+### 사전 요구사항
+
+- Python 3.9 이상
+- Node.js 16 이상
+- Django 4.2 이상
+- Vue 3
+
+### 백엔드 설정 (Django)
+
+1. 프로젝트 디렉토리로 이동
+
+```bash
+cd final-pjt/back
 ```
 
-## 2. 금융 데이터 시각화
+2. 가상환경 생성 및 활성화
 
-### 금/은 가격 변동 추이
-- Chart.js를 활용한 선형 그래프 구현
-- 날짜 기반 필터링 기능 (시작일/종료일 선택)
-- 금/은 자산 선택 기능
-- 통계 정보 표시 (최저가, 최고가, 평균가)
-- 동적 차트 생성과 캔버스 관리
+```bash
+# 가상환경 생성
+python -m venv venv
 
-```javascript
-// 차트 렌더링
-const renderChart = async () => {
-  // 동적으로 Chart.js 임포트
-  if (!Chart) Chart = (await import('chart.js/auto')).default
-  
-  // 캔버스 생성 및 차트 데이터 설정
-  const canvas = document.createElement('canvas')
-  chartInstance.value = new Chart(ctx, {
-    type: 'line',
-    data: { 
-      labels, 
-      datasets: [{ 
-        label: selectedMetal.value==='gold' ? '금 가격' : '은 가격', 
-        data, 
-        borderColor: color, 
-        tension: 0.1, 
-        fill: false 
-      }] 
-    }
-  })
-}
+# 가상환경 활성화 (Windows)
+venv\Scripts\activate
+
+# 가상환경 활성화 (macOS/Linux)
+source venv/bin/activate
 ```
 
-## 3. 외부 API 통합
+3. 필요한 패키지 설치
 
-### YouTube Data API
-- 관련 금융 교육 영상 검색 및 표시
-- `VITE_YOUTUBE_API_KEY`를 활용한 YouTube API 통합
-- 영상 결과 페이징 처리
-
-### Hugging Face API
-- 자연어 처리 기능 구현
-- `VITE_HUGGINGFACE_API_KEY`를 활용한 텍스트 분석 및 감정 분석
-
-### OpenAI API
-- 금융 관련 질의응답 기능
-- `VITE_OPENAI_API_KEY`를 활용한 AI 어시스턴트 구현
-- 사용자 입력에 기반한 금융 조언 제공
-
-```javascript
-// API 키 환경 변수 활용 예시
-const youtubeApiKey = import.meta.env.VITE_YOUTUBE_API_KEY
-const huggingfaceApiKey = import.meta.env.VITE_HUGGINGFACE_API_KEY
-const openaiApiKey = import.meta.env.VITE_OPENAI_API_KEY
+```bash
+pip install -r requirements.txt
 ```
 
-## 4. 반응형 디자인
+4. 환경 변수 설정 (.env 파일 생성)
 
-- 다양한 화면 크기에 적응하는 반응형 레이아웃
-- CSS Grid와 Flexbox를 활용한 모바일 친화적 UI
-- 미디어 쿼리를 통한 뷰포트 크기 기반 스타일 조정
-
-```css
-@media (max-width: 768px) {
-  .metal-info {
-    grid-template-columns: 1fr;
-  }
-  
-  .chart-controls {
-    flex-direction: column;
-    gap: 15px;
-  }
-}
+```bash
+# .env 파일 생성
+echo "FINLIFE_API_KEY=eb9f3d19062bbbc32015258aabea7ed3" > .env
 ```
 
-## 5. 백엔드 연동
+5. 데이터베이스 마이그레이션
 
-- RESTful API를 통한 데이터 통신
-- Django 백엔드와의 효율적인 통합
-- Axios를 활용한 HTTP 요청 처리
-- URL 라우팅과 API 엔드포인트 설계
-
-```javascript
-// 금속 가격 데이터 가져오기 예시
-const fetchData = async () => {
-  try {
-    const params = { metal_type: selectedMetal.value }
-    if (startDate.value) params.start_date = startDate.value
-    if (endDate.value) params.end_date = endDate.value
-    
-    const res = await api.get('/finance-info/metal-prices/', { params })
-    metalPrices.value = res.data.data || []
-    statistics.value = res.data.statistics || { min_price:0, max_price:0, avg_price:0 }
-  } catch (err) {
-    error.value = '데이터 로드 실패'
-  }
-}
+```bash
+python manage.py migrate
 ```
 
-## 6. 사용 기술 스택
+6. 초기 데이터 로드 (금/은 가격 데이터 및 금융상품 데이터)
+
+```bash
+# 금/은 가격 데이터 로드
+python manage.py loaddata finance_info/fixtures/gold_prices.json finance_info/fixtures/silver_prices.json
+
+# 금융상품 데이터 로드 (서버 실행 후)
+python manage.py runserver
+```
+
+서버가 실행된 상태에서 브라우저에서 다음 URL에 접속하여 API를 통해 데이터를 로드합니다:
+- 정기예금: http://localhost:8000/api/save-deposit-products/
+- 정기적금: http://localhost:8000/api/save-saving-products/
+
+7. 서버 실행
+
+```bash
+python manage.py runserver
+```
+
+### 프론트엔드 설정 (Vue)
+
+1. 프로젝트 디렉토리로 이동
+
+```bash
+cd final-pjt/front
+```
+
+2. 필요한 패키지 설치
+
+```bash
+npm install
+```
+
+3. 개발 서버 실행
+
+```bash
+npm run dev
+```
+
+4. 브라우저에서 접속
+
+```
+http://localhost:5173
+```
+
+## 프로젝트 구조
+
+```
+final-pjt/
+├── back/              # 백엔드 (Django)
+│   ├── accounts/      # 사용자 계정 관리
+│   ├── config/        # 프로젝트 설정
+│   ├── deposits/      # 예금 상품 API
+│   ├── finance_academy/ # 금융 교육 컨텐츠
+│   └── finance_info/  # 금융 정보 (금/은 가격 등)
+│
+└── front/             # 프론트엔드 (Vue 3)
+    ├── public/        # 정적 파일
+    └── src/           # 소스 코드
+        ├── api/       # API 클라이언트
+        ├── assets/    # 이미지 등 자산 파일
+        ├── components/# Vue 컴포넌트
+        ├── router/    # Vue Router 설정
+        ├── stores/    # Pinia 상태 관리
+        └── views/     # 페이지 컴포넌트
+```
+
+## 주요 기능 사용법
+
+### 금/은 가격 변동 추이 확인
+
+1. 네비게이션 바에서 "금융정보" 메뉴 클릭
+2. "금/은 가격 변동 추이" 카드 클릭
+3. 금 또는 은 버튼을 선택하여 해당 금속의 가격 추이 확인
+4. 시작일과 종료일을 설정하여 특정 기간의 데이터 확인 (2023.01.09 ~ 2024.12.01 기간 내 선택)
+
+### 금리 비교 기능
+
+1. 네비게이션 바에서 "금융정보" 메뉴 클릭
+2. "금리 비교" 카드 클릭
+3. 예금과 적금 탭을 전환하며 상품 비교
+4. 기간, 은행 등 필터를 적용하여 원하는 조건의 상품 검색
+
+## 기술 스택
 
 - **프론트엔드**: Vue 3, Vuex, Chart.js, Axios
 - **백엔드**: Django, Django REST Framework
-- **데이터베이스**: SQLite/PostgreSQL
-- **외부 API**: YouTube Data API, Hugging Face API, OpenAI API
-- **배포**: 미정 (Vercel, Netlify, AWS 등)
+- **데이터베이스**: SQLite
+- **기타**: JWT 인증, RESTful API
 
-## 7. 환경 변수 관리
 
-- .env 파일을 통한 API 키 및 중요 정보 관리
-- 보안을 위한 환경 변수 분리
-- Vite 빌드 시스템을 활용한 환경 변수 주입
-
-프로젝트는 사용자 인증부터 외부 API 통합, 데이터 시각화까지 다양한 기능을 제공하며, 반응형 디자인으로 모든 디바이스에서 일관된 사용자 경험을 제공합니다.
+이 README.md는 프로젝트를 처음 클론받은 사람이 필요한 설치 과정과 초기 데이터 로드, 실행 방법에 대한 상세한 가이드를 제공합니다. 또한 주요 기능의 사용법도 포함하여 사용자가 빠르게 시작할 수 있도록 작성했습니다.이 README.md는 프로젝트를 처음 클론받은 사람이 필요한 설치 과정과 초기 데이터 로드, 실행 방법에 대한 상세한 가이드를 제공합니다. 또한 주요 기능의 사용법도 포함하여 사용자가 빠르게 시작할 수 있도록 작성했습니다.
