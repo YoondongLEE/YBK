@@ -1,4 +1,3 @@
-<!-- filepath: /Users/iyundong/Desktop/SSAFY/1학기_관통/final-pjt-v1/final-pjt/front/src/components/finance/MetalPriceChart.vue -->
 <template>
   <div class="metal-price-chart-container">
     <div class="chart-controls">
@@ -26,7 +25,9 @@
             type="date" 
             id="start-date" 
             v-model="startDate"
-            @change="fetchData"
+            @change="validateDates"
+            min="2023-01-09"
+            max="2024-12-01"
           >
         </div>
         <div class="date-filter">
@@ -35,13 +36,20 @@
             type="date" 
             id="end-date" 
             v-model="endDate"
-            @change="fetchData"
+            @change="validateDates"
+            min="2023-01-09"
+            max="2024-12-01"
           >
         </div>
         <button @click="resetDates" class="reset-btn">
           전체 기간
         </button>
       </div>
+    </div>
+    
+    <!-- 날짜 오류 메시지 -->
+    <div v-if="dateError" class="date-error-message">
+      <i class="fas fa-exclamation-triangle"></i> {{ dateError }}
     </div>
     
     <div class="chart-container">
@@ -51,10 +59,10 @@
       <div v-else-if="error" class="error-message">
         <p>{{ error }}</p>
       </div>
-      <div v-else-if="!chartData.labels.length" class="no-data-message">
+      <div v-else-if="chartData.labels.length === 0" class="no-data-message">
         <p>선택한 기간에 데이터가 없습니다.</p>
       </div>
-      <canvas v-else ref="chartCanvas" class="chart-canvas"></canvas>
+      <canvas v-else id="metalPriceChart" ref="chartCanvas" class="chart-canvas"></canvas>
     </div>
     
     <div class="price-stats" v-if="chartData.labels.length">
@@ -70,6 +78,10 @@
         <span class="stat-label">평균가:</span>
         <span class="stat-value">${{ formatPrice(statistics.avg_price) }}</span>
       </div>
+    </div>
+    
+    <div class="date-range-info">
+      <p><small>* 데이터 조회 가능 기간: 2023.01.09 ~ 2024.12.01</small></p>
     </div>
   </div>
 </template>
@@ -88,13 +100,18 @@ export default {
     const startDate = ref('');
     const endDate = ref('');
     const metalPrices = ref([]);
-    const loading = ref(false);
+    const loading = ref(true);
     const error = ref(null);
+    const dateError = ref(null); // 날짜 오류 메시지
     const statistics = ref({
       min_price: 0,
       max_price: 0,
       avg_price: 0
     });
+    
+    // 유효한 날짜 범위 상수
+    const MIN_DATE = '2023-01-09';
+    const MAX_DATE = '2024-12-01';
     
     // 차트 데이터 계산
     const chartData = computed(() => {
@@ -117,69 +134,122 @@ export default {
       };
     });
     
-    // 차트 렌더링 함수
-    const renderChart = () => {
-      if (chartInstance.value) {
-        chartInstance.value.destroy();
+    // 날짜 유효성 검사 함수
+    const validateDates = () => {
+      dateError.value = null;
+      
+      // 날짜 범위 검사
+      if (startDate.value && (startDate.value < MIN_DATE || startDate.value > MAX_DATE)) {
+        dateError.value = '시작일은 2023.01.09 ~ 2024.12.01 사이여야 합니다';
+        startDate.value = '';
+        return false;
       }
       
-      if (!chartCanvas.value) return;
+      if (endDate.value && (endDate.value < MIN_DATE || endDate.value > MAX_DATE)) {
+        dateError.value = '종료일은 2023.01.09 ~ 2024.12.01 사이여야 합니다';
+        endDate.value = '';
+        return false;
+      }
       
-      const ctx = chartCanvas.value.getContext('2d');
+      // 시작일이 종료일보다 늦은 경우
+      if (startDate.value && endDate.value && startDate.value > endDate.value) {
+        dateError.value = '시작일은 종료일보다 빨라야 합니다';
+        return false;
+      }
       
-      chartInstance.value = new Chart(ctx, {
-        type: 'line',
-        data: chartData.value,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  return `가격: $${context.parsed.y.toFixed(2)}`;
+      // 유효한 날짜인 경우 데이터 불러오기
+      if (!dateError.value) {
+        fetchData();
+      }
+      
+      return !dateError.value;
+    };
+    
+    // 차트 렌더링 함수 - setTimeout으로 DOM이 완전히 준비된 후 실행
+    const renderChart = () => {
+      setTimeout(() => {
+        if (chartInstance.value) {
+          chartInstance.value.destroy();
+        }
+        
+        const canvas = document.getElementById('metalPriceChart');
+        if (!canvas) {
+          console.error('metalPriceChart 엘리먼트를 찾을 수 없습니다');
+          return;
+        }
+        
+        if (!chartData.value.labels.length) {
+          console.log('차트를 그릴 수 없음: 데이터 없음');
+          return;
+        }
+        
+        try {
+          const ctx = canvas.getContext('2d');
+          
+          if (!ctx) {
+            console.error('차트 컨텍스트를 얻을 수 없습니다.');
+            return;
+          }
+          
+          chartInstance.value = new Chart(ctx, {
+            type: 'line',
+            data: chartData.value,
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                tooltip: {
+                  callbacks: {
+                    label: function(context) {
+                      return `가격: $${context.parsed.y.toFixed(2)}`;
+                    }
+                  }
+                },
+                legend: {
+                  display: true,
+                  position: 'top'
+                },
+                title: {
+                  display: true,
+                  text: selectedMetal.value === 'gold' ? '금 가격 변동 추이' : '은 가격 변동 추이',
+                  font: {
+                    size: 16
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                    text: '날짜'
+                  },
+                  ticks: {
+                    maxRotation: 45,
+                    minRotation: 45,
+                    autoSkip: true,
+                    maxTicksLimit: 15
+                  }
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: '가격 (USD)'
+                  },
+                  beginAtZero: false
                 }
               }
-            },
-            legend: {
-              display: true,
-              position: 'top'
-            },
-            title: {
-              display: true,
-              text: selectedMetal.value === 'gold' ? '금 가격 변동 추이' : '은 가격 변동 추이',
-              font: {
-                size: 16
-              }
             }
-          },
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: '날짜'
-              },
-              ticks: {
-                maxRotation: 45,
-                minRotation: 45,
-                autoSkip: true,
-                maxTicksLimit: 15
-              }
-            },
-            y: {
-              title: {
-                display: true,
-                text: '가격 (USD)'
-              },
-              beginAtZero: false
-            }
-          }
+          });
+          console.log('차트가 성공적으로 렌더링되었습니다.');
+        } catch (err) {
+          console.error('차트 렌더링 중 오류 발생:', err);
         }
-      });
+      }, 300); // 300ms 지연 추가
     };
     
     // 데이터 로드 함수
     const fetchData = async () => {
+      console.log('금속 가격 데이터 불러오는 중...', selectedMetal.value);
       loading.value = true;
       error.value = null;
       
@@ -196,16 +266,24 @@ export default {
           params.end_date = endDate.value;
         }
         
+        console.log('API 요청 매개변수:', params);
         const response = await api.get('/finance-info/metal-prices/', { params });
+        console.log('API 응답 데이터:', response.data);
         
-        if (response.data && response.data.data) {
+        if (response.data && response.data.data && response.data.data.length > 0) {
           metalPrices.value = response.data.data;
           statistics.value = response.data.statistics || {
             min_price: 0,
             max_price: 0,
             avg_price: 0
           };
+          
+          // 데이터가 로드된 후 차트 렌더링 (지연 추가)
+          setTimeout(() => {
+            renderChart();
+          }, 100);
         } else {
+          console.warn('API에서 데이터를 받았지만 비어있습니다');
           metalPrices.value = [];
           statistics.value = {
             min_price: 0,
@@ -213,9 +291,6 @@ export default {
             avg_price: 0
           };
         }
-        
-        // 차트 다시 그리기
-        renderChart();
       } catch (err) {
         console.error('Metal prices fetch error:', err);
         error.value = '가격 데이터를 불러오는 중 오류가 발생했습니다.';
@@ -234,6 +309,7 @@ export default {
     const resetDates = () => {
       startDate.value = '';
       endDate.value = '';
+      dateError.value = null; // 날짜 오류 메시지도 초기화
       fetchData();
     };
     
@@ -243,15 +319,26 @@ export default {
       return parseFloat(price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
     
-    // 메탈 타입 변경 감시
-    watch(selectedMetal, () => {
+    // 컴포넌트 마운트 시 데이터 로드
+    onMounted(() => {
+      console.log('컴포넌트 마운트됨, 데이터 로드 시작');
       fetchData();
     });
     
-    // 컴포넌트 마운트 시 데이터 로드
-    onMounted(() => {
-      fetchData();
-    });
+    // 차트 자동 갱신 방지
+    const stopAutoRefresh = () => {
+      if (chartInstance.value) {
+        chartInstance.value.stop();
+      }
+    };
+    
+    // 컴포넌트 언마운트 시 차트 인스턴스 정리
+    const cleanup = () => {
+      if (chartInstance.value) {
+        chartInstance.value.destroy();
+        chartInstance.value = null;
+      }
+    };
     
     return {
       chartCanvas,
@@ -261,11 +348,15 @@ export default {
       chartData,
       loading,
       error,
+      dateError,
       statistics,
       selectMetal,
       resetDates,
+      validateDates,
       fetchData,
-      formatPrice
+      formatPrice,
+      stopAutoRefresh,
+      cleanup
     };
   }
 };
@@ -348,6 +439,26 @@ export default {
 
 .reset-btn:hover {
   background-color: #e0e0e0;
+}
+
+/* 날짜 오류 메시지 스타일 */
+.date-error-message {
+  background-color: #ffe0e0;
+  color: #d32f2f;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-range-info {
+  margin-top: 10px;
+  color: #666;
+  font-size: 12px;
+  text-align: right;
 }
 
 .chart-container {

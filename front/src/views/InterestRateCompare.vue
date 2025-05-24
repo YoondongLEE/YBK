@@ -260,9 +260,27 @@ const fetchDepositProducts = async () => {
   try {
     loadingDeposits.value = true;
     const response = await api.get('/deposits/');
-    depositProducts.value = response.data;
+    
+    // 데이터가 없으면 API에서 새로 가져오기
+    if (response.data.length === 0) {
+      console.log('정기예금 데이터가 없어 API에서 불러옵니다...');
+      await api.get('/save-deposit-products/');
+      const newResponse = await api.get('/deposits/');
+      depositProducts.value = newResponse.data;
+    } else {
+      depositProducts.value = response.data;
+    }
   } catch (error) {
     console.error('정기예금 상품 로드 실패:', error);
+    
+    // 오류 발생 시 API에서 직접 데이터 가져오기 시도
+    try {
+      await api.get('/save-deposit-products/');
+      const newResponse = await api.get('/deposits/');
+      depositProducts.value = newResponse.data;
+    } catch (e) {
+      console.error('정기예금 데이터 복구 실패:', e);
+    }
   } finally {
     loadingDeposits.value = false;
   }
@@ -273,9 +291,27 @@ const fetchSavingProducts = async () => {
   try {
     loadingSavings.value = true;
     const response = await api.get('/savings/');
-    savingProducts.value = response.data;
+    
+    // 데이터가 없으면 API에서 새로 가져오기
+    if (response.data.length === 0) {
+      console.log('정기적금 데이터가 없어 API에서 불러옵니다...');
+      await api.get('/save-saving-products/');
+      const newResponse = await api.get('/savings/');
+      savingProducts.value = newResponse.data;
+    } else {
+      savingProducts.value = response.data;
+    }
   } catch (error) {
     console.error('정기적금 상품 로드 실패:', error);
+    
+    // 오류 발생 시 API에서 직접 데이터 가져오기 시도
+    try {
+      await api.get('/save-saving-products/');
+      const newResponse = await api.get('/savings/');
+      savingProducts.value = newResponse.data;
+    } catch (e) {
+      console.error('정기적금 데이터 복구 실패:', e);
+    }
   } finally {
     loadingSavings.value = false;
   }
