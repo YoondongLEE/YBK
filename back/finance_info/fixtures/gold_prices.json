@@ -1,0 +1,965 @@
+[
+    {
+        "model": "finance_info.metalprice",
+        "pk": 536,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-01-09",
+            "price": 1967.1
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 537,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-01-11",
+            "price": 1987.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 538,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-01-12",
+            "price": 2089.7
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 539,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-02-10",
+            "price": 1847.2
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 540,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-02-11",
+            "price": 1993.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 541,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-03-10",
+            "price": 1841.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 542,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-03-11",
+            "price": 1999.2
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 543,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-04-10",
+            "price": 1834.8
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 544,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-04-12",
+            "price": 2042.2
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 545,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-05-09",
+            "price": 1952.6
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 546,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-05-10",
+            "price": 1831.8
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 547,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-05-12",
+            "price": 2036.3
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 548,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-06-09",
+            "price": 1944.2
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 549,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-06-10",
+            "price": 1845.2
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 550,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-06-11",
+            "price": 1988.6
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 551,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-06-12",
+            "price": 2047.9
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 552,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-07-09",
+            "price": 1942.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 553,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-07-11",
+            "price": 1973.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 554,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-07-12",
+            "price": 2046.4
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 555,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-08-09",
+            "price": 1942.7
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 556,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-08-11",
+            "price": 1957.8
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 557,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-08-12",
+            "price": 2014.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 558,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-08-18",
+            "price": 1916.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 559,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-08-21",
+            "price": 1923.0
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 560,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-08-22",
+            "price": 1926.0
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 561,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-08-23",
+            "price": 1948.1
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 562,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-08-24",
+            "price": 1947.1
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 563,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-08-25",
+            "price": 1939.9
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 564,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-08-28",
+            "price": 1946.8
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 565,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-08-29",
+            "price": 1965.1
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 566,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-08-30",
+            "price": 1973.0
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 567,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-08-31",
+            "price": 1965.9
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 568,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-10",
+            "price": 1864.3
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 569,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-11",
+            "price": 1969.8
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 570,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-13",
+            "price": 1932.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 571,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-14",
+            "price": 1932.8
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 572,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-15",
+            "price": 1946.2
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 573,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-18",
+            "price": 1953.4
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 574,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-19",
+            "price": 1953.7
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 575,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-20",
+            "price": 1967.1
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 576,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-21",
+            "price": 1939.6
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 577,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-22",
+            "price": 1945.6
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 578,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-25",
+            "price": 1936.6
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 579,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-26",
+            "price": 1919.8
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 580,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-27",
+            "price": 1890.9
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 581,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-28",
+            "price": 1878.6
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 582,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-09-29",
+            "price": 1866.1
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 583,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-10",
+            "price": 1875.3
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 584,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-11",
+            "price": 1937.7
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 585,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-13",
+            "price": 1941.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 586,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-16",
+            "price": 1934.3
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 587,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-17",
+            "price": 1935.7
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 588,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-18",
+            "price": 1968.3
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 589,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-19",
+            "price": 1980.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 590,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-20",
+            "price": 1994.4
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 591,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-23",
+            "price": 1987.8
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 592,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-24",
+            "price": 1986.1
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 593,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-25",
+            "price": 1994.9
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 594,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-26",
+            "price": 1997.4
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 595,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-27",
+            "price": 1998.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 596,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-30",
+            "price": 2005.6
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 597,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-10-31",
+            "price": 1994.3
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 598,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-09",
+            "price": 1947.2
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 599,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-10",
+            "price": 1887.3
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 600,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-12",
+            "price": 1993.7
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 601,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-13",
+            "price": 1950.2
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 602,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-14",
+            "price": 1966.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 603,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-15",
+            "price": 1964.3
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 604,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-16",
+            "price": 1987.3
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 605,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-17",
+            "price": 1984.7
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 606,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-20",
+            "price": 1980.3
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 607,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-21",
+            "price": 2001.6
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 608,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-22",
+            "price": 1992.8
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 609,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-24",
+            "price": 2003.0
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 610,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-27",
+            "price": 2012.4
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 611,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-28",
+            "price": 2040.0
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 612,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-29",
+            "price": 2067.1
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 613,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-11-30",
+            "price": 2057.2
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 614,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-09",
+            "price": 1935.1
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 615,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-10",
+            "price": 1883.0
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 616,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-12",
+            "price": 1993.2
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 617,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-13",
+            "price": 1997.3
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 618,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-14",
+            "price": 2044.9
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 619,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-15",
+            "price": 2035.7
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 620,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-18",
+            "price": 2040.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 621,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-19",
+            "price": 2052.1
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 622,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-20",
+            "price": 2047.7
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 623,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-21",
+            "price": 2051.3
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 624,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-22",
+            "price": 2069.1
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 625,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-26",
+            "price": 2069.8
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 626,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-27",
+            "price": 2093.1
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 627,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-28",
+            "price": 2083.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 628,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2023-12-29",
+            "price": 2071.8
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 629,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2024-01-16",
+            "price": 2030.2
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 630,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2024-01-17",
+            "price": 2006.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 631,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2024-01-18",
+            "price": 2021.6
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 632,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2024-01-19",
+            "price": 2029.3
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 633,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2024-01-22",
+            "price": 2022.2
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 634,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2024-02-01",
+            "price": 2073.4
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 635,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2024-03-01",
+            "price": 2042.8
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 636,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2024-04-01",
+            "price": 2050.0
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 637,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2024-05-01",
+            "price": 2049.8
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 638,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2024-08-01",
+            "price": 2033.5
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 639,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2024-09-01",
+            "price": 2033.0
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 640,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2024-10-01",
+            "price": 2027.8
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 641,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2024-11-01",
+            "price": 2019.2
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 642,
+        "fields": {
+            "metal_type": "gold",
+            "date": "2024-12-01",
+            "price": 2051.6
+        }
+    }
+]

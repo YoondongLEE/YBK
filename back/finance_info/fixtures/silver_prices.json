@@ -1,0 +1,965 @@
+[
+    {
+        "model": "finance_info.metalprice",
+        "pk": 643,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-01-09",
+            "price": 24.562
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 644,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-01-11",
+            "price": 22.79
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 645,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-01-12",
+            "price": 25.857
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 646,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-02-10",
+            "price": 21.421
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 647,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-02-11",
+            "price": 22.846
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 648,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-03-10",
+            "price": 21.377
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 649,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-03-11",
+            "price": 23.285
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 650,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-04-10",
+            "price": 21.146
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 651,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-04-12",
+            "price": 24.907
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 652,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-05-09",
+            "price": 23.873
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 653,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-05-10",
+            "price": 21.019
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 654,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-05-12",
+            "price": 24.546
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 655,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-06-09",
+            "price": 23.503
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 656,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-06-10",
+            "price": 21.723
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 657,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-06-11",
+            "price": 23.234
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 658,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-06-12",
+            "price": 24.228
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 659,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-07-09",
+            "price": 23.24
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 660,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-07-11",
+            "price": 22.589
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 661,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-07-12",
+            "price": 24.059
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 662,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-08-09",
+            "price": 23.174
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 663,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-08-11",
+            "price": 22.728
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 664,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-08-12",
+            "price": 23.276
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 665,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-08-18",
+            "price": 23.276
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 666,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-08-21",
+            "price": 23.659
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 667,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-08-22",
+            "price": 23.763
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 668,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-08-23",
+            "price": 24.71
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 669,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-08-24",
+            "price": 24.575
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 670,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-08-25",
+            "price": 24.583
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 671,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-08-28",
+            "price": 24.605
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 672,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-08-29",
+            "price": 25.139
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 673,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-08-30",
+            "price": 25.104
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 674,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-08-31",
+            "price": 24.812
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 675,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-10",
+            "price": 21.924
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 676,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-11",
+            "price": 22.905
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 677,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-13",
+            "price": 23.181
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 678,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-14",
+            "price": 22.994
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 679,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-15",
+            "price": 23.386
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 680,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-18",
+            "price": 23.498
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 681,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-19",
+            "price": 23.456
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 682,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-20",
+            "price": 23.836
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 683,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-21",
+            "price": 23.687
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 684,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-22",
+            "price": 23.844
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 685,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-25",
+            "price": 23.385
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 686,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-26",
+            "price": 23.196
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 687,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-27",
+            "price": 22.724
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 688,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-28",
+            "price": 22.741
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 689,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-09-29",
+            "price": 22.45
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 690,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-10",
+            "price": 21.953
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 691,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-11",
+            "price": 22.281
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 692,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-13",
+            "price": 22.895
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 693,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-16",
+            "price": 22.765
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 694,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-17",
+            "price": 23.024
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 695,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-18",
+            "price": 23.099
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 696,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-19",
+            "price": 23.031
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 697,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-20",
+            "price": 23.53
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 698,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-23",
+            "price": 23.21
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 699,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-24",
+            "price": 23.116
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 700,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-25",
+            "price": 23.007
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 701,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-26",
+            "price": 22.908
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 702,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-27",
+            "price": 22.887
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 703,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-30",
+            "price": 23.396
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 704,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-10-31",
+            "price": 22.952
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 705,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-09",
+            "price": 23.383
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 706,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-10",
+            "price": 22.133
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 707,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-12",
+            "price": 23.058
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 708,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-13",
+            "price": 22.358
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 709,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-14",
+            "price": 23.132
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 710,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-15",
+            "price": 23.538
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 711,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-16",
+            "price": 23.933
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 712,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-17",
+            "price": 23.775
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 713,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-20",
+            "price": 23.959
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 714,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-21",
+            "price": 24.221
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 715,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-22",
+            "price": 24.033
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 716,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-24",
+            "price": 24.692
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 717,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-27",
+            "price": 25.038
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 718,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-28",
+            "price": 25.302
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 719,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-29",
+            "price": 25.443
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 720,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-11-30",
+            "price": 25.66
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 721,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-09",
+            "price": 23.402
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 722,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-10",
+            "price": 21.959
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 723,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-12",
+            "price": 23.016
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 724,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-13",
+            "price": 22.921
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 725,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-14",
+            "price": 24.386
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 726,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-15",
+            "price": 24.154
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 727,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-18",
+            "price": 24.107
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 728,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-19",
+            "price": 24.321
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 729,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-20",
+            "price": 24.631
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 730,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-21",
+            "price": 24.585
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 731,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-22",
+            "price": 24.565
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 732,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-26",
+            "price": 24.396
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 733,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-27",
+            "price": 24.641
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 734,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-28",
+            "price": 24.372
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 735,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2023-12-29",
+            "price": 24.086
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 736,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2024-01-16",
+            "price": 23.093
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 737,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2024-01-17",
+            "price": 22.669
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 738,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2024-01-18",
+            "price": 22.807
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 739,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2024-01-19",
+            "price": 22.711
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 740,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2024-01-22",
+            "price": 22.296
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 741,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2024-02-01",
+            "price": 23.953
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 742,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2024-03-01",
+            "price": 23.157
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 743,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2024-04-01",
+            "price": 23.187
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 744,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2024-05-01",
+            "price": 23.315
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 745,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2024-08-01",
+            "price": 23.31
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 746,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2024-09-01",
+            "price": 23.091
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 747,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2024-10-01",
+            "price": 23.066
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 748,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2024-11-01",
+            "price": 22.705
+        }
+    },
+    {
+        "model": "finance_info.metalprice",
+        "pk": 749,
+        "fields": {
+            "metal_type": "silver",
+            "date": "2024-12-01",
+            "price": 23.329
+        }
+    }
+]
