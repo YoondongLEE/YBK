@@ -18,6 +18,13 @@
       >
         금융 영상
       </button>
+      <button 
+        @click="activeTab = 'bankmap'" 
+        :class="{ active: activeTab === 'bankmap' }"
+        class="tab-btn"
+      >
+        가까운 은행 찾기
+      </button>
     </div>
     
     <!-- 금융 정보 탭 -->
@@ -57,8 +64,6 @@
           </div>
         </div>
       </div>
-      
-      <!-- 기존 내용 유지 -->
     </div>
     
     <!-- YouTube 탭 -->
@@ -72,7 +77,11 @@
           <strong>알림:</strong> 저장한 영상과 채널은 마이페이지에서 확인할 수 있습니다.
           <router-link to="/mypage" class="saved-link">마이페이지로 이동</router-link>
         </p>
-      </div>
+      </div>      
+    </div>
+    <!-- 가까운 은행 찾기 탭 -->
+    <div v-else-if="activeTab === 'bankmap'" class="bankmap-section">
+      <BankMapSearch />
     </div>
   </div>
 </template>
@@ -81,6 +90,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import VideoSearch from '../components/youtube/VideoSearch.vue';
+import BankMapSearch from '../components/map/BankMapSearch.vue'; 
 
 const router = useRouter();
 const activeTab = ref('info');
@@ -231,6 +241,11 @@ h1 {
   
   .tab-btn.active::after {
     display: none;
+  }
+
+  /* 지도 섹션 스타일 추가 */
+  .bankmap-section {
+    margin-top: 20px;
   }
 }
 </style>

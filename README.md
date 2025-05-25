@@ -9,6 +9,7 @@
 - **금융 아카데미**: 금융 교육 콘텐츠 제공
 - **회원 기능**: 회원가입, 로그인, 마이페이지
 - **금융 상품 가입**: 관심 있는 금융 상품 가입 및 관리
+- **가까운 은행 찾기**: 지도에서 주변 은행 검색 및 경로 안내
 
 ## 프로젝트 설치 및 실행 가이드
 
@@ -60,6 +61,10 @@ VITE_YOUTUBE_API_KEY="key"
 VITE_HUGGINGFACE_API_KEY="key"
 
 VITE_OPENAI_API_KEY="key"
+
+VITE_KAKAO_JAVASCRIPT_KEY="key"
+
+VITE_KAKAO_REST_API_KEY="key"
 ```
 
 5. 데이터베이스 마이그레이션
