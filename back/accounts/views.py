@@ -5,50 +5,76 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import User
 from .serializers import UserDetailSerializer, UserSerializer, UserProfileUpdateSerializer, SignUpSerializer
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Count
+import pandas as pd
+import numpy as np
+from deposits.models import DepositProduct, SavingProduct, DepositSubscription, SavingSubscription
+import json
 
+# 기존 함수들을 모두 유지하고 누락된 함수들만 추가
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def my_profile(request):
-    """사용자 프로필 정보와 가입한 상품 목록 조회"""
-    try:
-        # 디버그 출력
-        print(f"요청 헤더: {request.headers}")
-        print(f"인증된 사용자: {request.user.username} ({request.user.id})")
-        
-        user = request.user
-        serializer = UserDetailSerializer(user)
-        return Response(serializer.data)
-    except Exception as e:
-        print(f"프로필 조회 중 오류 발생: {str(e)}")
-        import traceback
-        traceback.print_exc()
-        return Response(
-            {"error": f"프로필 정보를 조회하는 중 오류가 발생했습니다: {str(e)}"},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def profile(request):
-    """현재 로그인한 사용자의 프로필 정보를 반환"""
+    """마이 프로필 조회"""
     serializer = UserDetailSerializer(request.user)
     return Response(serializer.data)
 
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
+def profile(request):
+    """프로필 조회 및 수정"""
+    if request.method == 'GET':
+        serializer = UserDetailSerializer(request.user)
+        return Response(serializer.data)
+    
+    elif request.method == 'PUT':
+        serializer = UserDetailSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT', 'PATCH'])
+@api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_profile(request):
-    """사용자 프로필 정보 업데이트 (나이, 자산, 연봉)"""
+    """프로필 업데이트"""
     serializer = UserProfileUpdateSerializer(request.user, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
-        # 업데이트된 전체 프로필 정보 반환
-        updated_user = UserDetailSerializer(request.user)
-        return Response(updated_user.data)
+        return Response({
+            'user': UserDetailSerializer(request.user).data,
+            'message': '프로필이 업데이트되었습니다.'
+        })
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_user_profile(request):
+    """사용자 프로필 정보 업데이트 (나이, 자산, 연봉)"""
+    user = request.user
+    
+    data = request.data
+    
+    # 받은 데이터로 사용자 정보 업데이트
+    if 'age' in data:
+        user.age = data.get('age')
+    if 'assets' in data:
+        user.assets = data.get('assets')
+    if 'annual_income' in data:
+        user.annual_income = data.get('annual_income')
+    if 'savings_tendency' in data:
+        user.savings_tendency = data.get('savings_tendency')
+    if 'investment_tendency' in data:
+        user.investment_tendency = data.get('investment_tendency')
+    if 'preferred_bank' in data:
+        user.preferred_bank = data.get('preferred_bank')
+    
+    user.save()
+    
+    # 업데이트된 사용자 정보를 반환
+    serializer = UserDetailSerializer(user)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -57,42 +83,36 @@ def signup_view(request):
     serializer = SignUpSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
-        user_data = UserDetailSerializer(user).data
-        return Response(user_data, status=status.HTTP_201_CREATED)
+        return Response({'message': '회원가입이 완료되었습니다.'}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
     username = request.data.get('username')
     password = request.data.get('password')
-
-    if not username or not password:
-        return Response({"error": "사용자 이름과 비밀번호를 모두 입력해주세요."}, status=status.HTTP_400_BAD_REQUEST)
-
-    user = authenticate(request, username=username, password=password)
     
-    if user is not None:
+    if username is None or password is None:
+        return Response({'error': '아이디와 비밀번호를 입력해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    user = authenticate(username=username, password=password)
+    if user:
         login(request, user)
-        return Response({"message": "로그인 성공!"})
+        return Response({'message': '로그인 성공'}, status=status.HTTP_200_OK)
     else:
-        return Response({"error": "사용자 이름 또는 비밀번호가 올바르지 않습니다."}, status=status.HTTP_401_UNAUTHORIZED)
-
+        return Response({'error': '아이디 또는 비밀번호가 올바르지 않습니다.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['POST'])
 def logout_view(request):
     logout(request)
-    return Response({"message": "로그아웃 되었습니다."})
-
+    return Response({'message': '로그아웃 완료'}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_info(request):
-    user = request.user
-    serializer = UserSerializer(user)
+    """사용자 정보 조회"""
+    serializer = UserDetailSerializer(request.user)
     return Response(serializer.data)
-
 
 # YouTube 영상 저장 및 조회
 @api_view(['GET', 'POST'])
@@ -142,7 +162,6 @@ def youtube_videos(request):
         user.save()
         
         return Response({"message": "영상이 저장되었습니다.", "video": video_data}, status=status.HTTP_201_CREATED)
-
 
 # YouTube 채널 저장 및 조회
 @api_view(['GET', 'POST'])
@@ -198,7 +217,6 @@ def youtube_channels(request):
         
         return Response({"message": "채널이 저장되었습니다.", "channel": new_channel}, status=status.HTTP_201_CREATED)
 
-
 # 특정 YouTube 영상 삭제
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -231,8 +249,7 @@ def youtube_video_detail(request, video_id):
     user.saved_videos = updated_videos
     user.save()
     
-    return Response({"message": "영상이 삭제되었습니다."})
-
+    return Response({"message": "영상이 삭제되었습니다."}, status=status.HTTP_200_OK)
 
 # 특정 YouTube 채널 삭제
 @api_view(['DELETE'])
@@ -241,14 +258,214 @@ def youtube_channel_detail(request, channel_id):
     user = request.user
     saved_channels = user.saved_channels or []
     
-    # 기존 채널 검색
-    updated_channels = [channel for channel in saved_channels if channel.get('id') != channel_id]
+    # 기존 채널 검색 및 삭제
+    updated_channels = []
+    found = False
     
-    if len(updated_channels) == len(saved_channels):
+    for channel in saved_channels:
+        if channel.get('id') != channel_id:
+            updated_channels.append(channel)
+        else:
+            found = True
+    
+    if not found:
         return Response({"error": "해당 채널을 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
     
     # 업데이트된 채널 목록 저장
     user.saved_channels = updated_channels
     user.save()
     
-    return Response({"message": "채널이 삭제되었습니다."})
+    return Response({"message": "채널이 삭제되었습니다."}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_product_recommendations(request):
+    """사용자와 유사한 프로필을 가진 사용자들이 가입한 상품 추천"""
+    try:
+        current_user = request.user
+        
+        # 현재 사용자의 프로필 정보 확인
+        if not all([current_user.age, current_user.assets, current_user.annual_income]):
+            return Response({
+                'error': '추천을 받으려면 먼저 나이, 자산, 연봉 정보를 입력해주세요.',
+                'recommendations': []
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # 모든 사용자 데이터 가져오기 (현재 사용자 제외)
+        users_data = User.objects.exclude(id=current_user.id).filter(
+            age__isnull=False,
+            assets__isnull=False,
+            annual_income__isnull=False
+        ).values(
+            'id', 'age', 'assets', 'annual_income', 
+            'savings_tendency', 'investment_tendency'
+        )
+        
+        if not users_data:
+            return Response({
+                'message': '추천할 데이터가 부족합니다.',
+                'recommendations': []
+            })
+        
+        # pandas DataFrame으로 변환
+        df = pd.DataFrame(list(users_data))
+        
+        # 현재 사용자 정보
+        current_age = current_user.age
+        current_assets = current_user.assets
+        current_income = current_user.annual_income
+        
+        # 정규화를 위한 스케일링
+        age_range = df['age'].max() - df['age'].min()
+        assets_range = df['assets'].max() - df['assets'].min()
+        income_range = df['annual_income'].max() - df['annual_income'].min()
+        
+        df['age_norm'] = (df['age'] - df['age'].min()) / age_range if age_range != 0 else 0
+        df['assets_norm'] = (df['assets'] - df['assets'].min()) / assets_range if assets_range != 0 else 0
+        df['income_norm'] = (df['annual_income'] - df['annual_income'].min()) / income_range if income_range != 0 else 0
+        
+        # 현재 사용자 정규화
+        current_age_norm = (current_age - df['age'].min()) / age_range if age_range != 0 else 0
+        current_assets_norm = (current_assets - df['assets'].min()) / assets_range if assets_range != 0 else 0
+        current_income_norm = (current_income - df['annual_income'].min()) / income_range if income_range != 0 else 0
+        
+        # 유클리드 거리 계산 (가중치 적용)
+        weights = {'age': 0.2, 'assets': 0.4, 'income': 0.4}  # 자산과 소득에 더 높은 가중치
+        
+        df['similarity_score'] = np.sqrt(
+            weights['age'] * (df['age_norm'] - current_age_norm) ** 2 +
+            weights['assets'] * (df['assets_norm'] - current_assets_norm) ** 2 +
+            weights['income'] * (df['income_norm'] - current_income_norm) ** 2
+        )
+        
+        # 가장 유사한 상위 50명 선택
+        similar_users = df.nsmallest(50, 'similarity_score')['id'].tolist()
+        
+        # 현재 사용자가 이미 가입한 상품 ID 가져오기
+        user_deposit_ids = set(
+            DepositSubscription.objects.filter(user=current_user).values_list('product_id', flat=True)
+        )
+        user_saving_ids = set(
+            SavingSubscription.objects.filter(user=current_user).values_list('product_id', flat=True)
+        )
+        
+        # 유사한 사용자들이 가입한 상품 집계
+        deposit_recommendations = {}
+        saving_recommendations = {}
+        
+        # 예금 상품 집계
+        deposit_subs = DepositSubscription.objects.filter(
+            user_id__in=similar_users
+        ).exclude(
+            product_id__in=user_deposit_ids  # 이미 가입한 상품 제외
+        ).values('product_id').annotate(
+            count=Count('product_id')
+        ).order_by('-count')
+        
+        for sub in deposit_subs:
+            deposit_recommendations[sub['product_id']] = sub['count']
+        
+        # 적금 상품 집계
+        saving_subs = SavingSubscription.objects.filter(
+            user_id__in=similar_users
+        ).exclude(
+            product_id__in=user_saving_ids  # 이미 가입한 상품 제외
+        ).values('product_id').annotate(
+            count=Count('product_id')
+        ).order_by('-count')
+        
+        for sub in saving_subs:
+            saving_recommendations[sub['product_id']] = sub['count']
+        
+        # 추천 상품 상세 정보 가져오기
+        recommended_deposits = []
+        recommended_savings = []
+        
+        # 상위 5개 예금 상품
+        top_deposit_ids = list(deposit_recommendations.keys())[:5]
+        if top_deposit_ids:
+            deposit_products = DepositProduct.objects.filter(
+                fin_prdt_cd__in=top_deposit_ids
+            ).select_related('bank')
+            
+            for product in deposit_products:
+                # options 데이터 파싱
+                options_data = []
+                if product.options:
+                    if isinstance(product.options, str):
+                        try:
+                            options_data = json.loads(product.options)
+                        except json.JSONDecodeError:
+                            options_data = []
+                    elif isinstance(product.options, list):
+                        options_data = product.options
+                
+                product_data = {
+                    'product': {
+                        'fin_prdt_cd': product.fin_prdt_cd,
+                        'fin_prdt_nm': product.fin_prdt_nm,
+                        'bank': {
+                            'kor_co_nm': product.bank.kor_co_nm if product.bank else '정보 없음'
+                        },
+                        'options': options_data
+                    },
+                    'recommendation_count': deposit_recommendations[product.fin_prdt_cd],
+                    'type': 'deposit'
+                }
+                recommended_deposits.append(product_data)
+        
+        # 상위 5개 적금 상품
+        top_saving_ids = list(saving_recommendations.keys())[:5]
+        if top_saving_ids:
+            saving_products = SavingProduct.objects.filter(
+                fin_prdt_cd__in=top_saving_ids
+            ).select_related('bank')
+            
+            for product in saving_products:
+                # options 데이터 파싱
+                options_data = []
+                if product.options:
+                    if isinstance(product.options, str):
+                        try:
+                            options_data = json.loads(product.options)
+                        except json.JSONDecodeError:
+                            options_data = []
+                    elif isinstance(product.options, list):
+                        options_data = product.options
+                
+                product_data = {
+                    'product': {
+                        'fin_prdt_cd': product.fin_prdt_cd,
+                        'fin_prdt_nm': product.fin_prdt_nm,
+                        'bank': {
+                            'kor_co_nm': product.bank.kor_co_nm if product.bank else '정보 없음'
+                        },
+                        'options': options_data
+                    },
+                    'recommendation_count': saving_recommendations[product.fin_prdt_cd],
+                    'type': 'saving'
+                }
+                recommended_savings.append(product_data)
+        
+        # 추천 점수 순으로 정렬
+        recommended_deposits.sort(key=lambda x: x['recommendation_count'], reverse=True)
+        recommended_savings.sort(key=lambda x: x['recommendation_count'], reverse=True)
+        
+        # 전체 추천 결과 합치기 (최대 10개)
+        all_recommendations = recommended_deposits + recommended_savings
+        all_recommendations.sort(key=lambda x: x['recommendation_count'], reverse=True)
+        
+        return Response({
+            'message': f'{len(similar_users)}명의 유사한 사용자 데이터를 기반으로 추천합니다.',
+            'recommendations': all_recommendations[:10],
+            'similar_users_count': len(similar_users)
+        })
+        
+    except Exception as e:
+        print(f'상품 추천 중 오류 발생: {str(e)}')
+        import traceback
+        traceback.print_exc()
+        return Response({
+            'error': '상품 추천 중 오류가 발생했습니다.',
+            'recommendations': []
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

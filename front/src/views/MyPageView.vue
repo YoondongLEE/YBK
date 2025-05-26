@@ -1,7 +1,7 @@
 <!-- filepath: /Users/iyundong/Desktop/SSAFY/1학기_관통/final-pjt-v3/final-pjt/front/src/views/MyPageView.vue -->
 <template>
   <div class="mypage-container">
-    <h1>내 정보</h1>
+    <h1>마이페이지</h1>
     
     <!-- 사용자 정보 섹션 -->
     <div class="user-info-section">
@@ -168,6 +168,86 @@
         </div>
       </div>
     </div>
+
+    <!-- 🆕 상품 추천 섹션 (새로 추가) -->
+    <div v-if="isAuthenticated" class="recommendation-section">
+      <h2>맞춤형 상품 추천</h2>
+      <p class="recommendation-description">
+        회원님과 비슷한 나이, 자산, 소득을 가진 사용자들이 선택한 인기 상품을 추천드립니다.
+      </p>
+      
+      <div class="recommendation-controls">
+        <button 
+          @click="fetchRecommendations" 
+          class="recommendation-btn"
+          :disabled="recommendationLoading"
+        >
+          {{ recommendationLoading ? '분석 중...' : '추천 받기' }}
+        </button>
+      </div>
+
+      <!-- 추천 결과 -->
+      <div v-if="recommendations.length > 0" class="recommendations-container">
+        <div class="recommendation-info">
+          <p>{{ recommendationMessage }}</p>
+        </div>
+        
+        <div class="recommendation-grid">
+          <div 
+            v-for="(rec, index) in recommendations" 
+            :key="rec.product.fin_prdt_cd"
+            class="recommendation-card"
+            @click="goToProductDetail(rec.type, rec.product.fin_prdt_cd)"
+          >
+            <div class="recommendation-header">
+              <span class="product-type" :class="rec.type">
+                {{ rec.type === 'deposit' ? '예금' : '적금' }}
+              </span>
+              <span class="recommendation-rank">#{{ index + 1 }}</span>
+            </div>
+            
+            <h4 class="product-name">{{ rec.product.fin_prdt_nm }}</h4>
+            <p class="bank-name">{{ rec.product.bank.kor_co_nm }}</p>
+            
+            <div class="product-info">
+              <div class="max-rate">
+                최고금리 <span class="rate-value">{{ getMaxRecommendationRate(rec.product) }}%</span>
+              </div>
+              <div class="popularity">
+                <i class="fas fa-users"></i>
+                {{ rec.recommendation_count }}명이 선택
+              </div>
+            </div>
+            
+            <div class="card-footer">
+              <button class="detail-btn">
+                자세히 보기 <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 추천 실패 또는 오류 메시지 -->
+      <div v-else-if="recommendationError" class="recommendation-error">
+        <div class="error-content">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h3>추천을 받을 수 없습니다</h3>
+          <p>{{ recommendationError }}</p>
+          <p v-if="!userProfile.age || !userProfile.assets || !userProfile.annual_income" class="error-hint">
+            정확한 추천을 위해 위에서 나이, 자산, 연봉 정보를 입력해주세요.
+          </p>
+        </div>
+      </div>
+
+      <!-- 추천 로딩 상태 -->
+      <div v-else-if="recommendationLoading" class="recommendation-loading">
+        <div class="loading-content">
+          <div class="loading-spinner"></div>
+          <p>비슷한 사용자들의 데이터를 분석하고 있습니다...</p>
+        </div>
+      </div>
+    </div>
     
     <!-- 정기예금 목록 섹션 -->
     <div class="subscription-section">
@@ -209,7 +289,7 @@
       </div>
     </div>
 
-    <!-- 새로 추가된 차트 섹션 -->
+    <!-- 기존 차트 섹션 -->
     <div v-if="showCharts" class="charts-section">
       <h2>가입 상품 금리 분석</h2>
       
@@ -240,7 +320,6 @@
   </div>
 </template>
 
-<!-- filepath: /Users/iyundong/Desktop/SSAFY/1학기_관통/final-pjt-v3/final-pjt/front/src/views/MyPageView.vue -->
 <script setup>
 import { ref, onMounted, computed, nextTick, onUnmounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -285,6 +364,12 @@ const savingProducts = ref([]);
 
 // 은행 정보
 const banks = ref([]);
+
+// 🆕 추천 관련 상태 변수들 (새로 추가)
+const recommendations = ref([]);
+const recommendationLoading = ref(false);
+const recommendationError = ref('');
+const recommendationMessage = ref('');
 
 // 차트 인스턴스들
 const interestRateChartInstance = ref(null);
@@ -361,9 +446,49 @@ const getPreferredBankName = (bankCode) => {
   return bank ? bank.kor_co_nm : bankCode;
 };
 
-// 입력 처리 함수들... (기존과 동일)
+// 🆕 추천 관련 함수들 (새로 추가)
+const fetchRecommendations = async () => {
+  try {
+    recommendationLoading.value = true;
+    recommendationError.value = '';
+    
+    const response = await api.get('/accounts/recommendations/');
+    recommendations.value = response.data.recommendations || [];
+    recommendationMessage.value = response.data.message || '';
+    
+    if (recommendations.value.length === 0) {
+      recommendationError.value = response.data.error || '추천할 상품이 없습니다.';
+    }
+    
+  } catch (error) {
+    console.error('상품 추천 조회 실패:', error);
+    if (error.response && error.response.data) {
+      recommendationError.value = error.response.data.error || '추천 조회에 실패했습니다.';
+    } else {
+      recommendationError.value = '추천 조회에 실패했습니다.';
+    }
+  } finally {
+    recommendationLoading.value = false;
+  }
+};
 
-// 최대 금리 계산 함수 - 수정된 버전
+const goToProductDetail = (type, productId) => {
+  if (type === 'deposit') {
+    router.push({ name: 'deposit-detail', params: { id: productId } });
+  } else {
+    router.push({ name: 'saving-detail', params: { id: productId } });
+  }
+};
+
+const getMaxRecommendationRate = (product) => {
+  if (!product.options || product.options.length === 0) return '0.00';
+  const maxRate = Math.max(...product.options.map(option => 
+    parseFloat(option.intr_rate2 || option.intr_rate || 0)
+  ));
+  return maxRate.toFixed(2);
+};
+
+// 기존 최대 금리 계산 함수 - 수정된 버전
 const getMaxRate = (product) => {
   console.log('getMaxRate 호출:', product);
   
@@ -789,7 +914,7 @@ watch(showCharts, (newValue, oldValue) => {
   }
 }, { immediate: true });
 
-// 나머지 함수들은 기존과 동일...
+// 나머지 기존 함수들...
 const handleAssetsInput = (event) => {
   const inputValue = event.target.value;
   const numericOnly = inputValue.replace(/[^\d]/g, '');
@@ -906,7 +1031,9 @@ const updateProfile = async () => {
     }
     
     const response = await api.put('/accounts/profile/update/', updateData);
-    userProfile.value = response.data;
+    
+    // 🔥 핵심: 업데이트 후 즉시 사용자 프로필을 다시 가져오기
+    await fetchUserProfile();
     
     alert('프로필 정보가 성공적으로 업데이트되었습니다.');
   } catch (error) {
@@ -967,6 +1094,16 @@ onUnmounted(() => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.mypage-container h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 32px;
+  font-weight: 700;
 }
 
 h1 {
@@ -976,14 +1113,60 @@ h1 {
 }
 
 .user-info-section,
-.subscription-section,
-.saved-items-section,
-.charts-section {
-  margin-bottom: 40px;
-  background-color: #fff;
-  border-radius: 12px;
+.subscribed-products-section,
+.youtube-section,
+.recommendation-section {
+  background-color: white;
   padding: 30px;
+  border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+
+.user-info-section h2,
+.subscribed-products-section h2,
+.youtube-section h2,
+.recommendation-section h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.info-item label {
+  font-weight: 600;
+  color: #495057;
+}
+
+.info-item span {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.profile-update-form {
+  border-top: 2px solid #e9ecef;
+  padding-top: 30px;
+}
+
+.profile-update-form h3 {
+  color: #495057;
+  margin-bottom: 20px;
+  font-size: 20px;
 }
 
 h2 {
@@ -1072,10 +1255,9 @@ h4 {
 
 .form-group label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   font-weight: 600;
-  color: #333;
-  font-size: 14px;
+  color: #495057;
 }
 
 .input-with-controls {
@@ -1094,14 +1276,14 @@ h4 {
   transition: border-color 0.2s;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  box-sizing: border-box;
-  transition: border-color 0.2s;
+  padding: 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
 }
 
 .form-select {
@@ -1121,6 +1303,13 @@ h4 {
   outline: none;
   border-color: #3498db;
   box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .input-controls {
@@ -1298,6 +1487,252 @@ h4 {
     width: 50px;
     height: 30px;
     font-size: 12px;
+  }
+}
+
+/* 추천 섹션 스타일 (새로 추가) */
+.recommendation-section {
+  background-color: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+.recommendation-section h2 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.recommendation-description {
+  color: #7f8c8d;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.recommendation-controls {
+  margin-bottom: 25px;
+}
+
+.recommendation-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.recommendation-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.recommendation-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.recommendation-info {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #667eea;
+}
+
+.recommendation-info p {
+  margin: 0;
+  color: #495057;
+  font-weight: 500;
+}
+
+.recommendation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.recommendation-card {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.recommendation-card:hover {
+  border-color: #667eea;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+}
+
+.recommendation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.product-type {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.product-type.deposit {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.product-type.saving {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.recommendation-rank {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.product-name {
+  color: #2c3e50;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.bank-name {
+  color: #7f8c8d;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.product-info {
+  margin-bottom: 20px;
+}
+
+.max-rate {
+  margin-bottom: 10px;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.rate-value {
+  color: #e74c3c;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.popularity {
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.popularity i {
+  margin-right: 5px;
+  color: #667eea;
+}
+
+.card-footer {
+  border-top: 1px solid #e9ecef;
+  padding-top: 15px;
+}
+
+.detail-btn {
+  background: transparent;
+  border: 2px solid #667eea;
+  color: #667eea;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.detail-btn:hover {
+  background-color: #667eea;
+  color: white;
+}
+
+.recommendation-error {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: #fff5f5;
+  border-radius: 12px;
+  border: 2px solid #fed7d7;
+}
+
+.error-content h3 {
+  color: #e53e3e;
+  margin-bottom: 10px;
+}
+
+.error-content p {
+  color: #744210;
+  line-height: 1.6;
+}
+
+.error-hint {
+  background-color: #fef3cd;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 15px;
+  border-left: 4px solid #ffc107;
+}
+
+.recommendation-loading {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .recommendation-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .recommendation-section {
+    padding: 20px;
   }
 }
 </style>
