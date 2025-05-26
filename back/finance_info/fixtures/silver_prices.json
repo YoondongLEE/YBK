@@ -1,7 +1,7 @@
 [
     {
         "model": "finance_info.metalprice",
-        "pk": 1071,
+        "pk": 1927,
         "fields": {
             "metal_type": "silver",
             "date": "2023-01-09",
@@ -10,7 +10,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1072,
+        "pk": 1928,
         "fields": {
             "metal_type": "silver",
             "date": "2023-01-11",
@@ -19,7 +19,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1073,
+        "pk": 1929,
         "fields": {
             "metal_type": "silver",
             "date": "2023-01-12",
@@ -28,7 +28,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1074,
+        "pk": 1930,
         "fields": {
             "metal_type": "silver",
             "date": "2023-02-10",
@@ -37,7 +37,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1075,
+        "pk": 1931,
         "fields": {
             "metal_type": "silver",
             "date": "2023-02-11",
@@ -46,7 +46,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1076,
+        "pk": 1932,
         "fields": {
             "metal_type": "silver",
             "date": "2023-03-10",
@@ -55,7 +55,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1077,
+        "pk": 1933,
         "fields": {
             "metal_type": "silver",
             "date": "2023-03-11",
@@ -64,7 +64,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1078,
+        "pk": 1934,
         "fields": {
             "metal_type": "silver",
             "date": "2023-04-10",
@@ -73,7 +73,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1079,
+        "pk": 1935,
         "fields": {
             "metal_type": "silver",
             "date": "2023-04-12",
@@ -82,7 +82,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1080,
+        "pk": 1936,
         "fields": {
             "metal_type": "silver",
             "date": "2023-05-09",
@@ -91,7 +91,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1081,
+        "pk": 1937,
         "fields": {
             "metal_type": "silver",
             "date": "2023-05-10",
@@ -100,7 +100,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1082,
+        "pk": 1938,
         "fields": {
             "metal_type": "silver",
             "date": "2023-05-12",
@@ -109,7 +109,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1083,
+        "pk": 1939,
         "fields": {
             "metal_type": "silver",
             "date": "2023-06-09",
@@ -118,7 +118,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1084,
+        "pk": 1940,
         "fields": {
             "metal_type": "silver",
             "date": "2023-06-10",
@@ -127,7 +127,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1085,
+        "pk": 1941,
         "fields": {
             "metal_type": "silver",
             "date": "2023-06-11",
@@ -136,7 +136,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1086,
+        "pk": 1942,
         "fields": {
             "metal_type": "silver",
             "date": "2023-06-12",
@@ -145,7 +145,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1087,
+        "pk": 1943,
         "fields": {
             "metal_type": "silver",
             "date": "2023-07-09",
@@ -154,7 +154,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1088,
+        "pk": 1944,
         "fields": {
             "metal_type": "silver",
             "date": "2023-07-11",
@@ -163,7 +163,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1089,
+        "pk": 1945,
         "fields": {
             "metal_type": "silver",
             "date": "2023-07-12",
@@ -172,7 +172,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1090,
+        "pk": 1946,
         "fields": {
             "metal_type": "silver",
             "date": "2023-08-09",
@@ -181,7 +181,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1091,
+        "pk": 1947,
         "fields": {
             "metal_type": "silver",
             "date": "2023-08-11",
@@ -190,7 +190,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1092,
+        "pk": 1948,
         "fields": {
             "metal_type": "silver",
             "date": "2023-08-12",
@@ -199,7 +199,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1093,
+        "pk": 1949,
         "fields": {
             "metal_type": "silver",
             "date": "2023-08-18",
@@ -208,7 +208,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1094,
+        "pk": 1950,
         "fields": {
             "metal_type": "silver",
             "date": "2023-08-21",
@@ -217,7 +217,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1095,
+        "pk": 1951,
         "fields": {
             "metal_type": "silver",
             "date": "2023-08-22",
@@ -226,7 +226,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1096,
+        "pk": 1952,
         "fields": {
             "metal_type": "silver",
             "date": "2023-08-23",
@@ -235,7 +235,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1097,
+        "pk": 1953,
         "fields": {
             "metal_type": "silver",
             "date": "2023-08-24",
@@ -244,7 +244,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1098,
+        "pk": 1954,
         "fields": {
             "metal_type": "silver",
             "date": "2023-08-25",
@@ -253,7 +253,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1099,
+        "pk": 1955,
         "fields": {
             "metal_type": "silver",
             "date": "2023-08-28",
@@ -262,7 +262,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1100,
+        "pk": 1956,
         "fields": {
             "metal_type": "silver",
             "date": "2023-08-29",
@@ -271,7 +271,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1101,
+        "pk": 1957,
         "fields": {
             "metal_type": "silver",
             "date": "2023-08-30",
@@ -280,7 +280,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1102,
+        "pk": 1958,
         "fields": {
             "metal_type": "silver",
             "date": "2023-08-31",
@@ -289,7 +289,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1103,
+        "pk": 1959,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-10",
@@ -298,7 +298,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1104,
+        "pk": 1960,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-11",
@@ -307,7 +307,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1105,
+        "pk": 1961,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-13",
@@ -316,7 +316,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1106,
+        "pk": 1962,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-14",
@@ -325,7 +325,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1107,
+        "pk": 1963,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-15",
@@ -334,7 +334,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1108,
+        "pk": 1964,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-18",
@@ -343,7 +343,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1109,
+        "pk": 1965,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-19",
@@ -352,7 +352,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1110,
+        "pk": 1966,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-20",
@@ -361,7 +361,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1111,
+        "pk": 1967,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-21",
@@ -370,7 +370,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1112,
+        "pk": 1968,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-22",
@@ -379,7 +379,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1113,
+        "pk": 1969,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-25",
@@ -388,7 +388,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1114,
+        "pk": 1970,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-26",
@@ -397,7 +397,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1115,
+        "pk": 1971,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-27",
@@ -406,7 +406,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1116,
+        "pk": 1972,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-28",
@@ -415,7 +415,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1117,
+        "pk": 1973,
         "fields": {
             "metal_type": "silver",
             "date": "2023-09-29",
@@ -424,7 +424,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1118,
+        "pk": 1974,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-10",
@@ -433,7 +433,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1119,
+        "pk": 1975,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-11",
@@ -442,7 +442,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1120,
+        "pk": 1976,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-13",
@@ -451,7 +451,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1121,
+        "pk": 1977,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-16",
@@ -460,7 +460,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1122,
+        "pk": 1978,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-17",
@@ -469,7 +469,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1123,
+        "pk": 1979,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-18",
@@ -478,7 +478,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1124,
+        "pk": 1980,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-19",
@@ -487,7 +487,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1125,
+        "pk": 1981,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-20",
@@ -496,7 +496,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1126,
+        "pk": 1982,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-23",
@@ -505,7 +505,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1127,
+        "pk": 1983,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-24",
@@ -514,7 +514,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1128,
+        "pk": 1984,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-25",
@@ -523,7 +523,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1129,
+        "pk": 1985,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-26",
@@ -532,7 +532,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1130,
+        "pk": 1986,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-27",
@@ -541,7 +541,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1131,
+        "pk": 1987,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-30",
@@ -550,7 +550,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1132,
+        "pk": 1988,
         "fields": {
             "metal_type": "silver",
             "date": "2023-10-31",
@@ -559,7 +559,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1133,
+        "pk": 1989,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-09",
@@ -568,7 +568,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1134,
+        "pk": 1990,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-10",
@@ -577,7 +577,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1135,
+        "pk": 1991,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-12",
@@ -586,7 +586,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1136,
+        "pk": 1992,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-13",
@@ -595,7 +595,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1137,
+        "pk": 1993,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-14",
@@ -604,7 +604,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1138,
+        "pk": 1994,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-15",
@@ -613,7 +613,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1139,
+        "pk": 1995,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-16",
@@ -622,7 +622,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1140,
+        "pk": 1996,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-17",
@@ -631,7 +631,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1141,
+        "pk": 1997,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-20",
@@ -640,7 +640,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1142,
+        "pk": 1998,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-21",
@@ -649,7 +649,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1143,
+        "pk": 1999,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-22",
@@ -658,7 +658,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1144,
+        "pk": 2000,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-24",
@@ -667,7 +667,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1145,
+        "pk": 2001,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-27",
@@ -676,7 +676,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1146,
+        "pk": 2002,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-28",
@@ -685,7 +685,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1147,
+        "pk": 2003,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-29",
@@ -694,7 +694,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1148,
+        "pk": 2004,
         "fields": {
             "metal_type": "silver",
             "date": "2023-11-30",
@@ -703,7 +703,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1149,
+        "pk": 2005,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-09",
@@ -712,7 +712,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1150,
+        "pk": 2006,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-10",
@@ -721,7 +721,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1151,
+        "pk": 2007,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-12",
@@ -730,7 +730,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1152,
+        "pk": 2008,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-13",
@@ -739,7 +739,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1153,
+        "pk": 2009,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-14",
@@ -748,7 +748,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1154,
+        "pk": 2010,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-15",
@@ -757,7 +757,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1155,
+        "pk": 2011,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-18",
@@ -766,7 +766,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1156,
+        "pk": 2012,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-19",
@@ -775,7 +775,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1157,
+        "pk": 2013,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-20",
@@ -784,7 +784,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1158,
+        "pk": 2014,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-21",
@@ -793,7 +793,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1159,
+        "pk": 2015,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-22",
@@ -802,7 +802,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1160,
+        "pk": 2016,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-26",
@@ -811,7 +811,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1161,
+        "pk": 2017,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-27",
@@ -820,7 +820,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1162,
+        "pk": 2018,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-28",
@@ -829,7 +829,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1163,
+        "pk": 2019,
         "fields": {
             "metal_type": "silver",
             "date": "2023-12-29",
@@ -838,7 +838,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1164,
+        "pk": 2020,
         "fields": {
             "metal_type": "silver",
             "date": "2024-01-16",
@@ -847,7 +847,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1165,
+        "pk": 2021,
         "fields": {
             "metal_type": "silver",
             "date": "2024-01-17",
@@ -856,7 +856,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1166,
+        "pk": 2022,
         "fields": {
             "metal_type": "silver",
             "date": "2024-01-18",
@@ -865,7 +865,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1167,
+        "pk": 2023,
         "fields": {
             "metal_type": "silver",
             "date": "2024-01-19",
@@ -874,7 +874,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1168,
+        "pk": 2024,
         "fields": {
             "metal_type": "silver",
             "date": "2024-01-22",
@@ -883,7 +883,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1169,
+        "pk": 2025,
         "fields": {
             "metal_type": "silver",
             "date": "2024-02-01",
@@ -892,7 +892,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1170,
+        "pk": 2026,
         "fields": {
             "metal_type": "silver",
             "date": "2024-03-01",
@@ -901,7 +901,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1171,
+        "pk": 2027,
         "fields": {
             "metal_type": "silver",
             "date": "2024-04-01",
@@ -910,7 +910,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1172,
+        "pk": 2028,
         "fields": {
             "metal_type": "silver",
             "date": "2024-05-01",
@@ -919,7 +919,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1173,
+        "pk": 2029,
         "fields": {
             "metal_type": "silver",
             "date": "2024-08-01",
@@ -928,7 +928,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1174,
+        "pk": 2030,
         "fields": {
             "metal_type": "silver",
             "date": "2024-09-01",
@@ -937,7 +937,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1175,
+        "pk": 2031,
         "fields": {
             "metal_type": "silver",
             "date": "2024-10-01",
@@ -946,7 +946,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1176,
+        "pk": 2032,
         "fields": {
             "metal_type": "silver",
             "date": "2024-11-01",
@@ -955,7 +955,7 @@
     },
     {
         "model": "finance_info.metalprice",
-        "pk": 1177,
+        "pk": 2033,
         "fields": {
             "metal_type": "silver",
             "date": "2024-12-01",

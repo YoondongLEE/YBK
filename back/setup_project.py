@@ -60,7 +60,7 @@ def main():
         
         print("🎉 프로젝트 초기 설정이 완료되었습니다!")
         print("🔥 개발 서버를 시작하려면: python manage.py runserver")
-        print("🌐 프론트엔드 서버는: npm run dev (front 디렉토리에서)")
+        print("🌐 프론트엔드 서버는: npm run install\n \t \t npm run dev (front 디렉토리에서)")
         
     except Exception as e:
         print(f"❌ 설정 중 오류 발생: {e}")

@@ -125,6 +125,30 @@ const router = createRouter({
       }
     ]
   },
+  // 아카데미
+  {
+    path: '/finance-academy',
+    name: 'financeAcademy',
+    component: () => import('../views/FinanceAcademyView.vue')
+  }
+  // 다음 라우트는 구현 준비가 완료되면 주석 해제하세요
+  /*
+  {
+    path: '/finance-academy/problem-learning',
+    name: 'problem-learning',
+    component: () => import('../views/academy/ProblemLearningView.vue')
+  },
+  {
+    path: '/finance-academy/concept-learning',
+    name: 'concept-learning',
+    component: () => import('../views/academy/ConceptLearningView.vue')
+  },
+  {
+    path: '/finance-academy/exam',
+    name: 'exam',
+    component: () => import('../views/academy/ExamView.vue')
+  }
+  */
   ]
 })
 

@@ -10,7 +10,7 @@
     
     <footer class="footer">
       <div class="footer-content">
-        © {{ currentYear }} 금융 정보 서비스 | SSAFY 최종 프로젝트
+        © {{ currentYear }} 금융 정보 서비스 | 이윤동 김봉주 | SSAFY 최종 프로젝트
       </div>
     </footer>
     

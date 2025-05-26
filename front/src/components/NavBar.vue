@@ -2,14 +2,16 @@
   <nav class="navbar">
     <div class="container">
       <div class="navbar-brand">
-        <router-link to="/">윤봉길</router-link>
+        <router-link to="/">
+          <img src="@/assets/icons/logo_ybk.png" alt="윤봉길 로고" class="logo-image">
+        </router-link>
       </div>
       
       <div class="navbar-menu">
         <div class="navbar-start">
           <router-link to="/" class="navbar-item">홈</router-link>
           <router-link to="/finance-academy" class="navbar-item">금융 아카데미</router-link>
-          <router-link to="/finance-info" class="navbar-item">금융정보</router-link>
+          <router-link to="/finance-info" class="navbar-item">금융 정보 길잡이</router-link>
           <router-link to="/community" class="navbar-item">커뮤니티</router-link>
         </div>
         
@@ -49,8 +51,6 @@ const handleLogout = async () => {
 .navbar {
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 15px 0;
-  margin-bottom: 20px;
 }
 
 .container {
@@ -67,9 +67,10 @@ const handleLogout = async () => {
   font-weight: bold;
 }
 
-.navbar-brand a {
-  text-decoration: none;
-  color: #333;
+.logo-image {
+  height: 70px; /* 로고 크기 조정 */
+  width: auto;
+  vertical-align: middle;
 }
 
 .navbar-menu {
