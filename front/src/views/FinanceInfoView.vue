@@ -52,17 +52,6 @@
             <p>금과 은의 가격 변동 추이를 확인하고 투자 판단에 활용해보세요.</p>
           </div>
         </div>
-        
-        <!-- 다른 금융 정보 카드들은 기존과 동일하게 유지 -->
-        <div class="info-card">
-          <div class="info-image-placeholder">
-            <div class="placeholder-text">금융 트렌드</div>
-          </div>
-          <div class="info-content">
-            <h3>최신 금융 트렌드</h3>
-            <p>금융 시장의 최신 동향과 투자 트렌드를 알아보세요.</p>
-          </div>
-        </div>
       </div>
     </div>
     
