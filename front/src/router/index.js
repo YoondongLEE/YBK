@@ -10,6 +10,12 @@ import InterestRateCompare from '@/views/InterestRateCompare.vue'
 import DepositList from '@/views/DepositList.vue'
 import SavingDetail from '@/views/SavingDetail.vue'
 import MetalPriceView from '../views/MetalPriceView.vue'
+import CommunityView from '@/views/CommunityView.vue'
+import PostListView from '@/views/community/PostListView.vue'
+import PostDetailView from '@/views/community/PostDetailView.vue'
+import PostCreateView from '@/views/community/PostCreateView.vue'
+import PostEditView from '@/views/community/PostEditView.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -90,6 +96,35 @@ const router = createRouter({
         title: '금/은 가격 변동'
       }
     },
+    {
+    path: '/community',
+    name: 'community',
+    component: CommunityView,
+    children: [
+      {
+        path: '',
+        name: 'post-list',
+        component: PostListView
+      },
+      {
+        path: 'create',
+        name: 'post-create',
+        component: PostCreateView,
+        meta: { requiresAuth: true }
+      },
+      {
+        path: ':id',
+        name: 'post-detail',
+        component: PostDetailView
+      },
+      {
+        path: ':id/edit',
+        name: 'post-edit',
+        component: PostEditView,
+        meta: { requiresAuth: true }
+      }
+    ]
+  },
   ]
 })
 

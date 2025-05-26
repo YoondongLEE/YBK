@@ -49,9 +49,21 @@ watch(() => isAuthenticated.value, (newValue) => {
   youtubeStore.refreshOnAuthChange();
 });
 
-onMounted(() => {
-  // 앱 초기화 시 YouTube 데이터 로드
-  youtubeStore.initialize();
+onMounted(async () => {
+  try {
+    // 저장된 토큰으로 사용자 정보 불러오기
+    if (authStore.token) {
+      console.log('토큰 존재, 사용자 정보 로드 시도:', authStore.token);
+      await authStore.fetchUserInfo();
+      console.log('사용자 정보 로드됨:', authStore.user);
+      // 사용자 객체를 문자열화하여 구조 확인
+      console.log('사용자 객체 구조:', JSON.stringify(authStore.user));
+    } else {
+      console.log('토큰 없음, 로그인 필요');
+    }
+  } catch (error) {
+    console.error('사용자 정보 로드 실패:', error);
+  }
 });
 </script>
 

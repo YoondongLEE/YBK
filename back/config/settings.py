@@ -17,6 +17,7 @@ ALLOWED_HOSTS = []
 # Application definition
 INSTALLED_APPS = [
     'deposits',
+    'community',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -127,7 +128,10 @@ REST_FRAMEWORK = {
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Vue 개발 서버
+    "http://localhost:5173",  # Vite 개발 서버 기본 포트
 ]
+CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+CORS_ALLOW_HEADERS = ['Authorization', 'Content-Type']
 
 # JWT 설정
 SIMPLE_JWT = {

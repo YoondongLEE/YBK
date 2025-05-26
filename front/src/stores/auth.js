@@ -1,141 +1,129 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import axios from 'axios'
-import router from '../router'
+import router from '@/router'
 
-// 기본 API 인스턴스 생성 (인증 관련 전용)
+// 인증 전용 Axios 인스턴스
 const authApi = axios.create({
   baseURL: 'http://localhost:8000/api',
   timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json'
-  }
+  headers: { 'Content-Type': 'application/json' }
 })
 
 export const useAuthStore = defineStore('auth', () => {
+  // 상태
   const token = ref(localStorage.getItem('token') || '')
-  const user = ref(JSON.parse(localStorage.getItem('user') || '{}'))
-  
-  // 로그인 상태 확인
+  const user = ref(JSON.parse(localStorage.getItem('user') || 'null'))
+  const loadingUser = ref(false)
+  const error = ref(null)
+
+  // 로그인 여부
   const isAuthenticated = computed(() => !!token.value)
-  
+
+  // 토큰 저장
+  function setToken(newToken) {
+    token.value = newToken
+    localStorage.setItem('token', newToken)
+  }
+
+  // 인증 해제
+  function clearAuth() {
+    token.value = ''
+    user.value = null
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+  }
+
+  // 사용자 정보 조회
+  async function fetchUserInfo() {
+    if (!token.value) {
+      user.value = null
+      return null
+    }
+    loadingUser.value = true
+    error.value = null
+    try {
+      const res = await authApi.get('/accounts/user/', {
+        headers: { Authorization: `Token ${token.value}` }
+      })
+      user.value = res.data
+      localStorage.setItem('user', JSON.stringify(res.data))
+      return res.data
+    } catch (err) {
+      console.error('사용자 정보 로딩 실패:', err)
+      error.value = '사용자 정보를 가져올 수 없습니다.'
+      if (err.response?.status === 401) clearAuth()
+      throw err
+    } finally {
+      loadingUser.value = false
+    }
+  }
+
   // 로그인
-  const login = async (username, password) => {
+  async function login(username, password) {
+    loadingUser.value = true
+    error.value = null
     try {
-      // withCredentials 옵션 제거 (필요하지 않음)
-      const response = await authApi.post('/accounts/login/', {
-        username,
-        password
-      })
-      
-      console.log('로그인 응답:', response.data)
-      
-      // 토큰 저장
-      if (response.data && response.data.key) {
-        token.value = response.data.key
-        localStorage.setItem('token', response.data.key)
-        
-        // 사용자 정보 가져오기
-        await fetchUserInfo()
-        return response
-      } else {
-        throw new Error('로그인 응답에 토큰이 없습니다')
-      }
-    } catch (error) {
-      console.error('로그인 실패:', error)
-      throw error
+      const res = await authApi.post('/accounts/login/', { username, password })
+      const key = res.data.key
+      if (!key) throw new Error('토큰이 없습니다')
+      setToken(key)
+      await fetchUserInfo()
+      router.push({ name: 'home' })
+      return res
+    } catch (err) {
+      console.error('로그인 실패:', err)
+      error.value = '로그인 실패. 다시 시도해주세요.'
+      throw err
+    } finally {
+      loadingUser.value = false
     }
   }
-  
+
   // 회원가입
-  const signup = async (username, password1, password2, email) => {
+  async function signup(username, password1, password2, email) {
+    loadingUser.value = true
+    error.value = null
     try {
-      const response = await authApi.post('/accounts/signup/', {
-        username,
-        password1,
-        password2,
-        email
+      const res = await authApi.post('/accounts/signup/', {
+        username, password1, password2, email
       })
-      
-      console.log('회원가입 응답:', response.data)
-      
-      // 토큰 저장
-      if (response.data && response.data.key) {
-        token.value = response.data.key
-        localStorage.setItem('token', response.data.key)
-        
-        // 사용자 정보 가져오기
-        await fetchUserInfo()
-        return response
-      } else {
-        throw new Error('회원가입 응답에 토큰이 없습니다')
-      }
-    } catch (error) {
-      console.error('회원가입 실패:', error)
-      throw error
+      const key = res.data.key
+      if (!key) throw new Error('토큰이 없습니다')
+      setToken(key)
+      await fetchUserInfo()
+      router.push({ name: 'home' })
+      return res
+    } catch (err) {
+      console.error('회원가입 실패:', err)
+      error.value = '회원가입 실패. 다시 시도해주세요.'
+      throw err
+    } finally {
+      loadingUser.value = false
     }
   }
-  
+
   // 로그아웃
-  const logout = async () => {
+  async function logout() {
     try {
       if (token.value) {
         await authApi.post('/accounts/logout/', {}, {
-          headers: {
-            'Authorization': `Token ${token.value}`
-          }
+          headers: { Authorization: `Token ${token.value}` }
         })
       }
-    } catch (error) {
-      console.error('로그아웃 API 에러:', error)
+    } catch (err) {
+      console.error('로그아웃 실패:', err)
     } finally {
-      // 로컬 상태 초기화
-      token.value = ''
-      user.value = {}
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-      
-      // 홈페이지로 리다이렉트
+      clearAuth()
       router.push({ name: 'home' })
     }
   }
-  
-  // 사용자 정보 가져오기
-const fetchUserInfo = async () => {
-  if (!token.value) {
-    console.warn('토큰이 없어 사용자 정보를 가져올 수 없습니다.')
-    return null
-  }
-  
-  try {
-    // profile 대신 user 엔드포인트 사용
-    const response = await authApi.get('/accounts/user/', {
-      headers: {
-        'Authorization': `Token ${token.value}`
-      }
-    })
-    
-    user.value = response.data
-    localStorage.setItem('user', JSON.stringify(response.data))
-    return response.data
-  } catch (error) {
-    console.error('사용자 정보 가져오기 실패:', error)
-    
-    if (error.response && error.response.status === 401) {
-      // 토큰이 유효하지 않은 경우 로그아웃 처리
-      token.value = ''
-      user.value = {}
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-    }
-    
-    throw error
-  }
-}
-  
+
   return {
     token,
     user,
+    loadingUser,
+    error,
     isAuthenticated,
     login,
     signup,

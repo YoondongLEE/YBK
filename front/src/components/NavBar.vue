@@ -10,6 +10,7 @@
           <router-link to="/" class="navbar-item">홈</router-link>
           <router-link to="/finance-academy" class="navbar-item">금융 아카데미</router-link>
           <router-link to="/finance-info" class="navbar-item">금융정보</router-link>
+          <router-link to="/community" class="navbar-item">커뮤니티</router-link>
         </div>
         
         <div class="navbar-end">
