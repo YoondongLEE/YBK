@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import User
-from .serializers import UserDetailSerializer, UserSerializer
+from .serializers import UserDetailSerializer, UserSerializer, UserProfileUpdateSerializer, SignUpSerializer
 from django.contrib.auth import authenticate, login, logout
 
 
@@ -27,18 +27,39 @@ def my_profile(request):
             {"error": f"프로필 정보를 조회하는 중 오류가 발생했습니다: {str(e)}"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
-    
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def profile(request):
+    """현재 로그인한 사용자의 프로필 정보를 반환"""
+    serializer = UserDetailSerializer(request.user)
+    return Response(serializer.data)
+
+
+@api_view(['PUT', 'PATCH'])
+@permission_classes([IsAuthenticated])
+def update_profile(request):
+    """사용자 프로필 정보 업데이트 (나이, 자산, 연봉)"""
+    serializer = UserProfileUpdateSerializer(request.user, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        # 업데이트된 전체 프로필 정보 반환
+        updated_user = UserDetailSerializer(request.user)
+        return Response(updated_user.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def signup_view(request):
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
+    """회원가입"""
+    serializer = SignUpSerializer(data=request.data)
+    if serializer.is_valid():
         user = serializer.save()
-        user.set_password(request.data.get('password'))
-        user.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        user_data = UserDetailSerializer(user).data
+        return Response(user_data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])

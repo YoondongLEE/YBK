@@ -13,6 +13,8 @@ from .models import Bank, DepositProduct, DepositOption, DepositSubscription, Sa
 # 시리얼라이저 import 추가
 from .serializers import BankSerializer, DepositProductSerializer, SavingProductSerializer
 
+from .models import DepositSubscription, SavingSubscription
+
 # .env 파일에서 API 키 가져오기
 API_KEY = os.environ.get('FINLIFE_API_KEY')
 
@@ -494,50 +496,145 @@ def check_saving_subscription(request, pk):
         )
     
 
-# 파일 끝에 추가
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_subscribed_deposits(request):
-    """사용자가 가입한 정기예금 상품 목록 조회"""
+    """사용자가 가입한 예금 상품 목록 조회"""
     user = request.user
     
     try:
-        # 사용자가 가입한 정기예금 상품 목록
-        subscribed_deposits = user.subscribed_deposits.all()
+        # DepositSubscription을 통해 가입한 상품 조회
+        subscriptions = DepositSubscription.objects.filter(user=user).select_related('product__bank')
+        subscribed_deposits = []
         
-        # 시리얼라이저로 변환
-        serializer = DepositProductSerializer(subscribed_deposits, many=True)
+        for sub in subscriptions:
+            product = sub.product
+            
+            # JSON 필드에서 options 데이터 가져오기
+            options_data = []
+            if product.options:
+                if isinstance(product.options, str):
+                    try:
+                        options_data = json.loads(product.options)
+                    except json.JSONDecodeError:
+                        options_data = []
+                elif isinstance(product.options, list):
+                    options_data = product.options
+            
+            # 만약 JSONField의 options가 비어있으면 deposit_options 관계에서 가져오기
+            if not options_data:
+                options_data = list(product.deposit_options.all().values(
+                    'intr_rate_type', 'intr_rate_type_nm', 'save_trm', 'intr_rate', 'intr_rate2'
+                ))
+            
+            product_data = {
+                'fin_prdt_cd': product.fin_prdt_cd,
+                'fin_prdt_nm': product.fin_prdt_nm,
+                'join_way': product.join_way,
+                'mtrt_int': product.mtrt_int,
+                'spcl_cnd': product.spcl_cnd,
+                'join_member': product.join_member,
+                'join_deny': product.join_deny,
+                'etc_note': product.etc_note,
+                'max_limit': product.max_limit,
+                'dcls_strt_day': product.dcls_strt_day,
+                'dcls_end_day': product.dcls_end_day,
+                'fin_co_subm_day': product.fin_co_subm_day,
+                'sector_code': product.sector_code,
+                'bank': {
+                    'fin_co_no': product.bank.fin_co_no,
+                    'kor_co_nm': product.bank.kor_co_nm,
+                    'sector_code': product.bank.sector_code,
+                    'sector_name': product.bank.sector_name,
+                },
+                'options': options_data  # 파싱된 옵션 데이터
+            }
+            subscribed_deposits.append(product_data)
         
-        return Response(serializer.data)
+        print(f'예금 상품 조회 성공: {len(subscribed_deposits)}개')
+        if subscribed_deposits and subscribed_deposits[0]['options']:
+            print(f'첫 번째 상품 옵션 개수: {len(subscribed_deposits[0]["options"])}')
+            print(f'첫 번째 옵션 데이터: {subscribed_deposits[0]["options"][0]}')
+            
+        return Response(subscribed_deposits, status=status.HTTP_200_OK)
+        
     except Exception as e:
-        print(f"예금 상품 조회 실패: {str(e)}")
+        print(f'예금 상품 조회 실패: {e}')
         import traceback
         traceback.print_exc()
         return Response(
-            {'error': f'정기예금 상품 조회 실패: {str(e)}'},
+            {'error': '예금 상품 조회에 실패했습니다.'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+    
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_subscribed_savings(request):
-    """사용자가 가입한 정기적금 상품 목록 조회"""
+    """사용자가 가입한 적금 상품 목록 조회"""
     user = request.user
     
     try:
-        # 사용자가 가입한 정기적금 상품 목록
-        subscribed_savings = user.subscribed_savings.all()
+        # SavingSubscription을 통해 가입한 상품 조회
+        subscriptions = SavingSubscription.objects.filter(user=user).select_related('product__bank')
+        subscribed_savings = []
         
-        # 시리얼라이저로 변환
-        serializer = SavingProductSerializer(subscribed_savings, many=True)
+        for sub in subscriptions:
+            product = sub.product
+            
+            # JSON 필드에서 options 데이터 가져오기
+            options_data = []
+            if product.options:
+                if isinstance(product.options, str):
+                    try:
+                        options_data = json.loads(product.options)
+                    except json.JSONDecodeError:
+                        options_data = []
+                elif isinstance(product.options, list):
+                    options_data = product.options
+            
+            # 만약 JSONField의 options가 비어있으면 saving_options 관계에서 가져오기
+            if not options_data:
+                options_data = list(product.saving_options.all().values(
+                    'intr_rate_type', 'intr_rate_type_nm', 'save_trm', 'intr_rate', 'intr_rate2'
+                ))
+            
+            product_data = {
+                'fin_prdt_cd': product.fin_prdt_cd,
+                'fin_prdt_nm': product.fin_prdt_nm,
+                'join_way': product.join_way,
+                'mtrt_int': product.mtrt_int,
+                'spcl_cnd': product.spcl_cnd,
+                'join_member': product.join_member,
+                'join_deny': product.join_deny,
+                'etc_note': product.etc_note,
+                'max_limit': product.max_limit,
+                'dcls_strt_day': product.dcls_strt_day,
+                'dcls_end_day': product.dcls_end_day,
+                'fin_co_subm_day': product.fin_co_subm_day,
+                'sector_code': product.sector_code,
+                'bank': {
+                    'fin_co_no': product.bank.fin_co_no,
+                    'kor_co_nm': product.bank.kor_co_nm,
+                    'sector_code': product.bank.sector_code,
+                    'sector_name': product.bank.sector_name,
+                },
+                'options': options_data  # 파싱된 옵션 데이터
+            }
+            subscribed_savings.append(product_data)
         
-        return Response(serializer.data)
+        print(f'적금 상품 조회 성공: {len(subscribed_savings)}개')
+        if subscribed_savings and subscribed_savings[0]['options']:
+            print(f'첫 번째 상품 옵션 개수: {len(subscribed_savings[0]["options"])}')
+            print(f'첫 번째 옵션 데이터: {subscribed_savings[0]["options"][0]}')
+            
+        return Response(subscribed_savings, status=status.HTTP_200_OK)
+        
     except Exception as e:
-        print(f"적금 상품 조회 실패: {str(e)}")
+        print(f'적금 상품 조회 실패: {e}')
         import traceback
         traceback.print_exc()
         return Response(
-            {'error': f'정기적금 상품 조회 실패: {str(e)}'},
+            {'error': '적금 상품 조회에 실패했습니다.'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
