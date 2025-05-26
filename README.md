@@ -129,7 +129,8 @@ python manage.py migrate
 python manage.py loaddata finance_info/fixtures/gold_prices.json finance_info/fixtures/silver_prices.json
 
 # 더미 사용자 데이터 로드 (있는 경우)
-python manage.py loaddata accounts/fixtures/dummy_users.json
+python manage.py loaddata accounts/fixtures/dummy_accounts.json
+python manage.py loaddata accounts/fixtures/dummy_deposits.json
 
 # 서버 실행
 python manage.py runserver

@@ -10,7 +10,7 @@ from django.core.management import execute_from_command_line
 
 def main():
     """프로젝트 초기 설정 실행"""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'final_pjt.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
     django.setup()
     
     print("🚀 프로젝트 초기 설정을 시작합니다...\n")
@@ -34,13 +34,25 @@ def main():
         # 3. 더미 사용자 데이터 로드
         print("3️⃣ 더미 사용자 데이터 로드 중...")
         try:
-            execute_from_command_line([
-                'manage.py', 'loaddata',
-                'accounts/fixtures/dummy_users.json',
-                'accounts/fixtures/dummy_deposit_subscriptions.json',
-                'accounts/fixtures/dummy_saving_subscriptions.json'
-            ])
-            print("✅ 더미 사용자 데이터 로드 완료\n")
+            # 기존 데이터 확인
+            from accounts.models import User
+            user_count = User.objects.count()
+            
+            if user_count > 0:
+                print(f"✅ 이미 {user_count}명의 사용자가 있습니다")
+                print("📊 기존 데이터를 사용합니다\n")
+            else:
+                # fixtures에서 더미 데이터 로드
+                execute_from_command_line([
+                    'manage.py', 'loaddata', 
+                    'accounts/fixtures/dummy_accounts.json'
+                ])
+                execute_from_command_line([
+                    'manage.py', 'loaddata', 
+                    'accounts/fixtures/dummy_deposits.json'
+                ])
+                print("✅ 더미 사용자 데이터 로드 완료\n")
+                
         except Exception as e:
             print(f"⚠️ 더미 데이터 로드 실패: {e}")
             print("💡 더미 데이터가 없다면 다음 명령어로 생성하세요:")
@@ -48,6 +60,7 @@ def main():
         
         print("🎉 프로젝트 초기 설정이 완료되었습니다!")
         print("🔥 개발 서버를 시작하려면: python manage.py runserver")
+        print("🌐 프론트엔드 서버는: npm run dev (front 디렉토리에서)")
         
     except Exception as e:
         print(f"❌ 설정 중 오류 발생: {e}")
