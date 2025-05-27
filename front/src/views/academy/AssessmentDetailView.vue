@@ -54,6 +54,39 @@
         </div>
       </div>
 
+      <!-- 수료증 섹션 (합격한 경우에만 표시) -->
+      <div v-if="assessmentDetail.passed" class="certificate-section">
+        <div v-if="existingCertificate" class="certificate-exists">
+          <div class="certificate-card">
+            <i class="bi bi-award-fill"></i>
+            <div class="certificate-info">
+              <h3>수료증이 발급되었습니다!</h3>
+              <p>발급번호: {{ existingCertificate.certificate_number }}</p>
+              <p>등급: {{ existingCertificate.grade }}</p>
+            </div>
+            <button @click="goToCertificates" class="view-certificate-btn">
+              <i class="bi bi-eye"></i>
+              수료증 보기
+            </button>
+          </div>
+        </div>
+        <div v-else class="certificate-generate">
+          <div class="certificate-prompt">
+            <i class="bi bi-award"></i>
+            <h3>수료증을 발급받으세요!</h3>
+            <p>합격하신 것을 축하드립니다. 수료증을 발급받을 수 있습니다.</p>
+            <button 
+              @click="generateCertificate" 
+              class="generate-certificate-btn"
+              :disabled="generatingCertificate"
+            >
+              <i class="bi bi-award-fill"></i>
+              {{ generatingCertificate ? '수료증 생성 중...' : '수료증 발급받기' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- 문제별 상세 결과 -->
       <div class="questions-detail">
         <h2>문제별 상세 결과</h2>
@@ -125,16 +158,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAssessmentStore } from '../../stores/assessment'
+import { useCertificateStore } from '../../stores/certificate'
 
 const route = useRoute()
 const router = useRouter()
 const assessmentStore = useAssessmentStore()
+const certificateStore = useCertificateStore()
 
 const loading = ref(false)
 const assessmentDetail = ref(null)
+const generatingCertificate = ref(false)
 
 const getDifficultyName = (difficulty) => {
   const names = {
@@ -156,17 +192,52 @@ const formatDate = (dateString) => {
   })
 }
 
+// 기존 수료증이 있는지 확인
+const existingCertificate = computed(() => {
+  if (!assessmentDetail.value) return null
+  return certificateStore.getBestCertificate(assessmentDetail.value.difficulty)
+})
+
 const fetchDetail = async () => {
   try {
     loading.value = true
     const assessmentId = route.params.id
     const detail = await assessmentStore.fetchAssessmentDetail(assessmentId)
     assessmentDetail.value = detail
+    
+    // 합격한 경우 수료증 목록도 조회
+    if (detail.passed) {
+      await certificateStore.fetchUserCertificates()
+    }
   } catch (error) {
     console.error('평가 상세 조회 실패:', error)
   } finally {
     loading.value = false
   }
+}
+
+// 수료증 생성
+const generateCertificate = async () => {
+  try {
+    generatingCertificate.value = true
+    await certificateStore.generateCertificate(assessmentDetail.value.id)
+    
+    // 성공 알림
+    alert('수료증이 성공적으로 발급되었습니다!')
+    
+    // 수료증 페이지로 이동
+    router.push({ name: 'certificates' })
+  } catch (err) {
+    console.error('수료증 생성 실패:', err)
+    alert('수료증 발급에 실패했습니다. 다시 시도해주세요.')
+  } finally {
+    generatingCertificate.value = false
+  }
+}
+
+// 수료증 페이지로 이동
+const goToCertificates = () => {
+  router.push({ name: 'certificates' })
 }
 
 const goBack = () => {
@@ -319,6 +390,111 @@ onMounted(() => {
   background-color: #f8f9fa;
   color: #2c3e50;
   font-size: 16px;
+}
+
+/* 수료증 섹션 스타일 */
+.certificate-section {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+.certificate-exists .certificate-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 25px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.certificate-card i {
+  font-size: 3rem;
+  color: #ffd700;
+}
+
+.certificate-info {
+  flex: 1;
+}
+
+.certificate-info h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.3rem;
+}
+
+.certificate-info p {
+  margin: 5px 0;
+  opacity: 0.9;
+}
+
+.view-certificate-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-certificate-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.certificate-generate .certificate-prompt {
+  text-align: center;
+  padding: 20px;
+}
+
+.certificate-prompt i {
+  font-size: 4rem;
+  color: #ffd700;
+  margin-bottom: 20px;
+}
+
+.certificate-prompt h3 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.certificate-prompt p {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.generate-certificate-btn {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #333;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+}
+
+.generate-certificate-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4);
+}
+
+.generate-certificate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .questions-detail {
@@ -556,6 +732,16 @@ onMounted(() => {
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
+  }
+  
+  .certificate-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+  
+  .view-certificate-btn {
+    align-self: center;
   }
 }
 </style>

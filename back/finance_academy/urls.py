@@ -18,9 +18,14 @@ urlpatterns = [
     path('concept-study/<str:difficulty>/categories/', views.get_categories_by_difficulty, name='concept_categories'),
     path('concept-study/<str:difficulty>/category/<int:category_id>/', views.get_concept_study_questions, name='concept_study_questions'),
     
-    # 새로 추가: Assessment 관련 URL들
+    # Assessment 관련 URL들
     path('assessment/start/', views.start_assessment, name='start_assessment'),
     path('assessment/submit/', views.submit_assessment, name='submit_assessment'),
     path('assessment/history/', views.assessment_history, name='assessment_history'),
     path('assessment/<int:assessment_id>/', views.assessment_detail, name='assessment_detail'),
+    
+    # 수료증 관련 URL들 (새로 추가)
+    path('certificate/generate/<int:assessment_id>/', views.generate_certificate, name='generate_certificate'),
+    path('certificate/download/<int:certificate_id>/', views.download_certificate, name='download_certificate'),
+    path('certificates/', views.user_certificates, name='user_certificates'),
 ]

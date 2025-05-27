@@ -21,7 +21,8 @@ import InteractiveQuizView from '@/views/academy/InteractiveQuizView.vue'
 import ConceptCategoryView from '@/views/academy/ConceptCategoryView.vue'
 import ConceptStudyView from '@/views/academy/ConceptStudyView.vue'
 import AssessmentView from '@/views/academy/AssessmentView.vue'
-import AssessmentDetailView from '@/views/academy/AssessmentDetailView.vue'  // 새로 추가
+import AssessmentDetailView from '@/views/academy/AssessmentDetailView.vue'
+import CertificateView from '@/views/academy/CertificateView.vue'  // 새로 추가
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -94,6 +95,13 @@ const router = createRouter({
       path: '/finance-academy/assessment/detail/:id',
       name: 'assessment-detail',
       component: AssessmentDetailView,
+      meta: { requiresAuth: true }
+    },
+    // 수료증 관련 라우트 (새로 추가)
+    {
+      path: '/finance-academy/certificates',
+      name: 'certificates',
+      component: CertificateView,
       meta: { requiresAuth: true }
     },
     {

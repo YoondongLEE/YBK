@@ -4,8 +4,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from .models import Question, Choice, UserQuizAttempt, UserAnswer, QuestionCategory, Assessment
+from django.http import HttpResponse, Http404
+from django.conf import settings
+import os
+from .models import Question, Choice, UserQuizAttempt, UserAnswer, QuestionCategory, Assessment, Certificate
 from .serializers import QuestionForQuizSerializer, UserQuizAttemptSerializer, QuestionSerializer
+from .certificate_generator import CertificateGenerator
 import random
 
 @api_view(['GET'])
@@ -487,7 +491,26 @@ def submit_assessment(request):
         questions_data=question_results
     )
     
-    return Response({
+    # 합격 시 수료증 자동 생성
+    certificate_info = None
+    if passed:
+        try:
+            generator = CertificateGenerator()
+            certificate = generator.create_certificate(
+                user=user,
+                difficulty=difficulty,
+                score=correct_count,
+                total_questions=10
+            )
+            certificate_info = {
+                'id': certificate.id,
+                'certificate_number': certificate.certificate_number,
+                'grade': certificate.grade
+            }
+        except Exception as e:
+            print(f"수료증 생성 실패: {e}")
+    
+    response_data = {
         'assessment_id': assessment.id,
         'score': correct_count,
         'total_questions': 10,
@@ -495,7 +518,12 @@ def submit_assessment(request):
         'grade': grade,
         'passed': passed,
         'question_results': question_results
-    })
+    }
+    
+    if certificate_info:
+        response_data['certificate'] = certificate_info
+    
+    return Response(response_data)
 
 def get_grade(difficulty, score_percentage):
     """난이도별 등급 결정"""
@@ -559,3 +587,77 @@ def assessment_detail(request, assessment_id):
         'questions_data': assessment.questions_data,
         'created_at': assessment.created_at
     })
+
+# 수료증 관련 뷰들
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def generate_certificate(request, assessment_id):
+    """평가 결과를 바탕으로 수료증 생성"""
+    try:
+        assessment = get_object_or_404(Assessment, id=assessment_id, user=request.user)
+        
+        if not assessment.passed:
+            return Response({
+                'error': '합격한 평가만 수료증을 발급할 수 있습니다.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        generator = CertificateGenerator()
+        certificate = generator.create_certificate(
+            user=request.user,
+            difficulty=assessment.difficulty,
+            score=assessment.score,
+            total_questions=assessment.total_questions
+        )
+        
+        return Response({
+            'certificate_id': certificate.id,
+            'certificate_number': certificate.certificate_number,
+            'grade': certificate.grade,
+            'file_path': certificate.file_path,
+            'message': '수료증이 성공적으로 생성되었습니다.'
+        })
+        
+    except ValueError as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'error': '수료증 생성 중 오류가 발생했습니다.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def download_certificate(request, certificate_id):
+    """수료증 이미지 파일 다운로드"""
+    try:
+        certificate = get_object_or_404(Certificate, id=certificate_id, user=request.user)
+        file_path = os.path.join(settings.MEDIA_ROOT, certificate.file_path)
+        
+        if not os.path.exists(file_path):
+            raise Http404("수료증 파일을 찾을 수 없습니다.")
+        
+        with open(file_path, 'rb') as f:
+            response = HttpResponse(f.read(), content_type='image/png')
+            response['Content-Disposition'] = f'attachment; filename="{certificate.certificate_number}_수료증.png"'
+            return response
+            
+    except Exception as e:
+        raise Http404("수료증을 다운로드할 수 없습니다.")
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_certificates(request):
+    """사용자의 수료증 목록 조회"""
+    certificates = Certificate.objects.filter(user=request.user)
+    
+    results = []
+    for cert in certificates:
+        results.append({
+            'id': cert.id,
+            'difficulty': cert.difficulty,
+            'certificate_number': cert.certificate_number,
+            'grade': cert.grade,
+            'score': cert.score,
+            'score_percentage': cert.score_percentage,
+            'created_at': cert.created_at,
+            'file_path': cert.file_path
+        })
+    
+    return Response(results)

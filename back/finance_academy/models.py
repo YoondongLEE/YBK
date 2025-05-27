@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 class Course(models.Model):
     title = models.CharField(max_length=200)
@@ -86,3 +87,64 @@ class Assessment(models.Model):
     @property
     def score_percentage(self):
         return (self.score / self.total_questions) * 100
+
+# 수료증 모델 추가
+class Certificate(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='certificates')
+    difficulty = models.CharField(max_length=20, choices=Question.DIFFICULTY_CHOICES)
+    certificate_number = models.CharField(max_length=20, unique=True)
+    grade = models.CharField(max_length=5)  # AH, AM, AL, IH, IM, IL, NH, NM, NL
+    score = models.IntegerField()
+    total_questions = models.IntegerField(default=10)
+    file_path = models.CharField(max_length=500)  # 수료증 이미지 파일 경로
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['user', 'difficulty']
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.difficulty} - {self.grade}"
+    
+    @property
+    def score_percentage(self):
+        return (self.score / self.total_questions) * 100
+    
+    @classmethod
+    def generate_certificate_number(cls):
+        """발급번호 생성: 제 2025-0001 형식"""
+        current_year = timezone.now().year
+        year_certificates = cls.objects.filter(
+            created_at__year=current_year
+        ).count()
+        return f"{current_year}-{year_certificates + 1:03d}"
+    
+    @staticmethod
+    def calculate_grade(difficulty, score_percentage):
+        """난이도별 등급 계산"""
+        if score_percentage < 60:
+            return None  # 불합격
+        
+        if score_percentage >= 90:
+            if difficulty == 'adult_advanced':
+                return 'AH'
+            elif difficulty == 'adult_basic':
+                return 'IH'
+            else:  # youth
+                return 'NH'
+        elif score_percentage >= 75:
+            if difficulty == 'adult_advanced':
+                return 'AM'
+            elif difficulty == 'adult_basic':
+                return 'IM'
+            else:  # youth
+                return 'NM'
+        elif score_percentage >= 60:
+            if difficulty == 'adult_advanced':
+                return 'AL'
+            elif difficulty == 'adult_basic':
+                return 'IL'
+            else:  # youth
+                return 'NL'
+        
+        return None

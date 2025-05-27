@@ -26,7 +26,7 @@
         </div>
       </div>
       
-      <!-- 평가 응시 카드 (수정) -->
+      <!-- 평가 응시 카드 -->
       <div class="academy-card" @click="showDifficultySelector('assessment')">
         <div class="card-image">
           <img src="@/assets/icons/test.png" alt="평가 응시">
@@ -36,9 +36,26 @@
           <p>학습한 내용을 평가를 통해 확인하고 금융 전문가로 성장하세요.</p>
         </div>
       </div>
+
+      <!-- 수료증 카드 (새로 추가) -->
+      <div class="academy-card certificate-card" @click="goToCertificates">
+        <div class="card-image">
+          <div class="certificate-icon">
+            <i class="fas fa-certificate"></i>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3>나의 수료증</h3>
+          <p>취득한 수료증을 확인하고 다운로드할 수 있습니다.</p>
+          <span v-if="!isAuthenticated" class="auth-required-badge">
+            🔒 로그인 필요
+          </span>
+        </div>
+      </div>
     </div>
     
-    <!-- 학습 진행 현황 섹션 (선택사항) -->
+    <!-- 기존 나머지 코드들... -->
+    <!-- 학습 진행 현황 섹션 -->
     <div class="progress-section" v-if="isAuthenticated">
       <h2>나의 학습 현황</h2>
       <div class="progress-container">
@@ -139,6 +156,16 @@ const showDifficultySelector = (type) => {
 const closeModal = () => {
   showModal.value = false
   selectedType.value = ''
+}
+
+// 수료증 페이지로 이동 (새로 추가)
+const goToCertificates = () => {
+  if (!isAuthenticated.value) {
+    alertStore.showWarning('로그인 필요', '수료증을 확인하려면 로그인이 필요합니다.')
+    router.push('/login')
+    return
+  }
+  router.push('/finance-academy/certificates')
 }
 
 const getModalTitle = () => {
@@ -308,6 +335,31 @@ h1::after {
   transform: scale(1.05);
 }
 
+/* 수료증 카드 전용 스타일 */
+.certificate-card .card-image {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+}
+
+.certificate-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: rgba(51, 51, 51, 0.1);
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.certificate-icon i {
+  font-size: 3rem;
+  color: #333;
+}
+
+.certificate-card:hover .certificate-icon {
+  transform: rotate(10deg) scale(1.1);
+}
+
 .card-content {
   padding: 20px;
   position: relative;
@@ -326,6 +378,18 @@ h1::after {
   color: #666;
   font-size: 14px;
   line-height: 1.5;
+}
+
+.auth-required-badge {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  font-size: 11px;
+  color: #e74c3c;
+  background: #ffeaea;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
 .academy-card::after {
@@ -363,6 +427,12 @@ h1::after {
 
 .academy-card:nth-child(3)::after {
   background-color: #e74c3c;
+}
+
+/* 수료증 카드의 화살표 색상 */
+.certificate-card::after {
+  background-color: #333 !important;
+  color: #ffd700 !important;
 }
 
 .progress-section {
