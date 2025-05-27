@@ -12,8 +12,8 @@
         <ul>
           <li>랜덤으로 선택된 10문제가 출제됩니다</li>
           <li>각 문제당 시간 제한은 없습니다</li>
-          <li>1문제씩 결과와 해설을 확인할 수 있습니다</li>
-          <li>신중하게 답을 선택해주세요</li>
+          <li>1문제씩 결과와 해설을 바로 확인할 수 있습니다</li>
+          <li>선택지를 고른 후 "다음" 버튼을 눌러 정답을 확인하세요</li>
           <li>매번 다른 문제가 출제됩니다</li>
         </ul>
         <button class="start-btn" @click="startQuiz">시작하기</button>
@@ -33,7 +33,7 @@
       </div>
 
       <div v-if="currentQuestion" class="question-card">
-        <!-- 문제 출제 단계 -->
+        <!-- 1단계: 문제 풀이 (선택지 선택 후 다음 버튼) -->
         <div v-if="currentStep === 'solving'" class="question-solving">
           <h2 class="question-text">{{ currentQuestion.text }}</h2>
           
@@ -53,16 +53,16 @@
           <div class="action-buttons">
             <button 
               v-if="selectedChoice"
-              class="submit-btn"
-              @click="submitAnswer"
+              class="next-btn"
+              @click="submitAndShowResult"
               :disabled="submitting"
             >
-              {{ submitting ? '제출 중...' : '답안 제출' }}
+              {{ submitting ? '제출 중...' : '다음' }}
             </button>
           </div>
         </div>
 
-        <!-- 정답 확인 단계 -->
+        <!-- 2단계: 정답 확인 및 해설 -->
         <div v-if="currentStep === 'result'" class="result-step">
           <h2 class="question-text">{{ currentQuestion.text }}</h2>
           
@@ -123,25 +123,19 @@
             <span class="score-number">{{ quizScore }}</span>
             <span class="score-total">/ {{ questions.length }}</span>
           </div>
-          <div class="score-percentage">
-            {{ Math.round((quizScore / questions.length) * 100) }}%
-          </div>
         </div>
-        
-        <div class="result-message">
-          <div v-if="(quizScore / questions.length) >= 0.8" class="excellent">
-            🌟 훌륭합니다! 금융 지식이 우수하네요!
-          </div>
-          <div v-else-if="(quizScore / questions.length) >= 0.6" class="good">
-            👍 잘했습니다! 조금 더 공부하면 완벽해요!
-          </div>
-          <div v-else class="needs-improvement">
-            📚 더 공부해보세요! 금융 지식을 늘려가는 중이에요!
-          </div>
+        <div class="score-percentage">
+          정답률: {{ Math.round((quizScore / questions.length) * 100) }}%
+        </div>
+        <div class="encouragement">
+          <p v-if="quizScore === questions.length">🏆 완벽합니다! 모든 문제를 맞히셨네요!</p>
+          <p v-else-if="quizScore >= questions.length * 0.8">🎉 훌륭합니다! 높은 점수를 획득하셨어요!</p>
+          <p v-else-if="quizScore >= questions.length * 0.6">👍 좋습니다! 꾸준히 학습하시면 더 향상될 거예요!</p>
+          <p v-else>💪 아직 부족하지만 포기하지 마세요! 다시 도전해보세요!</p>
         </div>
       </div>
-
-      <div class="action-buttons">
+      
+      <div class="result-actions">
         <button class="retry-btn" @click="retryQuiz">다시 풀기</button>
         <button class="back-btn" @click="goBack">돌아가기</button>
       </div>
@@ -204,14 +198,12 @@ const selectChoice = (choice) => {
   selectedChoice.value = choice
 }
 
-// 랜덤 10문제 가져오기 (기존 API 사용)
+// 랜덤 10문제 가져오기
 const fetchRandomQuestions = async () => {
   try {
     loading.value = true
-    // 백엔드의 랜덤 10문제 API 사용
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/finance-academy/quiz/${difficulty.value}/`)
     
-    // API 응답 구조에 맞게 수정
     if (response.data.questions) {
       questions.value = response.data.questions
     } else {
@@ -229,7 +221,6 @@ const fetchRandomQuestions = async () => {
 }
 
 const startQuiz = async () => {
-  // 퀴즈 시작할 때마다 새로운 랜덤 문제 가져오기
   try {
     await fetchRandomQuestions()
     quizStarted.value = true
@@ -244,20 +235,22 @@ const startQuiz = async () => {
   }
 }
 
-// 답안 제출
-const submitAnswer = async () => {
+// 1단계에서 "다음" 버튼 클릭 - 답안 제출하고 결과 표시
+const submitAndShowResult = async () => {
   if (!selectedChoice.value || submitting.value) return
   
   submitting.value = true
   try {
+    // 로그인 상태라면 토큰과 함께 요청, 아니라면 토큰 없이 요청
+    const headers = {}
+    if (authStore.isAuthenticated && authStore.token) {
+      headers.Authorization = `Token ${authStore.token}`
+    }
+    
     const response = await axios.post(
       `${import.meta.env.VITE_API_URL}/api/finance-academy/questions/${currentQuestion.value.id}/submit/`,
       { choice_id: selectedChoice.value.id },
-      {
-        headers: {
-          Authorization: `Token ${authStore.token}`
-        }
-      }
+      { headers }
     )
     
     answerResult.value = response.data
@@ -273,13 +266,46 @@ const submitAnswer = async () => {
     
   } catch (error) {
     console.error('답안 제출 실패:', error)
-    alert('답안 제출 중 오류가 발생했습니다.')
+    
+    // 401 에러가 발생해도 로그아웃 상태에서는 괜찮음
+    if (error.response && error.response.status === 401 && !authStore.isAuthenticated) {
+      console.log('비로그인 상태에서 401 에러 발생 - 정상적인 상황')
+      // 비로그인 상태에서는 간단한 클라이언트 사이드 정답 확인
+      handleOfflineAnswerCheck()
+    } else {
+      alert('답안 제출 중 오류가 발생했습니다.')
+    }
   } finally {
     submitting.value = false
   }
 }
 
-// 다음 문제로 이동
+// 오프라인(비로그인) 상태에서의 정답 확인 처리
+const handleOfflineAnswerCheck = () => {
+  // 현재 문제에서 정답 찾기
+  const correctChoice = currentQuestion.value.choices.find(choice => choice.is_correct)
+  const isCorrect = selectedChoice.value.id === correctChoice.id
+  
+  // 결과 객체 생성
+  answerResult.value = {
+    is_correct: isCorrect,
+    selected_choice: selectedChoice.value,
+    correct_choice: correctChoice,
+    explanation: currentQuestion.value.explanation || '해설이 없습니다.'
+  }
+  
+  totalAnswered.value += 1
+  
+  // 정답이면 점수 증가
+  if (isCorrect) {
+    quizScore.value += 1
+  }
+  
+  // 결과 확인 단계로 이동
+  currentStep.value = 'result'
+}
+
+// 2단계에서 "다음 문제" 버튼 클릭 - 다음 문제로 이동
 const goToNextQuestion = () => {
   if (currentQuestionIndex.value < questions.value.length - 1) {
     currentQuestionIndex.value += 1
@@ -329,7 +355,7 @@ onMounted(() => {
   width: 40px;
   height: 40px;
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #4a90e2;
+  border-top: 4px solid #3498db;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 20px;
@@ -342,16 +368,22 @@ onMounted(() => {
 
 .quiz-intro {
   text-align: center;
+  padding: 40px 20px;
+}
+
+.quiz-intro h1 {
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+}
+
+.intro-card {
   background: white;
   border-radius: 16px;
   padding: 40px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-
-.intro-card h1 {
-  color: #2c3e50;
-  margin-bottom: 30px;
-  font-size: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .intro-card h2 {
@@ -360,33 +392,24 @@ onMounted(() => {
 }
 
 .intro-card ul {
-  list-style: none;
-  padding: 0;
+  text-align: left;
   margin: 20px 0;
+  padding-left: 20px;
 }
 
 .intro-card li {
-  padding: 8px 0;
-  color: #555;
-  position: relative;
-  padding-left: 25px;
-}
-
-.intro-card li::before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  color: #27ae60;
-  font-weight: bold;
+  margin: 10px 0;
+  color: #7f8c8d;
+  line-height: 1.6;
 }
 
 .start-btn {
-  background: linear-gradient(135deg, #3498db, #2ecc71);
+  background: linear-gradient(135deg, #3498db, #2980b9);
   color: white;
   border: none;
   padding: 15px 40px;
-  border-radius: 25px;
-  font-size: 16px;
+  border-radius: 12px;
+  font-size: 18px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -395,29 +418,29 @@ onMounted(() => {
 
 .start-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
 }
 
 .quiz-container {
   background: white;
   border-radius: 16px;
   padding: 30px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .progress-bar {
   width: 100%;
   height: 8px;
-  background-color: #ecf0f1;
+  background: #ecf0f1;
   border-radius: 4px;
-  overflow: hidden;
   margin-bottom: 20px;
+  overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #3498db, #2ecc71);
-  transition: width 0.5s ease;
+  background: linear-gradient(90deg, #3498db, #2980b9);
+  transition: width 0.3s ease;
 }
 
 .question-info {
@@ -425,342 +448,329 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  flex-wrap: wrap;
-  gap: 10px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 12px;
 }
 
 .question-number {
-  font-weight: bold;
+  font-weight: 600;
   color: #2c3e50;
-  font-size: 16px;
 }
 
 .difficulty-badge {
   background: #e74c3c;
   color: white;
-  padding: 4px 12px;
-  border-radius: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
 }
 
 .score-display {
-  font-weight: bold;
   color: #27ae60;
-  font-size: 16px;
+  font-weight: 600;
 }
 
 .question-card {
   background: #f8f9fa;
   border-radius: 12px;
   padding: 30px;
-  margin-bottom: 20px;
 }
 
 .question-text {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 25px;
-  line-height: 1.6;
   color: #2c3e50;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  line-height: 1.6;
 }
 
 .choices {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 25px;
+  gap: 15px;
+  margin-bottom: 30px;
 }
 
 .choice-btn {
   display: flex;
   align-items: center;
-  padding: 15px;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
+  padding: 20px;
+  border: 2px solid #ecf0f1;
+  border-radius: 12px;
   background: white;
   text-align: left;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .choice-btn:hover {
   border-color: #3498db;
   background: #f8f9fa;
+  transform: translateX(5px);
 }
 
 .choice-btn.selected {
   border-color: #3498db;
   background: #e3f2fd;
+  transform: translateX(5px);
 }
 
 .choice-number {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   background: #3498db;
   color: white;
   border-radius: 50%;
-  font-weight: bold;
-  margin-right: 12px;
+  font-weight: 600;
+  margin-right: 15px;
   flex-shrink: 0;
-  font-size: 12px;
-}
-
-.choice-btn.selected .choice-number {
-  background: #2980b9;
 }
 
 .choice-text {
   flex: 1;
+  line-height: 1.5;
 }
 
 .action-buttons {
-  text-align: center;
-  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
 }
 
-.submit-btn {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
+.next-btn, .next-question-btn, .finish-btn {
+  background: linear-gradient(135deg, #27ae60, #229954);
   color: white;
   border: none;
   padding: 12px 30px;
-  border-radius: 20px;
-  font-size: 14px;
+  border-radius: 10px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.submit-btn:hover:not(:disabled) {
+.next-btn:hover, .next-question-btn:hover, .finish-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+  box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
 }
 
-.submit-btn:disabled {
-  opacity: 0.6;
+.next-btn:disabled {
+  background: #95a5a6;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-/* 결과 확인 단계 스타일 */
-.result-step {
-  animation: fadeInUp 0.5s ease;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* 결과 표시 스타일 */
 .result-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
+  text-align: center;
   padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
 }
 
 .result-header.correct {
-  background: linear-gradient(135deg, #d4edda, #c3e6cb);
-  border: 2px solid #28a745;
+  background: linear-gradient(135deg, #d5f4e6, #c8e6c9);
+  border: 2px solid #27ae60;
 }
 
 .result-header.incorrect {
-  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-  border: 2px solid #dc3545;
+  background: linear-gradient(135deg, #ffebee, #ffcdd2);
+  border: 2px solid #e74c3c;
 }
 
 .result-icon {
-  font-size: 24px;
+  font-size: 3rem;
+  margin-bottom: 10px;
 }
 
 .result-text {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 1.2rem;
+  font-weight: 600;
   color: #2c3e50;
 }
 
 .answer-comparison {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  margin-bottom: 25px;
 }
 
 .answer-item {
-  padding: 12px;
+  background: white;
+  padding: 15px;
   border-radius: 8px;
-  border: 1px solid #e0e0e0;
+  margin-bottom: 10px;
+  border-left: 4px solid #3498db;
 }
 
 .answer-item.user-wrong {
-  background: #ffe6e6;
-  border-color: #ff9999;
+  border-left-color: #e74c3c;
+  background: #ffeaea;
 }
 
 .answer-item.correct-answer {
-  background: #e6ffe6;
-  border-color: #99dd99;
+  border-left-color: #27ae60;
+  background: #eaffea;
 }
 
 .answer-label {
-  font-weight: bold;
-  color: #555;
-  margin-bottom: 4px;
-  font-size: 13px;
+  font-weight: 600;
+  color: #7f8c8d;
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
 }
 
 .answer-content {
-  color: #333;
-  font-size: 14px;
-}
-
-.explanation-section {
-  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  border-left: 4px solid #2196f3;
-}
-
-.explanation-section h4 {
-  margin: 0 0 12px 0;
-  color: #1976d2;
+  color: #2c3e50;
   font-size: 16px;
 }
 
+.explanation-section {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+}
+
+.explanation-section h4 {
+  color: #f39c12;
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+}
+
 .explanation-content {
-  color: #424242;
-  font-size: 14px;
+  color: #856404;
   line-height: 1.6;
-}
-
-.next-question-btn, .finish-btn {
-  background: linear-gradient(135deg, #3498db, #2ecc71);
-  color: white;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.next-question-btn:hover, .finish-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+  font-size: 15px;
 }
 
 /* 최종 결과 스타일 */
 .results-container {
   text-align: center;
+  padding: 40px 20px;
+}
+
+.score-card {
   background: white;
-  border-radius: 16px;
-  padding: 40px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  border-radius: 20px;
+  padding: 50px 30px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
 }
 
 .score-card h1 {
   color: #2c3e50;
   margin-bottom: 30px;
-  font-size: 2rem;
+  font-size: 2.5rem;
 }
 
 .score-circle {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3498db, #2ecc71);
-  color: white;
+  background: linear-gradient(135deg, #3498db, #2980b9);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
 }
 
 .score-number {
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
 }
 
 .score-total {
-  font-size: 14px;
-  opacity: 0.9;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .score-percentage {
-  font-size: 20px;
-  font-weight: bold;
-  color: #2c3e50;
+  font-size: 1.5rem;
+  color: #27ae60;
+  font-weight: 600;
   margin-bottom: 20px;
 }
 
-.result-message {
-  margin: 20px 0;
-  font-size: 16px;
-  font-weight: 500;
+.encouragement {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  line-height: 1.6;
 }
 
-.excellent { color: #27ae60; }
-.good { color: #3498db; }
-.needs-improvement { color: #f39c12; }
+.result-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
 
 .retry-btn, .back-btn {
-  padding: 12px 24px;
+  padding: 15px 30px;
   border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 14px;
+  border-radius: 12px;
+  font-size: 16px;
   font-weight: 600;
+  cursor: pointer;
   transition: all 0.3s ease;
-  margin: 10px;
 }
 
 .retry-btn {
-  background: #27ae60;
+  background: linear-gradient(135deg, #f39c12, #e67e22);
   color: white;
+}
+
+.retry-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(243, 156, 18, 0.3);
 }
 
 .back-btn {
-  background: #95a5a6;
+  background: linear-gradient(135deg, #95a5a6, #7f8c8d);
   color: white;
 }
 
-.retry-btn:hover, .back-btn:hover {
+.back-btn:hover {
   transform: translateY(-2px);
-  opacity: 0.9;
+  box-shadow: 0 8px 25px rgba(149, 165, 166, 0.3);
 }
 
 @media (max-width: 768px) {
   .problem-learning-container {
-    padding: 15px;
+    padding: 10px;
   }
   
-  .quiz-container {
-    padding: 20px;
+  .question-info {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
   }
   
-  .question-text {
-    font-size: 18px;
+  .result-actions {
+    flex-direction: column;
   }
   
-  .choice-btn {
-    padding: 12px;
-    font-size: 14px;
+  .quiz-intro h1 {
+    font-size: 2rem;
+  }
+  
+  .score-circle {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .score-number {
+    font-size: 2.5rem;
   }
 }
 </style>

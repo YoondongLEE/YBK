@@ -57,7 +57,7 @@
     <!-- 기존 나머지 코드들... -->
     <!-- 학습 진행 현황 섹션 -->
     <div class="progress-section" v-if="isAuthenticated">
-      <h2>나의 학습 현황</h2>
+      <h2>나의 학습 현황 (업데이트 예정)</h2>
       <div class="progress-container">
         <div class="progress-item">
           <div class="progress-title">
