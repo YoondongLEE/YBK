@@ -34,13 +34,23 @@
   브라우저가 비디오를 지원하지 않습니다.
 </video>
 
+![금융 길잡이 전체 시연](https://img.youtube.com/vi/7K6NapYJw54/0.jpg)](https://www.youtube.com/watch?v=7K6NapYJw54&t=172s)  
+
+🎬 [YouTube에서 보기](https://www.youtube.com/watch?v=7K6NapYJw54&t=172s)
+
 *금융 길잡이 서비스의 주요 기능들을 종합적으로 보여주는 데모 영상입니다.*
+
+
 
 ##### 금융 아카데미 시연  
 <video width="800" controls>
   <source src="./mov/아카데미.mov" type="video/mp4">
   브라우저가 비디오를 지원하지 않습니다.
 </video>
+
+[![금융 아카데미 시연](https://img.youtube.com/vi/p3KYDH-Vvkk/0.jpg)](https://www.youtube.com/watch?v=p3KYDH-Vvkk)  
+
+🎬 [YouTube에서 보기](https://www.youtube.com/watch?v=p3KYDH-Vvkk)
 
 *금융 아카데미의 문제 학습, 개념 학습, 평가 시스템, 수료증 발급 등의 기능을 시연하는 영상입니다.*
 
