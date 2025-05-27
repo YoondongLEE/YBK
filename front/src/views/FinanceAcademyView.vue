@@ -26,8 +26,8 @@
         </div>
       </div>
       
-      <!-- 평가 응시 카드 -->
-      <div class="academy-card" @click="showComingSoon('평가 응시')">
+      <!-- 평가 응시 카드 (수정) -->
+      <div class="academy-card" @click="showDifficultySelector('assessment')">
         <div class="card-image">
           <img src="@/assets/icons/test.png" alt="평가 응시">
         </div>
@@ -92,10 +92,15 @@
             v-for="difficulty in difficulties" 
             :key="difficulty.value"
             class="difficulty-btn"
+            :class="{ 'assessment-btn': selectedType === 'assessment' }"
             @click="selectDifficulty(difficulty.value)"
           >
             <h3>{{ difficulty.label }}</h3>
             <p>{{ getDifficultyDescription(difficulty.value) }}</p>
+            <!-- 평가 버튼에만 인증 필요 표시 -->
+            <span v-if="selectedType === 'assessment' && !isAuthenticated" class="auth-required">
+              🔒 로그인 필요
+            </span>
           </button>
         </div>
         <button class="close-btn" @click="closeModal">취소</button>
@@ -108,14 +113,16 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { useAlertStore } from '../stores/alert'
 import axios from 'axios'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const alertStore = useAlertStore()
 const isAuthenticated = ref(authStore.isAuthenticated)
 const showModal = ref(false)
 const difficulties = ref([])
-const selectedType = ref('') // 'problem' 또는 'concept'
+const selectedType = ref('') // 'problem', 'concept', 'assessment'
 
 // 학습 진행 현황 데이터 (실제로는 API에서 가져오거나 상태 관리에서 가져와야 함)
 const progressData = ref({
@@ -123,11 +130,6 @@ const progressData = ref({
   concept: 40,
   exam: 30
 })
-
-// 기능 준비 중 메시지 표시
-const showComingSoon = (feature) => {
-  alert(`${feature} 기능은 현재 개발 중입니다. 곧 만나보실 수 있습니다!`)
-}
 
 const showDifficultySelector = (type) => {
   selectedType.value = type
@@ -144,6 +146,8 @@ const getModalTitle = () => {
     return '문제풀이 난이도를 선택하세요'
   } else if (selectedType.value === 'concept') {
     return '개념학습 난이도를 선택하세요'
+  } else if (selectedType.value === 'assessment') {
+    return '평가 난이도를 선택하세요'
   }
   return '난이도를 선택하세요'
 }
@@ -158,6 +162,14 @@ const getDifficultyDescription = (difficulty) => {
 }
 
 const selectDifficulty = (difficulty) => {
+  // 평가의 경우 로그인 확인
+  if (selectedType.value === 'assessment' && !isAuthenticated.value) {
+    alertStore.showWarning('로그인 필요', '평가를 응시하려면 로그인이 필요합니다.')
+    closeModal()
+    router.push('/login')
+    return
+  }
+
   if (selectedType.value === 'problem') {
     router.push({ 
       name: 'problem-learning', 
@@ -166,6 +178,11 @@ const selectDifficulty = (difficulty) => {
   } else if (selectedType.value === 'concept') {
     router.push({
       name: 'concept-category',
+      params: { difficulty }
+    })
+  } else if (selectedType.value === 'assessment') {
+    router.push({
+      name: 'assessment',
       params: { difficulty }
     })
   }
@@ -463,12 +480,22 @@ h1::after {
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: left;
+  position: relative;
 }
 
 .difficulty-btn:hover {
   border-color: #4a90e2;
   background-color: #f8f9fa;
   transform: translateY(-2px);
+}
+
+.difficulty-btn.assessment-btn {
+  border-color: #e74c3c;
+}
+
+.difficulty-btn.assessment-btn:hover {
+  border-color: #c0392b;
+  background-color: #fdf2f2;
 }
 
 .difficulty-btn h3 {
@@ -481,6 +508,17 @@ h1::after {
   margin: 0;
   color: #666;
   font-size: 14px;
+}
+
+.auth-required {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 12px;
+  color: #e74c3c;
+  background: #ffeaea;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 
 .close-btn {

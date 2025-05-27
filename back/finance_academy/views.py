@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from .models import Question, Choice, UserQuizAttempt, UserAnswer, QuestionCategory
+from .models import Question, Choice, UserQuizAttempt, UserAnswer, QuestionCategory, Assessment
 from .serializers import QuestionForQuizSerializer, UserQuizAttemptSerializer, QuestionSerializer
 import random
 
@@ -387,3 +387,175 @@ def get_concept_study_questions(request, difficulty, category_id):
         return Response({
             'error': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+# 새로 추가: Assessment 관련 뷰들
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def start_assessment(request):
+    """평가 시작 - 랜덤 10문제 출제 (선택지 순서 랜덤)"""
+    difficulty = request.data.get('difficulty')
+    
+    if not difficulty:
+        return Response({'error': '난이도를 선택해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # 해당 난이도의 모든 문제 가져오기
+    questions = list(Question.objects.filter(difficulty=difficulty))
+    
+    if len(questions) < 10:
+        return Response({'error': '문제가 부족합니다.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # 랜덤하게 10문제 선택
+    selected_questions = random.sample(questions, 10)
+    
+    # 문제 데이터 직렬화 (정답 정보 제외하되, 선택지 순서 랜덤)
+    questions_data = []
+    for q in selected_questions:
+        # 선택지들을 가져와서 랜덤하게 섞기
+        choices = list(q.choices.all())
+        random.shuffle(choices)
+        
+        choices_data = []
+        for choice in choices:
+            choices_data.append({
+                'id': choice.id,
+                'text': choice.text
+                # is_correct는 클라이언트에 전송하지 않음 (평가용)
+            })
+        
+        questions_data.append({
+            'id': q.id,
+            'text': q.text,
+            'choices': choices_data,
+            'explanation': q.explanation
+        })
+    
+    return Response({
+        'questions': questions_data,
+        'total_questions': 10
+    })
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def submit_assessment(request):
+    """평가 제출 및 채점"""
+    user = request.user
+    difficulty = request.data.get('difficulty')
+    answers = request.data.get('answers')  # {question_id: choice_id}
+    
+    if not all([difficulty, answers]):
+        return Response({'error': '필수 데이터가 누락되었습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # 정답 확인 및 채점
+    correct_count = 0
+    question_results = []
+    
+    for question_id, choice_id in answers.items():
+        try:
+            question = Question.objects.get(id=question_id)
+            selected_choice = Choice.objects.get(id=choice_id, question=question)
+            correct_choice = question.choices.filter(is_correct=True).first()
+            
+            is_correct = selected_choice.is_correct
+            if is_correct:
+                correct_count += 1
+            
+            question_results.append({
+                'question_id': question_id,
+                'question': question.text,
+                'user_answer': selected_choice.text,
+                'correct_answer': correct_choice.text if correct_choice else '',
+                'is_correct': is_correct,
+                'explanation': question.explanation
+            })
+        except (Question.DoesNotExist, Choice.DoesNotExist):
+            continue
+    
+    # 점수 계산 (100점 만점)
+    score_percentage = (correct_count / 10) * 100
+    passed = score_percentage >= 60
+    
+    # 등급 결정
+    grade = get_grade(difficulty, score_percentage)
+    
+    # 평가 결과 저장
+    assessment = Assessment.objects.create(
+        user=user,
+        difficulty=difficulty,
+        score=correct_count,
+        grade=grade,
+        passed=passed,
+        questions_data=question_results
+    )
+    
+    return Response({
+        'assessment_id': assessment.id,
+        'score': correct_count,
+        'total_questions': 10,
+        'score_percentage': score_percentage,
+        'grade': grade,
+        'passed': passed,
+        'question_results': question_results
+    })
+
+def get_grade(difficulty, score_percentage):
+    """난이도별 등급 결정"""
+    if score_percentage >= 90:
+        if difficulty == 'adult_advanced':
+            return 'AH'
+        elif difficulty == 'adult_basic':
+            return 'IH'
+        else:  # youth
+            return 'NH'
+    elif score_percentage >= 75:
+        if difficulty == 'adult_advanced':
+            return 'AM'
+        elif difficulty == 'adult_basic':
+            return 'IM'
+        else:  # youth
+            return 'NM'
+    elif score_percentage >= 60:
+        if difficulty == 'adult_advanced':
+            return 'AL'
+        elif difficulty == 'adult_basic':
+            return 'IL'
+        else:  # youth
+            return 'NL'
+    else:
+        return 'F'  # 불합격
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def assessment_history(request):
+    """사용자의 평가 이력 조회"""
+    assessments = Assessment.objects.filter(user=request.user)
+    
+    results = []
+    for assessment in assessments:
+        results.append({
+            'id': assessment.id,
+            'difficulty': assessment.difficulty,
+            'score': assessment.score,
+            'grade': assessment.grade,
+            'passed': assessment.passed,
+            'score_percentage': assessment.score_percentage,
+            'taken_at': assessment.created_at
+        })
+    
+    return Response(results)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def assessment_detail(request, assessment_id):
+    """평가 상세 결과 조회"""
+    assessment = get_object_or_404(Assessment, id=assessment_id, user=request.user)
+    
+    return Response({
+        'id': assessment.id,
+        'difficulty': assessment.difficulty,
+        'score': assessment.score,
+        'grade': assessment.grade,
+        'passed': assessment.passed,
+        'score_percentage': assessment.score_percentage,
+        'questions_data': assessment.questions_data,
+        'created_at': assessment.created_at
+    })

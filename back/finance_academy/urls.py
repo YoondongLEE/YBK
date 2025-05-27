@@ -14,7 +14,13 @@ urlpatterns = [
     path('questions/<int:question_id>/submit/', views.submit_answer, name='submit_answer'),
     path('categories/', views.category_list, name='category_list'),
     
-    # 새로 추가: 개념 학습용 URL들
+    # 기존 개념 학습용 URL들
     path('concept-study/<str:difficulty>/categories/', views.get_categories_by_difficulty, name='concept_categories'),
     path('concept-study/<str:difficulty>/category/<int:category_id>/', views.get_concept_study_questions, name='concept_study_questions'),
+    
+    # 새로 추가: Assessment 관련 URL들
+    path('assessment/start/', views.start_assessment, name='start_assessment'),
+    path('assessment/submit/', views.submit_assessment, name='submit_assessment'),
+    path('assessment/history/', views.assessment_history, name='assessment_history'),
+    path('assessment/<int:assessment_id>/', views.assessment_detail, name='assessment_detail'),
 ]

@@ -65,3 +65,24 @@ class UserAnswer(models.Model):
     
     def __str__(self):
         return f"{self.attempt.user.username} - Q{self.question.id} ({'O' if self.is_correct else 'X'})"
+
+# 새로 추가되는 Assessment 모델
+class Assessment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='assessments')
+    difficulty = models.CharField(max_length=20, choices=Question.DIFFICULTY_CHOICES)
+    score = models.IntegerField()  # 맞춘 개수 (0-10)
+    grade = models.CharField(max_length=5)  # AH, AM, AL, IH, IM, IL, NH, NM, NL
+    total_questions = models.IntegerField(default=10)
+    passed = models.BooleanField()  # 60점 이상 합격 여부
+    questions_data = models.JSONField()  # 출제된 문제들과 정답
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.get_difficulty_display()} - {self.grade} ({self.score}/10)"
+    
+    @property
+    def score_percentage(self):
+        return (self.score / self.total_questions) * 100

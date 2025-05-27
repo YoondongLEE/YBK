@@ -169,7 +169,7 @@
       </div>
     </div>
 
-    <!-- 🆕 상품 추천 섹션 (새로 추가) -->
+    <!-- 상품 추천 섹션 -->
     <div v-if="isAuthenticated" class="recommendation-section">
       <h2>맞춤형 상품 추천</h2>
       <p class="recommendation-description">
@@ -312,6 +312,57 @@
       </div>
     </div>
     
+    <!-- 평가 이력 섹션 (새로 추가) -->
+    <div v-if="isAuthenticated" class="assessment-history-section">
+      <h2>평가 이력</h2>
+      
+      <div v-if="assessmentHistory.length === 0 && !assessmentLoading" class="empty-state">
+        <p>아직 응시한 평가가 없습니다.</p>
+        <router-link to="/finance-academy" class="start-assessment-btn">
+          평가 응시하러 가기
+        </router-link>
+      </div>
+      
+      <div v-else-if="assessmentHistory.length > 0" class="assessment-list">
+        <div 
+          v-for="assessment in assessmentHistory" 
+          :key="assessment.id"
+          class="assessment-item"
+          :class="{ 'passed': assessment.passed }"
+          @click="viewAssessmentDetail(assessment.id)"
+        >
+          <div class="assessment-info">
+            <div class="difficulty-badge" :class="assessment.difficulty">
+              {{ getDifficultyName(assessment.difficulty) }}
+            </div>
+            <div class="assessment-details">
+              <h3>{{ getDifficultyName(assessment.difficulty) }} 평가</h3>
+              <p class="date">{{ formatDate(assessment.taken_at) }}</p>
+            </div>
+          </div>
+          
+          <div class="assessment-result">
+            <div class="score">
+              <span class="score-text">{{ assessment.score }}/10</span>
+              <span class="percentage">({{ assessment.score_percentage }}%)</span>
+            </div>
+            <div class="grade" :class="{ 'passed': assessment.passed }">
+              {{ assessment.grade || (assessment.passed ? '합격' : '불합격') }}
+            </div>
+          </div>
+          
+          <div class="view-detail">
+            <i class="bi bi-chevron-right"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 로딩 상태 -->
+      <div v-if="assessmentLoading" class="loading">
+        <p>평가 이력을 불러오는 중...</p>
+      </div>
+    </div>
+    
     <!-- 저장된 영상 섹션 -->
     <div v-if="isAuthenticated" class="saved-items-section">
       <h2>저장된 금융 콘텐츠</h2>
@@ -365,11 +416,15 @@ const savingProducts = ref([]);
 // 은행 정보
 const banks = ref([]);
 
-// 🆕 추천 관련 상태 변수들 (새로 추가)
+// 추천 관련 상태 변수들
 const recommendations = ref([]);
 const recommendationLoading = ref(false);
 const recommendationError = ref('');
 const recommendationMessage = ref('');
+
+// 평가 이력 관련 상태
+const assessmentHistory = ref([]);
+const assessmentLoading = ref(false);
 
 // 차트 인스턴스들
 const interestRateChartInstance = ref(null);
@@ -384,7 +439,7 @@ const comparisonChart = ref(null);
 // 차트 생성 상태 관리
 const chartsCreated = ref(false);
 
-// 차트 표시 조건 - 수정된 버전
+// 차트 표시 조건
 const showCharts = computed(() => {
   const hasData = (depositProducts.value.length > 0 || savingProducts.value.length > 0);
   const loadingComplete = !depositLoading.value && !savingLoading.value;
@@ -401,7 +456,7 @@ const showCharts = computed(() => {
   return hasData && loadingComplete;
 });
 
-// 기존 함수들 유지...
+// 유틸리티 함수들
 const formatCurrency = (value) => {
   if (!value) return '정보 없음';
   return new Intl.NumberFormat('ko-KR').format(value) + '원';
@@ -446,7 +501,45 @@ const getPreferredBankName = (bankCode) => {
   return bank ? bank.kor_co_nm : bankCode;
 };
 
-// 🆕 추천 관련 함수들 (새로 추가)
+// 평가 관련 함수들
+const getDifficultyName = (difficulty) => {
+  const names = {
+    'youth': '청소년',
+    'adult_basic': '성인 기본', 
+    'adult_advanced': '성인 심화'
+  }
+  return names[difficulty] || difficulty
+}
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: 'long', 
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+
+const viewAssessmentDetail = (assessmentId) => {
+  console.log('평가 상세 보기:', assessmentId)
+  alert(`평가 ID ${assessmentId}의 상세 정보를 확인합니다.`)
+}
+
+const fetchAssessmentHistory = async () => {
+  try {
+    assessmentLoading.value = true
+    const response = await api.get('/assessments/history/')
+    assessmentHistory.value = response.data
+  } catch (error) {
+    console.error('평가 이력을 불러오는데 실패했습니다:', error)
+  } finally {
+    assessmentLoading.value = false
+  }
+}
+
+// 추천 관련 함수들
 const fetchRecommendations = async () => {
   try {
     recommendationLoading.value = true;
@@ -488,7 +581,7 @@ const getMaxRecommendationRate = (product) => {
   return maxRate.toFixed(2);
 };
 
-// 기존 최대 금리 계산 함수 - 수정된 버전
+// 최대 금리 계산 함수
 const getMaxRate = (product) => {
   console.log('getMaxRate 호출:', product);
   
@@ -554,7 +647,7 @@ const goToDetail = (type, id) => {
   router.push({ name: `${type}-detail`, params: { id } });
 };
 
-// 데이터 fetch 함수들... (기존과 동일하지만 로그 추가)
+// 데이터 fetch 함수들
 const fetchDepositProducts = async () => {
   try {
     depositLoading.value = true;
@@ -599,7 +692,7 @@ const fetchSavingProducts = async () => {
   }
 };
 
-// 차트 생성 함수들 - 수정된 버전
+// 차트 생성 함수들
 const createInterestRateChart = () => {
   console.log('금리 비교 차트 생성 시작');
   const ctx = interestRateChart.value?.getContext('2d');
@@ -842,7 +935,7 @@ const createDistributionChart = () => {
   }
 };
 
-// 모든 차트 생성 - 수정된 버전
+// 모든 차트 생성
 const createCharts = async () => {
   console.log('차트 생성 시작, 데이터 확인:', {
     depositProducts: depositProducts.value.length,
@@ -904,7 +997,7 @@ const destroyCharts = () => {
   chartsCreated.value = false;
 };
 
-// showCharts computed 속성 감시 - 수정된 버전
+// showCharts computed 속성 감시
 watch(showCharts, (newValue, oldValue) => {
   console.log('showCharts 변경:', { newValue, oldValue, chartsCreated: chartsCreated.value });
   
@@ -914,7 +1007,7 @@ watch(showCharts, (newValue, oldValue) => {
   }
 }, { immediate: true });
 
-// 나머지 기존 함수들...
+// 입력 처리 함수들
 const handleAssetsInput = (event) => {
   const inputValue = event.target.value;
   const numericOnly = inputValue.replace(/[^\d]/g, '');
@@ -985,6 +1078,7 @@ const decreaseAnnualIncome = () => {
   formattedAnnualIncome.value = newValue === 0 ? '' : addCommas(newValue);
 };
 
+// 프로필 관련 함수들
 const fetchUserProfile = async () => {
   try {
     const response = await api.get('/accounts/profile/');
@@ -1032,7 +1126,7 @@ const updateProfile = async () => {
     
     const response = await api.put('/accounts/profile/update/', updateData);
     
-    // 🔥 핵심: 업데이트 후 즉시 사용자 프로필을 다시 가져오기
+    // 업데이트 후 즉시 사용자 프로필을 다시 가져오기
     await fetchUserProfile();
     
     alert('프로필 정보가 성공적으로 업데이트되었습니다.');
@@ -1070,6 +1164,7 @@ const fetchBanks = async () => {
   }
 };
 
+// 라이프사이클 훅
 onMounted(async () => {
   console.log('컴포넌트 마운트됨');
   if (isAuthenticated.value) {
@@ -1077,6 +1172,7 @@ onMounted(async () => {
     await fetchUserProfile();
     await fetchDepositProducts();
     await fetchSavingProducts();
+    await fetchAssessmentHistory();
     
     youtubeStore.initialize();
   } else {
@@ -1115,7 +1211,11 @@ h1 {
 .user-info-section,
 .subscribed-products-section,
 .youtube-section,
-.recommendation-section {
+.recommendation-section,
+.subscription-section,
+.charts-section,
+.assessment-history-section,
+.saved-items-section {
   background-color: white;
   padding: 30px;
   border-radius: 15px;
@@ -1123,11 +1223,14 @@ h1 {
   margin-bottom: 30px;
 }
 
-
 .user-info-section h2,
 .subscribed-products-section h2,
 .youtube-section h2,
-.recommendation-section h2 {
+.recommendation-section h2,
+.subscription-section h2,
+.charts-section h2,
+.assessment-history-section h2,
+.saved-items-section h2 {
   color: #2c3e50;
   margin-bottom: 20px;
   font-size: 24px;
@@ -1423,7 +1526,7 @@ h4 {
 
 /* 차트 관련 스타일 */
 .charts-section {
-  background-color: #f8f9fa;
+  background-color: white;
 }
 
 .chart-container {
@@ -1453,44 +1556,7 @@ h4 {
   height: 400px !important;
 }
 
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-  .user-info {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  .info-card {
-    padding: 15px;
-  }
-  
-  .profile-form {
-    padding: 20px;
-  }
-  
-  .product-list {
-    grid-template-columns: 1fr;
-  }
-  
-  .input-with-controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .input-controls {
-    flex-direction: row;
-    justify-content: center;
-    margin-top: 8px;
-  }
-  
-  .control-btn {
-    width: 50px;
-    height: 30px;
-    font-size: 12px;
-  }
-}
-
-/* 추천 섹션 스타일 (새로 추가) */
+/* 추천 섹션 스타일 */
 .recommendation-section {
   background-color: white;
   padding: 30px;
@@ -1610,7 +1676,7 @@ h4 {
   font-weight: 700;
 }
 
-.product-name {
+.recommendation-card .product-name {
   color: #2c3e50;
   margin-bottom: 8px;
   font-size: 16px;
@@ -1618,7 +1684,7 @@ h4 {
   line-height: 1.3;
 }
 
-.bank-name {
+.recommendation-card .bank-name {
   color: #7f8c8d;
   margin-bottom: 15px;
   font-size: 14px;
@@ -1725,14 +1791,207 @@ h4 {
   100% { transform: rotate(360deg); }
 }
 
+/* 평가 이력 섹션 스타일 */
+.assessment-history-section {
+  background-color: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+.assessment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.assessment-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.assessment-item:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.15);
+}
+
+.assessment-item.passed {
+  border-color: #28a745;
+  background-color: #f8fff9;
+}
+
+.assessment-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.difficulty-badge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.difficulty-badge.youth {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.difficulty-badge.adult_basic {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.difficulty-badge.adult_advanced {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.assessment-details h3 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: #2c3e50;
+}
+
+.assessment-details .date {
+  margin: 0;
+  font-size: 14px;
+  color: #7f8c8d;
+}
+
+.assessment-result {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.score {
+  text-align: center;
+}
+
+.score-text {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.percentage {
+  font-size: 14px;
+  color: #7f8c8d;
+}
+
+.grade {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.grade.passed {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.view-detail {
+  color: #667eea;
+  font-size: 18px;
+}
+
+.start-assessment-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+}
+
+.start-assessment-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  text-decoration: none;
+  color: white;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
+  .user-info {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .info-card {
+    padding: 15px;
+  }
+  
+  .profile-form {
+    padding: 20px;
+  }
+  
+  .product-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .input-with-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .input-controls {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  
+  .control-btn {
+    width: 50px;
+    height: 30px;
+    font-size: 12px;
+  }
+
   .recommendation-grid {
     grid-template-columns: 1fr;
   }
   
   .recommendation-section {
     padding: 20px;
+  }
+
+  .assessment-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .assessment-result {
+    align-self: stretch;
+    justify-content: space-between;
+  }
+
+  .chart-container {
+    height: 350px;
+    padding: 15px;
+  }
+
+  .chart-container canvas {
+    max-height: 300px !important;
+    height: 300px !important;
   }
 }
 </style>
