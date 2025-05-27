@@ -18,21 +18,21 @@
 
       <!-- 서비스 소개 섹션 -->
       <div id="services-section" class="services-section">
-        <div class="service-item academy" @click="navigateTo('financeAcademy')">
-          <div class="icon">
-            <i class="fas fa-graduation-cap"></i>
-          </div>
-          <h2>금융 아카데미</h2>
-          <p>기초부터 심화까지 체계적인 금융 교육 콘텐츠를 제공합니다</p>
-          <div class="btn-more">자세히 알아보기 →</div>
-        </div>
-        
         <div class="service-item info" @click="navigateTo('financeInfo')">
           <div class="icon">
             <i class="fas fa-info-circle"></i>
           </div>
           <h2>금융 정보 길잡이</h2>
           <p>실생활에 필요한 유용한 금융 정보와 최신 트렌드를 확인하세요</p>
+          <div class="btn-more">자세히 알아보기 →</div>
+        </div>
+
+        <div class="service-item academy" @click="navigateTo('financeAcademy')">
+          <div class="icon">
+            <i class="fas fa-graduation-cap"></i>
+          </div>
+          <h2>금융 아카데미</h2>
+          <p>기초부터 심화까지 체계적인 금융 교육 콘텐츠를 제공합니다</p>
           <div class="btn-more">자세히 알아보기 →</div>
         </div>
       </div>

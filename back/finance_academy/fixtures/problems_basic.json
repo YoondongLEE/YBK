@@ -1,0 +1,631 @@
+{
+  "adult_basic": [
+    {
+      "id": 1,
+      "text": "금융 목표를 설정할 때 가장 먼저 해야 할 일은?",
+      "keywords": ["금융 목표", "목표 금액과 기간 설정", "투자 상품 가입", "대출 신청", "카드 한도 상향"],
+      "choices": [
+        { "id": 1, "text": "목표 금액과 기간 설정", "is_correct": true },
+        { "id": 2, "text": "투자 상품 가입", "is_correct": false },
+        { "id": 3, "text": "대출 신청", "is_correct": false },
+        { "id": 4, "text": "카드 한도 상향", "is_correct": false }
+      ],
+      "explanation": "금융 목표를 체계적으로 달성하려면 구체적 금액과 기한을 정하는 것이 중요합니다."
+    },
+    {
+      "id": 2,
+      "text": "월별 고정지출과 변동지출을 구분하는 이유는?",
+      "keywords": ["고정지출", "재정 상태 파악", "투자 전략", "신용점수 관리", "보험료 납부"],
+      "choices": [
+        { "id": 1, "text": "재정 상태 파악", "is_correct": true },
+        { "id": 2, "text": "투자 전략 수립", "is_correct": false },
+        { "id": 3, "text": "신용점수 관리", "is_correct": false },
+        { "id": 4, "text": "보험료 납부", "is_correct": false }
+      ],
+      "explanation": "고정·변동지출을 분리하면 실제 여유자금을 정확히 계산할 수 있습니다."
+    },
+    {
+      "id": 3,
+      "text": "효율적인 소비 관리를 위해 권장되는 도구는?",
+      "keywords": ["가계부 앱", "소비 관리", "증권계좌", "부동산 중개 앱", "스포츠 뉴스 앱"],
+      "choices": [
+        { "id": 1, "text": "가계부 앱", "is_correct": true },
+        { "id": 2, "text": "증권계좌", "is_correct": false },
+        { "id": 3, "text": "부동산 중개 앱", "is_correct": false },
+        { "id": 4, "text": "스포츠 뉴스 앱", "is_correct": false }
+      ],
+      "explanation": "가계부 앱은 수입과 지출을 체계적으로 기록해 줍니다."
+    },
+    {
+      "id": 4,
+      "text": "구독 서비스 비용을 줄이기 위한 방법은?",
+      "keywords": ["구독 서비스", "사용 내역 점검", "신용카드 한도", "대출", "공유"],
+      "choices": [
+        { "id": 1, "text": "사용 내역 점검", "is_correct": true },
+        { "id": 2, "text": "신용카드 한도 올리기", "is_correct": false },
+        { "id": 3, "text": "대출받기", "is_correct": false },
+        { "id": 4, "text": "지인에게 공유", "is_correct": false }
+      ],
+      "explanation": "구독 내역을 주기적으로 확인하면 불필요한 지출을 줄일 수 있습니다."
+    },
+    {
+      "id": 5,
+      "text": "할인 쿠폰과 프로모션을 활용할 때 주의할 점은?",
+      "keywords": ["할인 쿠폰", "유효기간 확인", "무분별 사용", "현금 결제", "자동 연장"],
+      "choices": [
+        { "id": 1, "text": "유효기간 확인", "is_correct": true },
+        { "id": 2, "text": "무분별 사용", "is_correct": false },
+        { "id": 3, "text": "현금 결제", "is_correct": false },
+        { "id": 4, "text": "자동 연장", "is_correct": false }
+      ],
+      "explanation": "쿠폰 유효기간을 확인해야 할인 혜택을 놓치지 않습니다."
+    },
+    {
+      "id": 6,
+      "text": "비상금으로 권장되는 비율은 월 소득의 몇 퍼센트인가요?",
+      "keywords": ["비상금", "10%", "1%", "50%", "100%"],
+      "choices": [
+        { "id": 1, "text": "10%", "is_correct": true },
+        { "id": 2, "text": "1%", "is_correct": false },
+        { "id": 3, "text": "50%", "is_correct": false },
+        { "id": 4, "text": "100%", "is_correct": false }
+      ],
+      "explanation": "월 소득의 약 10%를 비상금으로 저축하는 것이 적당합니다."
+    },
+    {
+      "id": 7,
+      "text": "신용카드 명세서를 확인하는 적절한 주기는?",
+      "keywords": ["명세서 확인", "월 1회", "분기 1회", "연 1회", "미확인"],
+      "choices": [
+        { "id": 1, "text": "월 1회", "is_correct": true },
+        { "id": 2, "text": "분기 1회", "is_correct": false },
+        { "id": 3, "text": "연 1회", "is_correct": false },
+        { "id": 4, "text": "거의 확인 안함", "is_correct": false }
+      ],
+      "explanation": "매달 명세서를 확인하면 이상 거래를 빠르게 발견할 수 있습니다."
+    },
+    {
+      "id": 8,
+      "text": "지출 패턴을 분석하여 절약을 도와주는 서비스는?",
+      "keywords": ["가계부 분석", "지출 패턴", "주식 추천", "뉴스 구독", "영화 스트리밍"],
+      "choices": [
+        { "id": 1, "text": "가계부 분석", "is_correct": true },
+        { "id": 2, "text": "주식 추천", "is_correct": false },
+        { "id": 3, "text": "뉴스 구독", "is_correct": false },
+        { "id": 4, "text": "영화 스트리밍", "is_correct": false }
+      ],
+      "explanation": "가계부 분석 서비스는 지출 내역을 카테고리별로 보여줍니다."
+    },
+    {
+      "id": 9,
+      "text": "제로 베이스 예산이란 무엇을 의미하나요?",
+      "keywords": ["제로 베이스 예산", "모든 지출 계획", "저축", "투자", "채무상환"],
+      "choices": [
+        { "id": 1, "text": "모든 지출을 처음부터 계획", "is_correct": true },
+        { "id": 2, "text": "저축만 고려", "is_correct": false },
+        { "id": 3, "text": "투자 우선", "is_correct": false },
+        { "id": 4, "text": "채무상환 우선", "is_correct": false }
+      ],
+      "explanation": "제로 베이스 예산은 지출을 제로에서 계획해 예산을 효과적으로 관리합니다."
+    },
+    {
+      "id": 10,
+      "text": "쇼핑 전 가격 비교 앱 사용의 장점은?",
+      "keywords": ["가격 비교 앱", "최저가 확인", "상품 등록", "이자 계산", "신용조회"],
+      "choices": [
+        { "id": 1, "text": "최저가 확인", "is_correct": true },
+        { "id": 2, "text": "상품 등록", "is_correct": false },
+        { "id": 3, "text": "이자 계산", "is_correct": false },
+        { "id": 4, "text": "신용조회", "is_correct": false }
+      ],
+      "explanation": "가격 비교 앱은 다양한 판매처의 가격을 한눈에 보여줍니다."
+    },
+    {
+      "id": 11,
+      "text": "신용카드 결제일과 승인일의 차이는?",
+      "keywords": ["결제일", "대금 지불일", "승인일", "소비 발생일", "동일"],
+      "choices": [
+        { "id": 1, "text": "결제일은 대금 지불일, 승인일은 소비 발생일", "is_correct": true },
+        { "id": 2, "text": "승인일은 대금 지불일, 결제일은 소비 발생일", "is_correct": false },
+        { "id": 3, "text": "결제일은 소비 발생일", "is_correct": false },
+        { "id": 4, "text": "둘은 동일", "is_correct": false }
+      ],
+      "explanation": "결제일은 카드 대금을 지급하는 날, 승인일은 결제가 승인된 소비 시점을 말합니다."
+    },
+    {
+      "id": 12,
+      "text": "신용카드의 최소 결제금액을 납부하면 남은 잔액은 어떻게 되는가?",
+      "keywords": ["최소 결제금액", "이월", "자동 취소", "전액 상환", "연체료"],
+      "choices": [
+        { "id": 1, "text": "이월되어 이자가 붙음", "is_correct": true },
+        { "id": 2, "text": "자동 취소", "is_correct": false },
+        { "id": 3, "text": "전액 상환", "is_correct": false },
+        { "id": 4, "text": "연체료 부과 안함", "is_correct": false }
+      ],
+      "explanation": "최소 금액 납부 시 나머지 잔액은 이월되어 이자가 부과됩니다."
+    },
+    {
+      "id": 13,
+      "text": "할부와 일시불의 가장 큰 차이는?",
+      "keywords": ["할부", "분할 지불", "일시불", "한 번에 지불", "동일"],
+      "choices": [
+        { "id": 1, "text": "할부는 금액을 분할 지불, 일시불은 한 번에 지불", "is_correct": true },
+        { "id": 2, "text": "일시불은 분할 지불", "is_correct": false },
+        { "id": 3, "text": "할부는 전액 지불", "is_correct": false },
+        { "id": 4, "text": "둘 다 동일", "is_correct": false }
+      ],
+      "explanation": "할부는 구매 금액을 여러 번 나눠 납부, 일시불은 한 번에 납부하는 방식입니다."
+    },
+    {
+      "id": 14,
+      "text": "20대가 학자금 대출을 받을 때 고려해야 할 주요 조건은?",
+      "keywords": ["학자금 대출", "금리 유형", "카드 혜택", "환율", "주택 담보"],
+      "choices": [
+        { "id": 1, "text": "금리 유형", "is_correct": true },
+        { "id": 2, "text": "카드 혜택", "is_correct": false },
+        { "id": 3, "text": "환율", "is_correct": false },
+        { "id": 4, "text": "주택 담보", "is_correct": false }
+      ],
+      "explanation": "학자금 대출은 고정금리와 변동금리 조건을 잘 비교해야 합니다."
+    },
+    {
+      "id": 15,
+      "text": "주택담보대출과 신용대출의 주요 차이점은?",
+      "keywords": ["주택담보대출", "신용대출", "담보 여부", "이자율", "조건"],
+      "choices": [
+        { "id": 1, "text": "담보 여부", "is_correct": true },
+        { "id": 2, "text": "이자율 동일", "is_correct": false },
+        { "id": 3, "text": "만기 동일", "is_correct": false },
+        { "id": 4, "text": "조건 없음", "is_correct": false }
+      ],
+      "explanation": "주택담보대출은 부동산을 담보로, 신용대출은 신용만으로 대출합니다."
+    },
+    {
+      "id": 16,
+      "text": "DTI와 DSR 중 대출 심사 시 더 포괄적으로 상환능력을 평가하는 지표는?",
+      "keywords": ["DTI", "DSR", "상환능력", "P/E", "LTV"],
+      "choices": [
+        { "id": 1, "text": "DSR", "is_correct": true },
+        { "id": 2, "text": "DTI", "is_correct": false },
+        { "id": 3, "text": "P/E", "is_correct": false },
+        { "id": 4, "text": "LTV", "is_correct": false }
+      ],
+      "explanation": "DSR은 모든 부채 원리금상환액 대비 소득 비율을 평가합니다."
+    },
+    {
+      "id": 17,
+      "text": "원리금 균등 상환 방식이란 무엇인가요?",
+      "keywords": ["원리금 균등", "월 상환액 일정", "이자 납부", "원금 납부", "만기일"],
+      "choices": [
+        { "id": 1, "text": "월 상환액 일정", "is_correct": true },
+        { "id": 2, "text": "이자만 납부", "is_correct": false },
+        { "id": 3, "text": "원금만 납부", "is_correct": false },
+        { "id": 4, "text": "만기일 한 번에", "is_correct": false }
+      ],
+      "explanation": "원리금 균등 상환은 매월 일정 금액을 상환하는 방식입니다."
+    },
+    {
+      "id": 18,
+      "text": "만기 일시 상환 방식의 특징은?",
+      "keywords": ["만기 일시 상환", "만기", "원금 및 이자", "월 납부", "무이자"],
+      "choices": [
+        { "id": 1, "text": "만기에 원금과 이자 함께 납부", "is_correct": true },
+        { "id": 2, "text": "매월 일정액 납부", "is_correct": false },
+        { "id": 3, "text": "일시불 구매", "is_correct": false },
+        { "id": 4, "text": "무이자", "is_correct": false }
+      ],
+      "explanation": "만기 일시 상환은 만기에 원금과 이자를 한 번에 상환하는 방식입니다."
+    },
+    {
+      "id": 19,
+      "text": "신용점수를 높이기 위해 가장 중요한 행동은?",
+      "keywords": ["신용점수", "연체 없음", "카드 한도", "대출", "카드 개설"],
+      "choices": [
+        { "id": 1, "text": "연체 없이 납부", "is_correct": true },
+        { "id": 2, "text": "카드 한도 높이기", "is_correct": false },
+        { "id": 3, "text": "대출 다수", "is_correct": false },
+        { "id": 4, "text": "모든 카드 개설", "is_correct": false }
+      ],
+      "explanation": "제때 납부 이력은 신용점수에 큰 영향을 미칩니다."
+    },
+    {
+      "id": 20,
+      "text": "학자금 대출이 이자 상환을 유예해 주는 경우는?",
+      "keywords": ["학자금 대출", "이자 상환 유예", "취업 후", "재학 중", "만 30세"],
+      "choices": [
+        { "id": 1, "text": "취업 후 상환 유예", "is_correct": true },
+        { "id": 2, "text": "무조건 재학 중", "is_correct": false },
+        { "id": 3, "text": "만 30세 이후", "is_correct": false },
+        { "id": 4, "text": "승인 즉시", "is_correct": false }
+      ],
+      "explanation": "일부 학자금 대출은 일정 소득 기준 충족 시 취업 후 상환을 유예해 줍니다."
+    },
+    {
+      "id": 21,
+      "text": "주식 매수 시 최소 거래 단위는?",
+      "keywords": ["주식 매수", "1주", "10주", "100주", "1000주"],
+      "choices": [
+        { "id": 1, "text": "1주", "is_correct": true },
+        { "id": 2, "text": "10주", "is_correct": false },
+        { "id": 3, "text": "100주", "is_correct": false },
+        { "id": 4, "text": "1000주", "is_correct": false }
+      ],
+      "explanation": "개별 주식은 최소 1주 단위로 거래할 수 있습니다."
+    },
+    {
+      "id": 22,
+      "text": "분할 매수 전략의 장점은?",
+      "keywords": ["분할 매수", "리스크 감소", "수익률 보장", "손실 회피", "전액 투자"],
+      "choices": [
+        { "id": 1, "text": "가격 변동 리스크 감소", "is_correct": true },
+        { "id": 2, "text": "수익률 보장", "is_correct": false },
+        { "id": 3, "text": "손실 회피 불가", "is_correct": false },
+        { "id": 4, "text": "즉시 전액 투자", "is_correct": false }
+      ],
+      "explanation": "분할 매수는 매수 타이밍에 따른 가격 변동 리스크를 줄여 줍니다."
+    },
+    {
+      "id": 23,
+      "text": "ETF의 특징 중 가장 큰 장점은?",
+      "keywords": ["ETF", "분산투자", "무조건 고수익", "개별 투자", "장외거래"],
+      "choices": [
+        { "id": 1, "text": "분산투자 가능", "is_correct": true },
+        { "id": 2, "text": "무조건 고수익", "is_correct": false },
+        { "id": 3, "text": "개별 종목 투자", "is_correct": false },
+        { "id": 4, "text": "장외 거래", "is_correct": false }
+      ],
+      "explanation": "ETF는 여러 종목에 한 번에 투자해 분산효과를 얻을 수 있습니다."
+    },
+    {
+      "id": 24,
+      "text": "펀드를 선택할 때 고려해야 할 중요한 요소는?",
+      "keywords": ["펀드 선택", "총보수", "펀드명", "카드 혜택", "환전 수수료"],
+      "choices": [
+        { "id": 1, "text": "총보수", "is_correct": true },
+        { "id": 2, "text": "펀드명", "is_correct": false },
+        { "id": 3, "text": "카드 혜택", "is_correct": false },
+        { "id": 4, "text": "환전 수수료", "is_correct": false }
+      ],
+      "explanation": "총보수(운용+판매) 낮추기가 수익률에 유리합니다."
+    },
+    {
+      "id": 25,
+      "text": "배당 재투자의 효과는?",
+      "keywords": ["배당 재투자", "복리", "현금환수", "세금", "위험"],
+      "choices": [
+        { "id": 1, "text": "복리 효과", "is_correct": true },
+        { "id": 2, "text": "즉시 현금환수", "is_correct": false },
+        { "id": 3, "text": "세금 절감", "is_correct": false },
+        { "id": 4, "text": "위험 증가", "is_correct": false }
+      ],
+      "explanation": "배당금을 재투자하면 복리 효과로 장기 수익이 커집니다."
+    },
+    {
+      "id": 26,
+      "text": "모의투자 계좌를 활용하는 이유는?",
+      "keywords": ["모의투자", "실전 감각", "수익 보장", "위험 회피", "세금 절감"],
+      "choices": [
+        { "id": 1, "text": "실전 감각 익히기", "is_correct": true },
+        { "id": 2, "text": "수익 보장", "is_correct": false },
+        { "id": 3, "text": "위험 회피", "is_correct": false },
+        { "id": 4, "text": "세금 절감", "is_correct": false }
+      ],
+      "explanation": "모의투자는 실제 돈을 쓰지 않고 시장 경험을 쌓게 해 줍니다."
+    },
+    {
+      "id": 27,
+      "text": "장기투자의 핵심은 무엇인가요?",
+      "keywords": ["장기투자", "복리", "시간", "단기차익", "고빈도거래"],
+      "choices": [
+        { "id": 1, "text": "복리와 시간", "is_correct": true },
+        { "id": 2, "text": "단기 차익", "is_correct": false },
+        { "id": 3, "text": "고빈도거래", "is_correct": false },
+        { "id": 4, "text": "무조건 매도", "is_correct": false }
+      ],
+      "explanation": "장기투자는 시간과 복리를 활용해 자산을 키우는 전략입니다."
+    },
+    {
+      "id": 28,
+      "text": "샤프 지수(Sharpe Ratio)는 무엇을 평가하는가?",
+      "keywords": ["샤프 지수", "위험 대비 수익", "총수익률", "배당률", "변동성"],
+      "choices": [
+        { "id": 1, "text": "위험 대비 초과수익", "is_correct": true },
+        { "id": 2, "text": "총수익률", "is_correct": false },
+        { "id": 3, "text": "배당률", "is_correct": false },
+        { "id": 4, "text": "변동성", "is_correct": false }
+      ],
+      "explanation": "샤프 지수는 단위 위험당 얻는 초과수익을 측정합니다."
+    },
+    {
+      "id": 29,
+      "text": "달러-코스트 에버리징 전략이란?",
+      "keywords": ["달러코스트에버리징", "분할투자", "평균단가", "환율고정", "현금보유"],
+      "choices": [
+        { "id": 1, "text": "일정 금액 분할 투자", "is_correct": true },
+        { "id": 2, "text": "환율 고정", "is_correct": false },
+        { "id": 3, "text": "일시불 투자", "is_correct": false },
+        { "id": 4, "text": "현금 보유", "is_correct": false }
+      ],
+      "explanation": "정기적으로 일정 금액을 투자해 매수 가격을 평균화하는 기법입니다."
+    },
+    {
+      "id": 30,
+      "text": "적립식펀드의 장점은?",
+      "keywords": ["적립식 펀드", "소액투자", "분할투자", "고위험", "환전"],
+      "choices": [
+        { "id": 1, "text": "소액으로 시작 가능", "is_correct": true },
+        { "id": 2, "text": "즉시 전액 투자", "is_correct": false },
+        { "id": 3, "text": "고위험", "is_correct": false },
+        { "id": 4, "text": "자동 환전", "is_correct": false }
+      ],
+      "explanation": "적립식펀드는 매월 일정 금액을 소액으로 투자할 수 있게 해 줍니다."
+    },
+    {
+      "id": 31,
+      "text": "실비보험의 주요 보장은?",
+      "keywords": ["실비보험", "치료비", "입원비", "자동차보험", "화재보험"],
+      "choices": [
+        { "id": 1, "text": "치료비 및 입원비", "is_correct": true },
+        { "id": 2, "text": "자동차 사고", "is_correct": false },
+        { "id": 3, "text": "화재 피해", "is_correct": false },
+        { "id": 4, "text": "도난 보상", "is_correct": false }
+      ],
+      "explanation": "실비보험은 실제 의료비용을 보상해 줍니다."
+    },
+    {
+      "id": 32,
+      "text": "암보험 가입 시 중요한 검토사항은?",
+      "keywords": ["암보험", "보장범위", "면책조항", "보험기간", "보험료"],
+      "choices": [
+        { "id": 1, "text": "보장범위 및 면책조항", "is_correct": true },
+        { "id": 2, "text": "환율", "is_correct": false },
+        { "id": 3, "text": "ATM 수수료", "is_correct": false },
+        { "id": 4, "text": "모의투자 수익률", "is_correct": false }
+      ],
+      "explanation": "면책조항을 통해 보장 제외 항목을 정확히 알아야 합니다."
+    },
+    {
+      "id": 33,
+      "text": "자동차 보험 갱신 전 확인 사항은?",
+      "keywords": ["자동차보험", "갱신", "보험료 변동", "운전자 등급", "세금"],
+      "choices": [
+        { "id": 1, "text": "보험료 변동 및 할인 조건", "is_correct": true },
+        { "id": 2, "text": "계좌 잔고", "is_correct": false },
+        { "id": 3, "text": "OTP 설정", "is_correct": false },
+        { "id": 4, "text": "모의투자 보고서", "is_correct": false }
+      ],
+      "explanation": "갱신 전 보험료와 할인 조건을 확인해 비용을 절감할 수 있습니다."
+    },
+    {
+      "id": 34,
+      "text": "정기보험과 종신보험의 차이는?",
+      "keywords": ["정기보험", "종신보험", "보장기간", "환급금", "사망보험금"],
+      "choices": [
+        { "id": 1, "text": "보장기간 유무", "is_correct": true },
+        { "id": 2, "text": "투자수익률", "is_correct": false },
+        { "id": 3, "text": "수수료", "is_correct": false },
+        { "id": 4, "text": "카드 혜택", "is_correct": false }
+      ],
+      "explanation": "정기보험은 일정 기간만 보장하고, 종신보험은 평생 보장합니다."
+    },
+    {
+      "id": 35,
+      "text": "보험료 납입 기간 후 보장 유지하려면?",
+      "keywords": ["보험료납입", "보장유지", "해지", "추가납입", "환급"],
+      "choices": [
+        { "id": 1, "text": "해지하지 않고 유지", "is_correct": true },
+        { "id": 2, "text": "자동 해지", "is_correct": false },
+        { "id": 3, "text": "환급 청구", "is_correct": false },
+        { "id": 4, "text": "추가 납입", "is_correct": false }
+      ],
+      "explanation": "납입 기간 후에도 해지하지 않으면 보장이 계속 유지됩니다."
+    },
+    {
+      "id": 36,
+      "text": "보험 청구 시 필요한 서류는?",
+      "keywords": ["보험청구", "진단서", "영수증", "신분증", "진료기록"],
+      "choices": [
+        { "id": 1, "text": "진단서 및 영수증", "is_correct": true },
+        { "id": 2, "text": "신분증 사본", "is_correct": false },
+        { "id": 3, "text": "주식계좌 내역", "is_correct": false },
+        { "id": 4, "text": "모의투자 보고서", "is_correct": false }
+      ],
+      "explanation": "의료비 청구를 위해 진단서와 영수증을 제출해야 합니다."
+    },
+    {
+      "id": 37,
+      "text": "비상시에 대비해 준비해야 할 것은?",
+      "keywords": ["비상금", "비상식량", "보험", "주식", "암호화폐"],
+      "choices": [
+        { "id": 1, "text": "비상금 및 가입 보험", "is_correct": true },
+        { "id": 2, "text": "주식 매수", "is_correct": false },
+        { "id": 3, "text": "카드 무한 사용", "is_correct": false },
+        { "id": 4, "text": "대출 증가", "is_correct": false }
+      ],
+      "explanation": "비상금과 적절한 보험은 예기치 못한 상황에 대비해 줍니다."
+    },
+    {
+      "id": 38,
+      "text": "피싱 사기 메시지를 받으면 우선 해야 할 일은?",
+      "keywords": ["피싱", "메시지 삭제", "URL 클릭 금지", "신고", "전화 회신"],
+      "choices": [
+        { "id": 1, "text": "URL 클릭 금지 및 삭제", "is_correct": true },
+        { "id": 2, "text": "전화 회신", "is_correct": false },
+        { "id": 3, "text": "SNS 공유", "is_correct": false },
+        { "id": 4, "text": "파일 다운로드", "is_correct": false }
+      ],
+      "explanation": "피싱 URL을 클릭하지 않고 즉시 삭제해야 합니다."
+    },
+    {
+      "id": 39,
+      "text": "긴급대출 없이 비상금을 마련하는 방법은?",
+      "keywords": ["저축계획", "비상금", "대출", "투자", "절약"],
+      "choices": [
+        { "id": 1, "text": "저축 계획 재점검", "is_correct": true },
+        { "id": 2, "text": "무분별 대출", "is_correct": false },
+        { "id": 3, "text": "주식 급매", "is_correct": false },
+        { "id": 4, "text": "암호화폐 투기", "is_correct": false }
+      ],
+      "explanation": "기존 저축 계획을 조정해 비상금을 마련해 보는 것이 안전합니다."
+    },
+    {
+      "id": 40,
+      "text": "의료비 대비 어떤 보험을 추천하나요?",
+      "keywords": ["실손의료보험", "암보험", "자동차보험", "여행자보험", "화재보험"],
+      "choices": [
+        { "id": 1, "text": "실손의료보험", "is_correct": true },
+        { "id": 2, "text": "암보험", "is_correct": false },
+        { "id": 3, "text": "자동차보험", "is_correct": false },
+        { "id": 4, "text": "여행자보험", "is_correct": false }
+      ],
+      "explanation": "실손의료보험은 실제 발생한 의료비를 보상해 줍니다."
+    },
+    {
+      "id": 41,
+      "text": "모바일 뱅킹 앱 사용 시 추가 보안 수단은?",
+      "keywords": ["모바일뱅킹", "OTP", "생체인증", "자동로그인", "쿠키"],
+      "choices": [
+        { "id": 1, "text": "생체인증 또는 OTP", "is_correct": true },
+        { "id": 2, "text": "자동로그인", "is_correct": false },
+        { "id": 3, "text": "쿠키 저장", "is_correct": false },
+        { "id": 4, "text": "광고 수신", "is_correct": false }
+      ],
+      "explanation": "생체인증과 OTP를 통해 보안을 강화할 수 있습니다."
+    },
+    {
+      "id": 42,
+      "text": "간편 송금 서비스 예시가 아닌 것은?",
+      "keywords": ["토스", "카카오페이", "네이버페이", "모바일 쿠킹앱", "배달앱"],
+      "choices": [
+        { "id": 1, "text": "토스", "is_correct": false },
+        { "id": 2, "text": "카카오페이", "is_correct": false },
+        { "id": 3, "text": "네이버페이", "is_correct": false },
+        { "id": 4, "text": "모바일 쿠킹앱", "is_correct": true }
+      ],
+      "explanation": "모바일 쿠킹앱은 송금 서비스가 아닙니다."
+    },
+    {
+      "id": 43,
+      "text": "P2P 대출 서비스의 주된 리스크는?",
+      "keywords": ["P2P대출", "상환불이행", "변동금리", "수수료", "환율"],
+      "choices": [
+        { "id": 1, "text": "상환불이행", "is_correct": true },
+        { "id": 2, "text": "변동금리", "is_correct": false },
+        { "id": 3, "text": "수수료", "is_correct": false },
+        { "id": 4, "text": "환율 변동", "is_correct": false }
+      ],
+      "explanation": "P2P 대출은 차입자의 상환불이행 위험이 큽니다."
+    },
+    {
+      "id": 44,
+      "text": "로보어드바이저의 주요 기능은?",
+      "keywords": ["로보어드바이저", "자산배분", "수익보장", "AI투자", "위험관리"],
+      "choices": [
+        { "id": 1, "text": "자동 자산 배분", "is_correct": true },
+        { "id": 2, "text": "수익 보장", "is_correct": false },
+        { "id": 3, "text": "ATM 출금", "is_correct": false },
+        { "id": 4, "text": "주택 대출", "is_correct": false }
+      ],
+      "explanation": "로보어드바이저는 알고리즘 기반으로 자산을 자동 배분합니다."
+    },
+    {
+      "id": 45,
+      "text": "가상자산 거래 시 주의해야 할 점은?",
+      "keywords": ["가상자산", "지갑 주소", "보안", "변동성", "피싱"],
+      "choices": [
+        { "id": 1, "text": "지갑 주소 확인", "is_correct": true },
+        { "id": 2, "text": "은행 이자", "is_correct": false },
+        { "id": 3, "text": "보험료", "is_correct": false },
+        { "id": 4, "text": "주택 담보", "is_correct": false }
+      ],
+      "explanation": "잘못된 지갑 주소로 전송하면 자산을 복구할 수 없습니다."
+    },
+    {
+      "id": 46,
+      "text": "API 연동 가계부의 장점은?",
+      "keywords": ["API연동", "자동 기록", "수동 입력", "보안", "데이터 분석"],
+      "choices": [
+        { "id": 1, "text": "자동 수입·지출 기록", "is_correct": true },
+        { "id": 2, "text": "수동 입력 필요", "is_correct": false },
+        { "id": 3, "text": "종이 영수증만 사용", "is_correct": false },
+        { "id": 4, "text": "ATM 위치 안내", "is_correct": false }
+      ],
+      "explanation": "API 연동으로 금융 내역을 자동으로 기록할 수 있습니다."
+    },
+    {
+      "id": 47,
+      "text": "오픈뱅킹 서비스의 핵심 기능은?",
+      "keywords": ["오픈뱅킹", "계좌 조회", "이체", "결제", "대출"],
+      "choices": [
+        { "id": 1, "text": "다수 계좌 잔액 조회", "is_correct": true },
+        { "id": 2, "text": "ATM 출금", "is_correct": false },
+        { "id": 3, "text": "무이자 할부", "is_correct": false },
+        { "id": 4, "text": "주식 매매", "is_correct": false }
+      ],
+      "explanation": "오픈뱅킹은 여러 은행 계좌를 한 곳에서 조회할 수 있게 합니다."
+    },
+    {
+      "id": 48,
+      "text": "소비 패턴 알리미의 주요 목적은?",
+      "keywords": ["소비패턴알리미", "지출경향", "절약", "포인트", "쿠폰"],
+      "choices": [
+        { "id": 1, "text": "지출 경향 파악", "is_correct": true },
+        { "id": 2, "text": "수익 실현", "is_correct": false },
+        { "id": 3, "text": "대출 신청", "is_correct": false },
+        { "id": 4, "text": "보험 가입", "is_correct": false }
+      ],
+      "explanation": "소비 패턴 알리미는 지출 특성을 분석해 알려 줍니다."
+    },
+    {
+      "id": 49,
+      "text": "해외 송금 앱 이용 시 주의할 점은?",
+      "keywords": ["해외송금", "환율 우대", "수수료", "송금 시간", "수취인 확인"],
+      "choices": [
+        { "id": 1, "text": "환율 우대 및 수수료 비교", "is_correct": true },
+        { "id": 2, "text": "ATM 위치", "is_correct": false },
+        { "id": 3, "text": "카드 한도", "is_correct": false },
+        { "id": 4, "text": "보험료 환급", "is_correct": false }
+      ],
+      "explanation": "송금 전 우대 환율과 수수료를 꼼꼼히 비교해야 합니다."
+    },
+    {
+      "id": 50,
+      "text": "QR 결제의 주요 장점은?",
+      "keywords": ["QR결제", "편리성", "속도", "보안", "무카드"],
+      "choices": [
+        { "id": 1, "text": "편리성과 속도", "is_correct": true },
+        { "id": 2, "text": "고액 거래 전용", "is_correct": false },
+        { "id": 3, "text": "신용점수 상승", "is_correct": false },
+        { "id": 4, "text": "자동 대출", "is_correct": false }
+      ],
+      "explanation": "QR 코드는 빠르고 간편하게 결제할 수 있게 해 줍니다."
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "예산·소비 관리",
+      "questions": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    },
+    {
+      "id": 2,
+      "name": "신용·대출 관리",
+      "questions": [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    },
+    {
+      "id": 3,
+      "name": "투자 기초",
+      "questions": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+    },
+    {
+      "id": 4,
+      "name": "보험·리스크 관리",
+      "questions": [31, 32, 33, 34, 35, 36, 37, 38, 39, 40]
+    },
+    {
+      "id": 5,
+      "name": "디지털 금융 활용",
+      "questions": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50]
+    }
+  ]
+}

@@ -5,7 +5,7 @@
     
     <div class="academy-cards">
       <!-- 문제로 학습하기 카드 -->
-      <div class="academy-card" @click="showComingSoon('문제로 학습하기')">
+      <div class="academy-card" @click="showDifficultySelector('problem')">
         <div class="card-image">
           <img src="@/assets/icons/problems.png" alt="문제로 학습하기">
         </div>
@@ -16,7 +16,7 @@
       </div>
       
       <!-- 개념으로 학습하기 카드 -->
-      <div class="academy-card" @click="showComingSoon('개념으로 학습하기')">
+      <div class="academy-card" @click="showDifficultySelector('concept')">
         <div class="card-image">
           <img src="@/assets/icons/concept.png" alt="개념으로 학습하기">
         </div>
@@ -82,29 +82,117 @@
         <router-link to="/login" class="login-link">로그인하기 →</router-link>
       </p>
     </div>
+
+    <!-- 난이도 선택 모달 -->
+    <div v-if="showModal" class="modal-overlay" @click="closeModal">
+      <div class="modal-content" @click.stop>
+        <h2>{{ getModalTitle() }}</h2>
+        <div class="difficulty-buttons">
+          <button 
+            v-for="difficulty in difficulties" 
+            :key="difficulty.value"
+            class="difficulty-btn"
+            @click="selectDifficulty(difficulty.value)"
+          >
+            <h3>{{ difficulty.label }}</h3>
+            <p>{{ getDifficultyDescription(difficulty.value) }}</p>
+          </button>
+        </div>
+        <button class="close-btn" @click="closeModal">취소</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/auth';
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
+import axios from 'axios'
 
-const router = useRouter();
-const authStore = useAuthStore();
-const isAuthenticated = ref(authStore.isAuthenticated);
+const router = useRouter()
+const authStore = useAuthStore()
+const isAuthenticated = ref(authStore.isAuthenticated)
+const showModal = ref(false)
+const difficulties = ref([])
+const selectedType = ref('') // 'problem' 또는 'concept'
 
 // 학습 진행 현황 데이터 (실제로는 API에서 가져오거나 상태 관리에서 가져와야 함)
 const progressData = ref({
   problem: 65,
   concept: 40,
   exam: 30
-});
+})
 
 // 기능 준비 중 메시지 표시
 const showComingSoon = (feature) => {
-  alert(`${feature} 기능은 현재 개발 중입니다. 곧 만나보실 수 있습니다!`);
-};
+  alert(`${feature} 기능은 현재 개발 중입니다. 곧 만나보실 수 있습니다!`)
+}
+
+const showDifficultySelector = (type) => {
+  selectedType.value = type
+  showModal.value = true
+}
+
+const closeModal = () => {
+  showModal.value = false
+  selectedType.value = ''
+}
+
+const getModalTitle = () => {
+  if (selectedType.value === 'problem') {
+    return '문제풀이 난이도를 선택하세요'
+  } else if (selectedType.value === 'concept') {
+    return '개념학습 난이도를 선택하세요'
+  }
+  return '난이도를 선택하세요'
+}
+
+const getDifficultyDescription = (difficulty) => {
+  const descriptions = {
+    'youth': '기초적인 금융 개념과 용어',
+    'adult_basic': '실생활 금융 지식과 상품 이해',
+    'adult_advanced': '투자와 자산관리, 심화 금융 지식'
+  }
+  return descriptions[difficulty] || ''
+}
+
+const selectDifficulty = (difficulty) => {
+  if (selectedType.value === 'problem') {
+    router.push({ 
+      name: 'problem-learning', 
+      params: { difficulty } 
+    })
+  } else if (selectedType.value === 'concept') {
+    router.push({
+      name: 'concept-category',
+      params: { difficulty }
+    })
+  }
+  closeModal()
+}
+
+// 기존 함수들과의 호환성을 위해 유지
+const startQuiz = (difficulty) => {
+  router.push({ 
+    name: 'problem-learning', 
+    params: { difficulty } 
+  })
+  closeModal()
+}
+
+const fetchDifficulties = async () => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/finance-academy/quiz/difficulties/`)
+    difficulties.value = response.data
+  } catch (error) {
+    console.error('난이도 목록을 가져오는데 실패했습니다:', error)
+  }
+}
+
+onMounted(() => {
+  fetchDifficulties()
+})
 </script>
 
 <style scoped>
@@ -171,7 +259,7 @@ h1::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f5f7fa; /* 배경색 추가하여 이미지가 작아져도 자연스럽게 */
+  background-color: #f5f7fa;
 }
 
 .card-image::before {
@@ -192,14 +280,15 @@ h1::after {
 }
 
 .card-image img {
-  max-height: 100%; /* 높이도 90%로 제한 */
-  width: auto; /* 원본 비율 유지 */
-  height: auto; /* 원본 비율 유지 */
-  object-fit: contain; /* cover에서 contain으로 변경하여 이미지가 잘리지 않게 함 */
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
   transition: transform 0.5s;
 }
+
 .academy-card:hover .card-image img {
-  transform: scale(1.05); /* 1.08에서 1.05로 줄여 과도한 확대 방지 */
+  transform: scale(1.05);
 }
 
 .card-content {
@@ -222,7 +311,6 @@ h1::after {
   line-height: 1.5;
 }
 
-/* 트렌디한 카드 액션 버튼 추가 */
 .academy-card::after {
   content: '→';
   position: absolute;
@@ -248,20 +336,18 @@ h1::after {
   transform: translateX(0);
 }
 
-/* 카드 타입별 색상 다르게 적용 */
 .academy-card:nth-child(1)::after {
-  background-color: #4a90e2; /* 파란색 - 문제로 학습하기 */
+  background-color: #4a90e2;
 }
 
 .academy-card:nth-child(2)::after {
-  background-color: #27ae60; /* 녹색 - 개념으로 학습하기 */
+  background-color: #27ae60;
 }
 
 .academy-card:nth-child(3)::after {
-  background-color: #e74c3c; /* 빨간색 - 평가 응시 */
+  background-color: #e74c3c;
 }
 
-/* 학습 진행 현황 섹션 스타일 */
 .progress-section {
   background-color: #f9f9f9;
   padding: 30px;
@@ -314,7 +400,6 @@ h1::after {
   transition: width 0.5s ease;
 }
 
-/* 로그인 안내 메시지 스타일 */
 .login-notice {
   margin-top: 40px;
   padding: 20px;
@@ -335,7 +420,84 @@ h1::after {
   text-decoration: underline;
 }
 
-/* 부드러운 트랜지션 효과 추가 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 90%;
+}
+
+.modal-content h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.difficulty-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.difficulty-btn {
+  padding: 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.difficulty-btn:hover {
+  border-color: #4a90e2;
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+}
+
+.difficulty-btn h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.difficulty-btn p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.close-btn {
+  width: 100%;
+  padding: 12px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.close-btn:hover {
+  background: #5a6268;
+}
+
 * {
   transition-property: transform, box-shadow, opacity, background-color, color;
   transition-duration: 0.3s;

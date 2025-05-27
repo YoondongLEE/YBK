@@ -15,7 +15,11 @@ import PostListView from '@/views/community/PostListView.vue'
 import PostDetailView from '@/views/community/PostDetailView.vue'
 import PostCreateView from '@/views/community/PostCreateView.vue'
 import PostEditView from '@/views/community/PostEditView.vue'
-
+import ProblemLearningView from '@/views/academy/ProblemLearningView.vue'
+import QuizListView from '@/views/academy/QuizListView.vue'
+import InteractiveQuizView from '@/views/academy/InteractiveQuizView.vue'
+import ConceptCategoryView from '@/views/academy/ConceptCategoryView.vue'
+import ConceptStudyView from '@/views/academy/ConceptStudyView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +49,37 @@ const router = createRouter({
       path: '/finance-academy',
       name: 'financeAcademy',
       component: FinanceAcademyView
+    },
+    {
+      path: '/finance-academy/problem-learning/:difficulty',
+      name: 'problem-learning',
+      component: ProblemLearningView
+    },
+    // 새로 추가되는 퀴즈 관련 라우트들
+    {
+      path: '/finance-academy/quiz',
+      name: 'quiz-list',
+      component: QuizListView,
+      meta: { requiresAuth: false }
+    },
+    {
+      path: '/finance-academy/quiz/:difficulty',
+      name: 'interactiveQuiz',
+      component: InteractiveQuizView,
+      meta: { requiresAuth: true }
+    },
+    // 새로 추가되는 개념 학습 관련 라우트들
+    {
+      path: '/finance-academy/concept-study/:difficulty',
+      name: 'concept-category',
+      component: ConceptCategoryView,
+      meta: { requiresAuth: false }
+    },
+    {
+      path: '/finance-academy/concept-study/:difficulty/category/:categoryId',
+      name: 'concept-study',
+      component: ConceptStudyView,
+      meta: { requiresAuth: false }
     },
     {
       path: '/finance-info',
@@ -97,58 +132,34 @@ const router = createRouter({
       }
     },
     {
-    path: '/community',
-    name: 'community',
-    component: CommunityView,
-    children: [
-      {
-        path: '',
-        name: 'post-list',
-        component: PostListView
-      },
-      {
-        path: 'create',
-        name: 'post-create',
-        component: PostCreateView,
-        meta: { requiresAuth: true }
-      },
-      {
-        path: ':id',
-        name: 'post-detail',
-        component: PostDetailView
-      },
-      {
-        path: ':id/edit',
-        name: 'post-edit',
-        component: PostEditView,
-        meta: { requiresAuth: true }
-      }
-    ]
-  },
-  // 아카데미
-  {
-    path: '/finance-academy',
-    name: 'financeAcademy',
-    component: () => import('../views/FinanceAcademyView.vue')
-  }
-  // 다음 라우트는 구현 준비가 완료되면 주석 해제하세요
-  /*
-  {
-    path: '/finance-academy/problem-learning',
-    name: 'problem-learning',
-    component: () => import('../views/academy/ProblemLearningView.vue')
-  },
-  {
-    path: '/finance-academy/concept-learning',
-    name: 'concept-learning',
-    component: () => import('../views/academy/ConceptLearningView.vue')
-  },
-  {
-    path: '/finance-academy/exam',
-    name: 'exam',
-    component: () => import('../views/academy/ExamView.vue')
-  }
-  */
+      path: '/community',
+      name: 'community',
+      component: CommunityView,
+      children: [
+        {
+          path: '',
+          name: 'post-list',
+          component: PostListView
+        },
+        {
+          path: 'create',
+          name: 'post-create',
+          component: PostCreateView,
+          meta: { requiresAuth: true }
+        },
+        {
+          path: ':id',
+          name: 'post-detail',
+          component: PostDetailView
+        },
+        {
+          path: ':id/edit',
+          name: 'post-edit',
+          component: PostEditView,
+          meta: { requiresAuth: true }
+        }
+      ]
+    }
   ]
 })
 

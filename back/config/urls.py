@@ -9,4 +9,5 @@ urlpatterns = [
     path('api/accounts/', include('accounts.urls')),
     path('api/finance-info/', include('finance_info.urls')),
     path('api/community/', include('community.urls')),
+    path('api/finance-academy/', include('finance_academy.urls')),
 ]

@@ -1,0 +1,636 @@
+{
+  "adult_advanced": [
+    {
+      "id": 1,
+      "text": "포트폴리오 이론에서 효율적 프론티어(Efficient Frontier)란?",
+      "keywords": ["효율적 프론티어", "위험 대비 최대 수익", "분산투자", "자산배분", "최적화"],
+      "choices": [
+        { "id": 1, "text": "동일한 위험 수준에서 최대 수익을 제공하는 포트폴리오들의 집합", "is_correct": true },
+        { "id": 2, "text": "가장 높은 수익률을 보장하는 단일 자산", "is_correct": false },
+        { "id": 3, "text": "위험이 전혀 없는 투자 상품", "is_correct": false },
+        { "id": 4, "text": "정부가 보장하는 투자 한도", "is_correct": false }
+      ],
+      "explanation": "효율적 프론티어는 주어진 위험 수준에서 최대 기대수익을 제공하는 포트폴리오들의 집합을 나타냅니다."
+    },
+    {
+      "id": 2,
+      "text": "베타(β) 계수가 1.5인 주식의 의미는?",
+      "keywords": ["베타계수", "시장위험", "변동성", "체계적위험", "상관관계"],
+      "choices": [
+        { "id": 1, "text": "시장이 1% 상승할 때 해당 주식은 1.5% 상승", "is_correct": true },
+        { "id": 2, "text": "해당 주식의 수익률이 시장보다 1.5배 높음", "is_correct": false },
+        { "id": 3, "text": "해당 주식의 위험이 시장보다 1.5배 낮음", "is_correct": false },
+        { "id": 4, "text": "해당 주식의 가격이 1.5배 비쌈", "is_correct": false }
+      ],
+      "explanation": "베타계수는 시장 변동에 대한 개별 주식의 민감도를 측정하며, 1.5는 시장보다 50% 더 민감하게 반응함을 의미합니다."
+    },
+    {
+      "id": 3,
+      "text": "옵션의 내재가치(Intrinsic Value)가 0인 경우는?",
+      "keywords": ["옵션", "내재가치", "행사가격", "현재가격", "만료"],
+      "choices": [
+        { "id": 1, "text": "콜옵션의 현재가격이 행사가격보다 낮을 때", "is_correct": true },
+        { "id": 2, "text": "콜옵션의 현재가격이 행사가격보다 높을 때", "is_correct": false },
+        { "id": 3, "text": "옵션의 만료일이 다가올 때", "is_correct": false },
+        { "id": 4, "text": "변동성이 높을 때", "is_correct": false }
+      ],
+      "explanation": "콜옵션의 내재가치는 현재가격에서 행사가격을 뺀 값이며, 음수일 경우 0으로 처리됩니다."
+    },
+    {
+      "id": 4,
+      "text": "WACC(가중평균자본비용)에서 부채비용이 낮아지는 이유는?",
+      "keywords": ["WACC", "부채비용", "세금혜택", "이자공제", "자본구조"],
+      "choices": [
+        { "id": 1, "text": "이자비용의 세금공제 효과", "is_correct": true },
+        { "id": 2, "text": "부채의 원금상환 의무", "is_correct": false },
+        { "id": 3, "text": "주주의 배당 요구", "is_correct": false },
+        { "id": 4, "text": "인플레이션 효과", "is_correct": false }
+      ],
+      "explanation": "부채의 이자비용은 세금공제가 가능하여 실질적인 자본비용을 낮추는 효과가 있습니다."
+    },
+    {
+      "id": 5,
+      "text": "듀레이션(Duration)이 긴 채권의 특징은?",
+      "keywords": ["듀레이션", "채권", "금리민감도", "만기", "이자율위험"],
+      "choices": [
+        { "id": 1, "text": "금리 변동에 더 민감하게 반응", "is_correct": true },
+        { "id": 2, "text": "금리 변동에 둔감하게 반응", "is_correct": false },
+        { "id": 3, "text": "신용위험이 높음", "is_correct": false },
+        { "id": 4, "text": "유동성이 낮음", "is_correct": false }
+      ],
+      "explanation": "듀레이션이 긴 채권은 금리 변동에 대한 민감도가 높아 가격 변동폭이 큽니다."
+    },
+    {
+      "id": 6,
+      "text": "VaR(Value at Risk) 95% 신뢰구간에서 1억원이라는 의미는?",
+      "keywords": ["VaR", "위험관리", "신뢰구간", "손실", "확률"],
+      "choices": [
+        { "id": 1, "text": "95% 확률로 손실이 1억원을 넘지 않음", "is_correct": true },
+        { "id": 2, "text": "95% 확률로 1억원의 수익 보장", "is_correct": false },
+        { "id": 3, "text": "투자금액의 95%인 1억원", "is_correct": false },
+        { "id": 4, "text": "95일 후 1억원 손실 예상", "is_correct": false }
+      ],
+      "explanation": "VaR은 일정 신뢰구간에서 발생할 수 있는 최대 손실액을 나타내는 위험측정 지표입니다."
+    },
+    {
+      "id": 7,
+      "text": "블랙-숄즈 모델에서 옵션가격에 영향을 주지 않는 요소는?",
+      "keywords": ["블랙숄즈", "옵션가격", "변수", "모델", "가정"],
+      "choices": [
+        { "id": 1, "text": "기초자산의 과거 수익률", "is_correct": true },
+        { "id": 2, "text": "현재 주가", "is_correct": false },
+        { "id": 3, "text": "행사가격", "is_correct": false },
+        { "id": 4, "text": "만료시간", "is_correct": false }
+      ],
+      "explanation": "블랙-숄즈 모델은 과거 데이터가 아닌 현재가격, 행사가격, 만료시간, 변동성, 무위험이자율을 사용합니다."
+    },
+    {
+      "id": 8,
+      "text": "헤지펀드의 2 and 20 수수료 구조는?",
+      "keywords": ["헤지펀드", "수수료구조", "관리보수", "성과보수", "fee"],
+      "choices": [
+        { "id": 1, "text": "운용자산의 2%, 초과수익의 20%", "is_correct": true },
+        { "id": 2, "text": "총수익의 2%, 손실의 20% 보상", "is_correct": false },
+        { "id": 3, "text": "최소 2%, 최대 20% 수수료", "is_correct": false },
+        { "id": 4, "text": "2년 Lock-up, 20% 조기상환수수료", "is_correct": false }
+      ],
+      "explanation": "헤지펀드의 전형적인 수수료는 운용자산의 2% 관리보수와 초과수익의 20% 성과보수입니다."
+    },
+    {
+      "id": 9,
+      "text": "레버리지 바이아웃(LBO)의 핵심 메커니즘은?",
+      "keywords": ["LBO", "인수합병", "레버리지", "부채", "현금흐름"],
+      "choices": [
+        { "id": 1, "text": "대상회사의 자산을 담보로 차입하여 인수", "is_correct": true },
+        { "id": 2, "text": "주식을 저가에 매수하여 고가에 매도", "is_correct": false },
+        { "id": 3, "text": "기업을 분할하여 각각 상장", "is_correct": false },
+        { "id": 4, "text": "경영진과 합작하여 운영", "is_correct": false }
+      ],
+      "explanation": "LBO는 인수대상 회사의 자산과 현금흐름을 담보로 차입금을 조달하여 인수하는 방식입니다."
+    },
+    {
+      "id": 10,
+      "text": "CAPM 모델에서 무위험이자율이 상승하면?",
+      "keywords": ["CAPM", "무위험이자율", "기대수익률", "위험프리미엄", "체계적위험"],
+      "choices": [
+        { "id": 1, "text": "모든 자산의 기대수익률이 상승", "is_correct": true },
+        { "id": 2, "text": "베타가 높은 자산만 수익률 상승", "is_correct": false },
+        { "id": 3, "text": "시장위험프리미엄이 증가", "is_correct": false },
+        { "id": 4, "text": "자산의 기대수익률은 변화 없음", "is_correct": false }
+      ],
+      "explanation": "CAPM에서 무위험이자율 상승은 모든 자산의 기대수익률을 동일하게 상승시킵니다."
+    },
+    {
+      "id": 11,
+      "text": "스왑(Swap) 거래에서 고정금리 지급자의 목적은?",
+      "keywords": ["스왑", "고정금리", "변동금리", "헤지", "금리위험"],
+      "choices": [
+        { "id": 1, "text": "금리 상승 위험을 헤지", "is_correct": true },
+        { "id": 2, "text": "금리 하락 위험을 헤지", "is_correct": false },
+        { "id": 3, "text": "환율 변동 위험을 헤지", "is_correct": false },
+        { "id": 4, "text": "신용 위험을 헤지", "is_correct": false }
+      ],
+      "explanation": "고정금리를 지급하는 측은 변동금리 상승에 따른 부담 증가를 방지하려는 목적입니다."
+    },
+    {
+      "id": 12,
+      "text": "컨테이고(Contango) 상황에서 선물가격은?",
+      "keywords": ["컨테이고", "선물가격", "현물가격", "백워데이션", "시간가치"],
+      "choices": [
+        { "id": 1, "text": "현물가격보다 높음", "is_correct": true },
+        { "id": 2, "text": "현물가격보다 낮음", "is_correct": false },
+        { "id": 3, "text": "현물가격과 동일", "is_correct": false },
+        { "id": 4, "text": "예측 불가능", "is_correct": false }
+      ],
+      "explanation": "컨테이고는 선물가격이 현물가격보다 높은 상황으로, 보관비용과 금융비용이 반영된 결과입니다."
+    },
+    {
+      "id": 13,
+      "text": "채권의 컨벡시티(Convexity)가 높을 때의 특징은?",
+      "keywords": ["컨벡시티", "채권", "듀레이션", "가격민감도", "곡률"],
+      "choices": [
+        { "id": 1, "text": "금리 변동 시 듀레이션보다 유리한 가격 변동", "is_correct": true },
+        { "id": 2, "text": "금리 변동에 둔감", "is_correct": false },
+        { "id": 3, "text": "신용위험이 높음", "is_correct": false },
+        { "id": 4, "text": "만기가 짧음", "is_correct": false }
+      ],
+      "explanation": "컨벡시티가 높은 채권은 금리 하락 시 더 크게 상승하고, 금리 상승 시 덜 하락하는 특성이 있습니다."
+    },
+    {
+      "id": 14,
+      "text": "사모펀드(Private Equity)의 주요 투자 전략은?",
+      "keywords": ["사모펀드", "PE", "투자전략", "기업가치", "구조조정"],
+      "choices": [
+        { "id": 1, "text": "기업 인수 후 가치 개선하여 매각", "is_correct": true },
+        { "id": 2, "text": "공개시장에서 단기 매매", "is_correct": false },
+        { "id": 3, "text": "부동산 임대수익 추구", "is_correct": false },
+        { "id": 4, "text": "정부채권만 투자", "is_correct": false }
+      ],
+      "explanation": "사모펀드는 비상장 기업을 인수하여 경영 개선을 통해 가치를 높인 후 매각하는 것이 주요 전략입니다."
+    },
+    {
+      "id": 15,
+      "text": "알파(Alpha) 수익률의 의미는?",
+      "keywords": ["알파", "초과수익", "능동적수익", "벤치마크", "포트폴리오성과"],
+      "choices": [
+        { "id": 1, "text": "시장 대비 초과 달성한 수익률", "is_correct": true },
+        { "id": 2, "text": "위험조정 후 절대 수익률", "is_correct": false },
+        { "id": 3, "text": "시장과 동일한 수익률", "is_correct": false },
+        { "id": 4, "text": "무위험 수익률", "is_correct": false }
+      ],
+      "explanation": "알파는 시장 베타를 조정한 후 벤치마크 대비 초과 달성한 능동적 운용 성과를 나타냅니다."
+    },
+    {
+      "id": 16,
+      "text": "크레딧 디폴트 스왑(CDS)의 기능은?",
+      "keywords": ["CDS", "신용위험", "디폴트", "보험", "헤지"],
+      "choices": [
+        { "id": 1, "text": "채무불이행 위험을 전가", "is_correct": true },
+        { "id": 2, "text": "금리 위험을 헤지", "is_correct": false },
+        { "id": 3, "text": "환율 위험을 관리", "is_correct": false },
+        { "id": 4, "text": "유동성을 공급", "is_correct": false }
+      ],
+      "explanation": "CDS는 채권이나 대출의 신용위험을 다른 투자자에게 전가하는 파생상품입니다."
+    },
+    {
+      "id": 17,
+      "text": "몬테카를로 시뮬레이션의 활용 목적은?",
+      "keywords": ["몬테카를로", "시뮬레이션", "확률분포", "위험분석", "포트폴리오"],
+      "choices": [
+        { "id": 1, "text": "불확실성 하에서 다양한 시나리오 분석", "is_correct": true },
+        { "id": 2, "text": "과거 데이터 정확성 검증", "is_correct": false },
+        { "id": 3, "text": "현재 가격의 정확성 확인", "is_correct": false },
+        { "id": 4, "text": "거래 비용 최소화", "is_correct": false }
+      ],
+      "explanation": "몬테카를로 시뮬레이션은 무작위 표본을 이용해 불확실한 상황에서 다양한 결과를 예측하는 기법입니다."
+    },
+    {
+      "id": 18,
+      "text": "하이 워터 마크(High Water Mark) 조항의 목적은?",
+      "keywords": ["하이워터마크", "성과보수", "펀드", "손실보전", "투자자보호"],
+      "choices": [
+        { "id": 1, "text": "손실 회복 전까지 성과보수 지급 중단", "is_correct": true },
+        { "id": 2, "text": "최대 투자 한도 설정", "is_correct": false },
+        { "id": 3, "text": "최고 수익률 보장", "is_correct": false },
+        { "id": 4, "text": "환매 제한 기간 설정", "is_correct": false }
+      ],
+      "explanation": "하이워터마크는 펀드가 과거 최고치를 회복하기 전까지 성과보수를 받지 않도록 하는 투자자 보호 장치입니다."
+    },
+    {
+      "id": 19,
+      "text": "볼커 룰(Volcker Rule)의 핵심 내용은?",
+      "keywords": ["볼커룰", "자기계정매매", "은행규제", "투기거래", "리스크관리"],
+      "choices": [
+        { "id": 1, "text": "은행의 자기계정 투기거래 금지", "is_correct": true },
+        { "id": 2, "text": "은행의 대출 한도 제한", "is_correct": false },
+        { "id": 3, "text": "예금보험 한도 확대", "is_correct": false },
+        { "id": 4, "text": "금리 인상 의무화", "is_correct": false }
+      ],
+      "explanation": "볼커 룰은 예금을 받는 은행이 자기 자금으로 투기적 거래를 하는 것을 제한하는 규제입니다."
+    },
+    {
+      "id": 20,
+      "text": "테일 리스크(Tail Risk)의 특징은?",
+      "keywords": ["테일리스크", "극한사건", "확률분포", "블랙스완", "위험관리"],
+      "choices": [
+        { "id": 1, "text": "발생확률은 낮지만 충격이 큰 위험", "is_correct": true },
+        { "id": 2, "text": "일상적으로 발생하는 작은 위험", "is_correct": false },
+        { "id": 3, "text": "예측 가능한 계절적 위험", "is_correct": false },
+        { "id": 4, "text": "정부가 보장하는 위험", "is_correct": false }
+      ],
+      "explanation": "테일 리스크는 확률분포의 끝부분에 위치하는 극히 드물지만 발생 시 큰 손실을 가져오는 위험입니다."
+    },
+    {
+      "id": 21,
+      "text": "리츠(REITs)의 의무 배당 비율은?",
+      "keywords": ["리츠", "REITs", "배당의무", "부동산투자", "수익배당"],
+      "choices": [
+        { "id": 1, "text": "과세소득의 90% 이상", "is_correct": true },
+        { "id": 2, "text": "총수익의 50% 이상", "is_correct": false },
+        { "id": 3, "text": "순이익의 70% 이상", "is_correct": false },
+        { "id": 4, "text": "자산가치의 30% 이상", "is_correct": false }
+      ],
+      "explanation": "REITs는 세제혜택을 받는 대신 과세소득의 90% 이상을 투자자에게 배당해야 할 의무가 있습니다."
+    },
+    {
+      "id": 22,
+      "text": "마진콜(Margin Call)이 발생하는 상황은?",
+      "keywords": ["마진콜", "증거금", "레버리지", "손실", "추가납입"],
+      "choices": [
+        { "id": 1, "text": "계좌 잔고가 유지증거금 밑으로 떨어질 때", "is_correct": true },
+        { "id": 2, "text": "투자 수익이 일정 수준을 넘을 때", "is_correct": false },
+        { "id": 3, "text": "거래량이 급증할 때", "is_correct": false },
+        { "id": 4, "text": "시장이 문을 닫을 때", "is_correct": false }
+      ],
+      "explanation": "마진콜은 레버리지 거래에서 손실로 인해 계좌 잔고가 최소 유지증거금 수준 이하로 떨어질 때 발생합니다."
+    },
+    {
+      "id": 23,
+      "text": "스트레스 테스트(Stress Test)의 목적은?",
+      "keywords": ["스트레스테스트", "극한상황", "위험측정", "시나리오분석", "건전성"],
+      "choices": [
+        { "id": 1, "text": "극한 상황에서 금융기관의 건전성 평가", "is_correct": true },
+        { "id": 2, "text": "일반적인 시장 상황에서의 수익성 분석", "is_correct": false },
+        { "id": 3, "text": "고객 서비스 품질 측정", "is_correct": false },
+        { "id": 4, "text": "직원의 업무 효율성 평가", "is_correct": false }
+      ],
+      "explanation": "스트레스 테스트는 금융위기 등 극한 상황에서 금융기관이 견딜 수 있는지 평가하는 위험관리 도구입니다."
+    },
+    {
+      "id": 24,
+      "text": "다크 풀(Dark Pool)의 특징은?",
+      "keywords": ["다크풀", "비공개거래", "유동성", "익명성", "대량거래"],
+      "choices": [
+        { "id": 1, "text": "거래 정보가 공개되지 않는 사적 거래소", "is_correct": true },
+        { "id": 2, "text": "정부가 운영하는 공적 거래소", "is_correct": false },
+        { "id": 3, "text": "야간에만 운영되는 거래소", "is_correct": false },
+        { "id": 4, "text": "암호화폐 전용 거래소", "is_correct": false }
+      ],
+      "explanation": "다크 풀은 대형 투자자들이 시장에 영향을 주지 않고 익명으로 대량 거래할 수 있는 사적 거래 플랫폼입니다."
+    },
+    {
+      "id": 25,
+      "text": "양적완화(QE) 정책의 주요 효과는?",
+      "keywords": ["양적완화", "QE", "통화정책", "유동성공급", "장기금리"],
+      "choices": [
+        { "id": 1, "text": "장기금리 인하 및 유동성 공급", "is_correct": true },
+        { "id": 2, "text": "정부 재정수입 증대", "is_correct": false },
+        { "id": 3, "text": "환율 고정", "is_correct": false },
+        { "id": 4, "text": "수출 규제 강화", "is_correct": false }
+      ],
+      "explanation": "양적완화는 중앙은행이 국채 등을 매입하여 시중에 유동성을 공급하고 장기금리를 낮추는 정책입니다."
+    },
+    {
+      "id": 26,
+      "text": "커버드 콜(Covered Call) 전략의 목적은?",
+      "keywords": ["커버드콜", "옵션전략", "프리미엄수익", "헤지", "주식보유"],
+      "choices": [
+        { "id": 1, "text": "보유 주식에서 추가 프리미엄 수익 획득", "is_correct": true },
+        { "id": 2, "text": "주식의 하락 위험을 완전히 제거", "is_correct": false },
+        { "id": 3, "text": "레버리지를 통한 수익 극대화", "is_correct": false },
+        { "id": 4, "text": "무위험 수익률 보장", "is_correct": false }
+      ],
+      "explanation": "커버드 콜은 보유한 주식에 대해 콜옵션을 매도하여 옵션 프리미엄으로 추가 수익을 얻는 전략입니다."
+    },
+    {
+      "id": 27,
+      "text": "인버스 ETF의 특징은?",
+      "keywords": ["인버스ETF", "역방향", "베어ETF", "기초지수", "헤지"],
+      "choices": [
+        { "id": 1, "text": "기초지수 하락 시 수익 발생", "is_correct": true },
+        { "id": 2, "text": "기초지수 상승 시에만 수익 발생", "is_correct": false },
+        { "id": 3, "text": "해외 투자에만 활용", "is_correct": false },
+        { "id": 4, "text": "배당 수익만 추구", "is_correct": false }
+      ],
+      "explanation": "인버스 ETF는 기초지수와 반대 방향으로 움직이도록 설계되어 시장 하락 시 수익을 낼 수 있습니다."
+    },
+    {
+      "id": 28,
+      "text": "그린본드(Green Bond)의 발행 목적은?",
+      "keywords": ["그린본드", "환경채권", "지속가능성", "친환경투자", "ESG"],
+      "choices": [
+        { "id": 1, "text": "환경 개선 프로젝트 자금 조달", "is_correct": true },
+        { "id": 2, "text": "일반적인 운영자금 조달", "is_correct": false },
+        { "id": 3, "text": "주식 투자 자금 조달", "is_correct": false },
+        { "id": 4, "text": "부동산 개발 자금 조달", "is_correct": false }
+      ],
+      "explanation": "그린본드는 재생에너지, 에너지 효율성 개선 등 환경에 긍정적 영향을 주는 프로젝트 자금 조달을 위해 발행됩니다."
+    },
+    {
+      "id": 29,
+      "text": "플래시 크래시(Flash Crash)의 주요 원인은?",
+      "keywords": ["플래시크래시", "급락", "알고리즘거래", "시스템거래", "유동성"],
+      "choices": [
+        { "id": 1, "text": "알고리즘 거래의 연쇄 반응", "is_correct": true },
+        { "id": 2, "text": "정부의 규제 발표", "is_correct": false },
+        { "id": 3, "text": "개별 기업의 부도", "is_correct": false },
+        { "id": 4, "text": "자연재해 발생", "is_correct": false }
+      ],
+      "explanation": "플래시 크래시는 자동화된 알고리즘 거래가 연쇄적으로 매도를 촉발하면서 발생하는 급격한 시장 하락입니다."
+    },
+    {
+      "id": 30,
+      "text": "뮤추얼 펀드와 ETF의 가장 큰 차이점은?",
+      "keywords": ["뮤추얼펀드", "ETF", "거래방식", "실시간거래", "NAV"],
+      "choices": [
+        { "id": 1, "text": "거래소에서 실시간 거래 가능 여부", "is_correct": true },
+        { "id": 2, "text": "투자 대상 자산의 종류", "is_correct": false },
+        { "id": 3, "text": "최소 투자 금액", "is_correct": false },
+        { "id": 4, "text": "세금 혜택의 차이", "is_correct": false }
+      ],
+      "explanation": "ETF는 거래소에서 주식처럼 실시간 거래가 가능하지만, 뮤추얼 펀드는 하루 한 번 NAV로만 거래됩니다."
+    },
+    {
+      "id": 31,
+      "text": "로보어드바이저의 리밸런싱 기준은?",
+      "keywords": ["로보어드바이저", "리밸런싱", "자산배분", "목표비중", "자동화"],
+      "choices": [
+        { "id": 1, "text": "목표 자산배분 비중에서 일정 이상 이탈 시", "is_correct": true },
+        { "id": 2, "text": "투자자의 수동 요청 시에만", "is_correct": false },
+        { "id": 3, "text": "매일 정해진 시간에", "is_correct": false },
+        { "id": 4, "text": "시장이 급등락할 때만", "is_correct": false }
+      ],
+      "explanation": "로보어드바이저는 사전에 설정된 목표 자산배분에서 일정 비율 이상 벗어날 때 자동으로 리밸런싱을 수행합니다."
+    },
+    {
+      "id": 32,
+      "text": "ESG 투자에서 'S'가 의미하는 것은?",
+      "keywords": ["ESG", "사회적책임", "지배구조", "환경", "지속가능성"],
+      "choices": [
+        { "id": 1, "text": "Social (사회적 책임)", "is_correct": true },
+        { "id": 2, "text": "Sustainable (지속가능성)", "is_correct": false },
+        { "id": 3, "text": "Structural (구조적)", "is_correct": false },
+        { "id": 4, "text": "Strategic (전략적)", "is_correct": false }
+      ],
+      "explanation": "ESG는 Environmental(환경), Social(사회), Governance(지배구조)의 줄임말입니다."
+    },
+    {
+      "id": 33,
+      "text": "스팩(SPAC)의 주요 특징은?",
+      "keywords": ["스팩", "SPAC", "기업인수목적회사", "공백수표회사", "상장"],
+      "choices": [
+        { "id": 1, "text": "인수 대상 기업을 정하지 않고 먼저 상장", "is_correct": true },
+        { "id": 2, "text": "특정 업종에만 투자하는 펀드", "is_correct": false },
+        { "id": 3, "text": "정부가 설립한 투자회사", "is_correct": false },
+        { "id": 4, "text": "암호화폐 전문 투자회사", "is_correct": false }
+      ],
+      "explanation": "SPAC은 인수 대상을 정하지 않은 채 자금을 먼저 조달하여 상장한 후 기업을 찾아 인수하는 목적회사입니다."
+    },
+    {
+      "id": 34,
+      "text": "비트코인의 반감기(Halving) 이벤트는?",
+      "keywords": ["비트코인", "반감기", "halving", "채굴보상", "공급"],
+      "choices": [
+        { "id": 1, "text": "채굴 보상이 절반으로 줄어드는 주기적 이벤트", "is_correct": true },
+        { "id": 2, "text": "비트코인 가격이 절반으로 하락하는 현상", "is_correct": false },
+        { "id": 3, "text": "거래 수수료가 절반으로 줄어드는 이벤트", "is_correct": false },
+        { "id": 4, "text": "전체 비트코인의 절반이 소멸되는 이벤트", "is_correct": false }
+      ],
+      "explanation": "비트코인 반감기는 약 4년마다 채굴자에게 주어지는 보상이 절반으로 줄어드는 프로토콜상의 이벤트입니다."
+    },
+    {
+      "id": 35,
+      "text": "스마트 베타(Smart Beta) 전략의 특징은?",
+      "keywords": ["스마트베타", "팩터투자", "가중방식", "퀄리티", "모멘텀"],
+      "choices": [
+        { "id": 1, "text": "시가총액 외 다른 기준으로 가중치 부여", "is_correct": true },
+        { "id": 2, "text": "인공지능만을 활용한 투자", "is_correct": false },
+        { "id": 3, "text": "정부채권에만 투자", "is_correct": false },
+        { "id": 4, "text": "무위험 수익률 추구", "is_correct": false }
+      ],
+      "explanation": "스마트 베타는 시가총액 대신 밸류, 퀄리티, 모멘텀 등 특정 팩터를 기준으로 가중치를 부여하는 전략입니다."
+    },
+    {
+      "id": 36,
+      "text": "중앙은행 디지털화폐(CBDC)의 목적은?",
+      "keywords": ["CBDC", "중앙은행디지털화폐", "디지털결제", "통화정책", "금융포용"],
+      "choices": [
+        { "id": 1, "text": "디지털 결제 효율성 제고 및 금융포용성 확대", "is_correct": true },
+        { "id": 2, "text": "민간 암호화폐 완전 대체", "is_correct": false },
+        { "id": 3, "text": "모든 현금 거래 금지", "is_correct": false },
+        { "id": 4, "text": "외환 거래 독점", "is_correct": false }
+      ],
+      "explanation": "CBDC는 결제 시스템의 효율성을 높이고 금융 서비스 접근성을 개선하기 위한 중앙은행 발행 디지털 화폐입니다."
+    },
+    {
+      "id": 37,
+      "text": "인플레이션 연동채권(TIPS)의 장점은?",
+      "keywords": ["TIPS", "인플레이션연동채권", "실질수익률", "물가상승", "구매력"],
+      "choices": [
+        { "id": 1, "text": "인플레이션으로부터 구매력 보호", "is_correct": true },
+        { "id": 2, "text": "디플레이션 시 수익률 상승", "is_correct": false },
+        { "id": 3, "text": "세금 혜택 제공", "is_correct": false },
+        { "id": 4, "text": "높은 유동성 보장", "is_correct": false }
+      ],
+      "explanation": "TIPS는 원금과 이자가 인플레이션율에 연동되어 조정되므로 물가 상승으로부터 실질구매력을 보호할 수 있습니다."
+    },
+    {
+      "id": 38,
+      "text": "레버리지 ETF의 위험 요소는?",
+      "keywords": ["레버리지ETF", "복리효과", "일일리셋", "변동성", "추적오차"],
+      "choices": [
+        { "id": 1, "text": "일일 리셋으로 인한 복리 효과 저하", "is_correct": true },
+        { "id": 2, "text": "배당금 지급 없음", "is_correct": false },
+        { "id": 3, "text": "해외 투자 제한", "is_correct": false },
+        { "id": 4, "text": "세금 혜택 없음", "is_correct": false }
+      ],
+      "explanation": "레버리지 ETF는 매일 목표 배수를 유지하기 위해 리셋되므로, 변동성이 클 때 복리 효과로 장기적으로 추적오차가 발생할 수 있습니다."
+    },
+    {
+      "id": 39,
+      "text": "대체투자(Alternative Investment)에 포함되지 않는 것은?",
+      "keywords": ["대체투자", "헤지펀드", "사모펀드", "부동산", "상장주식"],
+      "choices": [
+        { "id": 1, "text": "상장 주식", "is_correct": true },
+        { "id": 2, "text": "헤지펀드", "is_correct": false },
+        { "id": 3, "text": "사모펀드", "is_correct": false },
+        { "id": 4, "text": "원자재", "is_correct": false }
+      ],
+      "explanation": "대체투자는 전통적인 주식, 채권 이외의 투자를 말하며, 상장 주식은 전통적 투자에 해당합니다."
+    },
+    {
+      "id": 40,
+      "text": "금융위기 시 안전자산으로 간주되는 것은?",
+      "keywords": ["안전자산", "금융위기", "국채", "피난처", "유동성"],
+      "choices": [
+        { "id": 1, "text": "미국 국채", "is_correct": true },
+        { "id": 2, "text": "신흥국 주식", "is_correct": false },
+        { "id": 3, "text": "회사채", "is_correct": false },
+        { "id": 4, "text": "원자재", "is_correct": false }
+      ],
+      "explanation": "미국 국채는 세계에서 가장 안전한 자산으로 간주되어 금융위기 시 자금이 몰리는 대표적인 안전자산입니다."
+    },
+    {
+      "id": 41,
+      "text": "팩터 투자에서 '밸류 팩터'는?",
+      "keywords": ["팩터투자", "밸류팩터", "저평가", "PER", "PBR"],
+      "choices": [
+        { "id": 1, "text": "저평가된 기업에 투자하는 전략", "is_correct": true },
+        { "id": 2, "text": "고배당 기업에 투자하는 전략", "is_correct": false },
+        { "id": 3, "text": "성장성이 높은 기업에 투자하는 전략", "is_correct": false },
+        { "id": 4, "text": "변동성이 낮은 기업에 투자하는 전략", "is_correct": false }
+      ],
+      "explanation": "밸류 팩터는 PER, PBR 등 밸류에이션 지표가 낮은 저평가된 기업들에 투자하는 전략입니다."
+    },
+    {
+      "id": 42,
+      "text": "경기선행지수가 하락할 때 유리한 투자전략은?",
+      "keywords": ["경기선행지수", "경기하락", "방어적투자", "채권", "필수소비재"],
+      "choices": [
+        { "id": 1, "text": "채권 및 방어적 섹터 비중 확대", "is_correct": true },
+        { "id": 2, "text": "성장주 비중 확대", "is_correct": false },
+        { "id": 3, "text": "레버리지 확대", "is_correct": false },
+        { "id": 4, "text": "신흥국 투자 확대", "is_correct": false }
+      ],
+      "explanation": "경기선행지수 하락은 경기 둔화를 시사하므로 안전자산인 채권이나 필수소비재 등 방어적 섹터가 유리합니다."
+    },
+    {
+      "id": 43,
+      "text": "페어 트레이딩(Pair Trading) 전략은?",
+      "keywords": ["페어트레이딩", "중립전략", "롱숏", "상관관계", "시장중립"],
+      "choices": [
+        { "id": 1, "text": "상관관계가 높은 두 종목을 롱숏으로 거래", "is_correct": true },
+        { "id": 2, "text": "같은 종목을 두 번 매수", "is_correct": false },
+        { "id": 3, "text": "두 개의 다른 시장에 투자", "is_correct": false },
+        { "id": 4, "text": "옵션과 주식을 함께 거래", "is_correct": false }
+      ],
+      "explanation": "페어 트레이딩은 상관관계가 높은 두 종목의 가격 차이를 이용해 한 종목은 매수하고 다른 종목은 매도하는 시장중립 전략입니다."
+    },
+    {
+      "id": 44,
+      "text": "터틀 트레이딩(Turtle Trading)의 핵심 원칙은?",
+      "keywords": ["터틀트레이딩", "추세추종", "브레이크아웃", "손절매", "시스템매매"],
+      "choices": [
+        { "id": 1, "text": "가격 브레이크아웃 신호를 따라 추세에 투자", "is_correct": true },
+        { "id": 2, "text": "단기 가격 역방향 베팅", "is_correct": false },
+        { "id": 3, "text": "고빈도 거래를 통한 소액 수익 추구", "is_correct": false },
+        { "id": 4, "text": "기본적 분석만을 활용한 투자", "is_correct": false }
+      ],
+      "explanation": "터틀 트레이딩은 가격이 일정 기간 최고점을 돌파할 때 매수하는 추세추종 시스템 트레이딩 기법입니다."
+    },
+    {
+      "id": 45,
+      "text": "글로벌 매크로 전략의 특징은?",
+      "keywords": ["글로벌매크로", "거시경제", "통화정책", "환율", "금리"],
+      "choices": [
+        { "id": 1, "text": "거시경제 변화를 바탕으로 한 대규모 베팅", "is_correct": true },
+        { "id": 2, "text": "개별 기업 분석을 통한 주식 선택", "is_correct": false },
+        { "id": 3, "text": "부동산 시장에만 집중 투자", "is_correct": false },
+        { "id": 4, "text": "채권 시장에서의 차익거래", "is_correct": false }
+      ],
+      "explanation": "글로벌 매크로 전략은 각국의 통화정책, 경제상황 등 거시경제 요인을 분석해 통화, 금리, 주식 등에 대규모로 투자하는 전략입니다."
+    },
+    {
+      "id": 46,
+      "text": "고빈도 거래(HFT)의 주요 수익원은?",
+      "keywords": ["고빈도거래", "HFT", "차익거래", "스프레드", "속도"],
+      "choices": [
+        { "id": 1, "text": "매우 작은 가격 차이를 빠르게 포착", "is_correct": true },
+        { "id": 2, "text": "장기 보유를 통한 배당 수익", "is_correct": false },
+        { "id": 3, "text": "기업 인수합병을 통한 차익", "is_correct": false },
+        { "id": 4, "text": "부동산 임대 수익", "is_correct": false }
+      ],
+      "explanation": "고빈도 거래는 첨단 기술과 초고속 연결을 이용해 매우 짧은 시간 내에 작은 가격 차이를 포착하여 수익을 창출합니다."
+    },
+    {
+      "id": 47,
+      "text": "이벤트 드리븐(Event Driven) 전략의 대상은?",
+      "keywords": ["이벤트드리븐", "기업이벤트", "M&A", "구조조정", "특수상황"],
+      "choices": [
+        { "id": 1, "text": "인수합병, 구조조정 등 특별한 기업 이벤트", "is_correct": true },
+        { "id": 2, "text": "정기적인 배당 지급", "is_correct": false },
+        { "id": 3, "text": "계절적 요인", "is_correct": false },
+        { "id": 4, "text": "일반적인 시장 변동성", "is_correct": false }
+      ],
+      "explanation": "이벤트 드리븐 전략은 기업의 인수합병, 분할, 구조조정 등 특별한 기업 이벤트로 인한 가격 변동을 활용하는 투자 전략입니다."
+    },
+    {
+      "id": 48,
+      "text": "컨버터블 아비트라지(Convertible Arbitrage)는?",
+      "keywords": ["컨버터블아비트라지", "전환사채", "델타헤지", "변동성", "차익거래"],
+      "choices": [
+        { "id": 1, "text": "전환사채 매수와 주식 매도를 통한 차익거래", "is_correct": true },
+        { "id": 2, "text": "두 개의 다른 통화 간 차익거래", "is_correct": false },
+        { "id": 3, "text": "금리 변동을 이용한 채권 차익거래", "is_correct": false },
+        { "id": 4, "text": "상품 선물과 현물 간 차익거래", "is_correct": false }
+      ],
+      "explanation": "컨버터블 아비트라지는 전환사채를 매수하고 기초주식을 매도하여 전환권의 내재 가치와 시장가격 차이를 활용하는 전략입니다."
+    },
+    {
+      "id": 49,
+      "text": "볼래틸리티 스킴(Volatility Skew)의 의미는?",
+      "keywords": ["볼래틸리티스킴", "옵션", "내재변동성", "행사가격", "기울기"],
+      "choices": [
+        { "id": 1, "text": "행사가격에 따른 내재변동성의 차이", "is_correct": true },
+        { "id": 2, "text": "시간에 따른 변동성 변화", "is_correct": false },
+        { "id": 3, "text": "섹터별 변동성 차이", "is_correct": false },
+        { "id": 4, "text": "국가별 변동성 차이", "is_correct": false }
+      ],
+      "explanation": "볼래틸리티 스킴은 동일한 만기의 옵션에서 행사가격이 다를 때 나타나는 내재변동성의 차이를 의미합니다."
+    },
+    {
+      "id": 50,
+      "text": "팩터 타이밍(Factor Timing)의 위험성은?",
+      "keywords": ["팩터타이밍", "시장타이밍", "투자성과", "예측", "위험"],
+      "choices": [
+        { "id": 1, "text": "팩터의 성과 시점을 예측하기 어려움", "is_correct": true },
+        { "id": 2, "text": "거래비용이 전혀 발생하지 않음", "is_correct": false },
+        { "id": 3, "text": "세금 혜택이 보장됨", "is_correct": false },
+        { "id": 4, "text": "무위험 수익률을 제공함", "is_correct": false }
+      ],
+      "explanation": "팩터 타이밍은 특정 팩터가 언제 좋은 성과를 낼지 예측하는 것이 매우 어렵고, 잘못된 타이밍으로 인해 오히려 성과가 악화될 위험이 있습니다."
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "포트폴리오 이론·위험관리",
+      "questions": [1, 2, 5, 6, 13, 17, 20, 23]
+    },
+    {
+      "id": 2,
+      "name": "파생상품·옵션전략",
+      "questions": [3, 7, 11, 12, 16, 22, 26, 49]
+    },
+    {
+      "id": 3,
+      "name": "기업금융·투자은행",
+      "questions": [4, 8, 9, 14, 18, 19, 33]
+    },
+    {
+      "id": 4,
+      "name": "대체투자·ETF",
+      "questions": [21, 24, 27, 28, 30, 31, 35, 38, 39]
+    },
+    {
+      "id": 5,
+      "name": "거시경제·통화정책",
+      "questions": [25, 29, 34, 36, 37, 40, 42]
+    },
+    {
+      "id": 6,
+      "name": "퀀트·시스템매매",
+      "questions": [10, 15, 32, 41, 43, 44, 45, 46, 47, 48, 50]
+    }
+  ]
+}

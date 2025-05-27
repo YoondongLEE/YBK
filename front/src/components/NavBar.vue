@@ -10,8 +10,8 @@
       <div class="navbar-menu">
         <div class="navbar-start">
           <router-link to="/" class="navbar-item">홈</router-link>
-          <router-link to="/finance-academy" class="navbar-item">금융 아카데미</router-link>
-          <router-link to="/finance-info" class="navbar-item">금융 정보 길잡이</router-link>
+          <router-link to="/finance-info" class="navbar-item">정보 길잡이</router-link>
+          <router-link to="/finance-academy" class="navbar-item">아카데미</router-link>
           <router-link to="/community" class="navbar-item">커뮤니티</router-link>
         </div>
         

@@ -11,8 +11,9 @@ class Command(BaseCommand):
     help = 'Load metal prices from Excel files and create fixtures'
 
     def handle(self, *args, **kwargs):
-        # 파일 경로 설정 - final-pjt/data 폴더 직접 지정
-        data_dir = Path('/Users/iyundong/Desktop/SSAFY/1학기_관통/final-pjt-v1/final-pjt/data')
+        # 현재 프로젝트의 정확한 경로 설정
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+        data_dir = os.path.join(base_dir, 'data')
         
         # 디버깅을 위한 경로 출력
         self.stdout.write(f'Looking for data in: {data_dir}')
