@@ -11,6 +11,7 @@ export const useAssessmentStore = defineStore('assessment', () => {
   const loading = ref(false)
   const assessmentResult = ref(null)
   const assessmentHistory = ref([])
+  const assessmentDetail = ref(null) // 추가
 
   // API 인스턴스 생성
   const api = axios.create({
@@ -84,23 +85,28 @@ export const useAssessmentStore = defineStore('assessment', () => {
     }
   }
 
-  // 평가 상세 결과 조회
+  // 평가 상세 결과 조회 (수정)
   const fetchAssessmentDetail = async (assessmentId) => {
+    loading.value = true
     try {
       const response = await api.get(`/assessment/${assessmentId}/`)
+      assessmentDetail.value = response.data
       return response.data
     } catch (error) {
       console.error('평가 상세 조회 실패:', error)
       throw error
+    } finally {
+      loading.value = false
     }
   }
 
-  // 평가 초기화
+  // 평가 초기화 (수정)
   const resetAssessment = () => {
     questions.value = []
     currentQuestionIndex.value = 0
     userAnswers.value = {}
     assessmentResult.value = null
+    assessmentDetail.value = null
   }
 
   // 현재 문제 가져오기
@@ -141,6 +147,7 @@ export const useAssessmentStore = defineStore('assessment', () => {
     loading,
     assessmentResult,
     assessmentHistory,
+    assessmentDetail, // 추가
     
     // Actions
     startAssessment,

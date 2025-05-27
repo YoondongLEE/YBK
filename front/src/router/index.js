@@ -20,7 +20,8 @@ import QuizListView from '@/views/academy/QuizListView.vue'
 import InteractiveQuizView from '@/views/academy/InteractiveQuizView.vue'
 import ConceptCategoryView from '@/views/academy/ConceptCategoryView.vue'
 import ConceptStudyView from '@/views/academy/ConceptStudyView.vue'
-import AssessmentView from '@/views/academy/AssessmentView.vue'  // 새로 추가
+import AssessmentView from '@/views/academy/AssessmentView.vue'
+import AssessmentDetailView from '@/views/academy/AssessmentDetailView.vue'  // 새로 추가
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -82,11 +83,17 @@ const router = createRouter({
       component: ConceptStudyView,
       meta: { requiresAuth: false }
     },
-    // 새로 추가: Assessment 관련 라우트
+    // Assessment 관련 라우트들
     {
       path: '/finance-academy/assessment/:difficulty',
       name: 'assessment',
       component: AssessmentView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/finance-academy/assessment/detail/:id',
+      name: 'assessment-detail',
+      component: AssessmentDetailView,
       meta: { requiresAuth: true }
     },
     {

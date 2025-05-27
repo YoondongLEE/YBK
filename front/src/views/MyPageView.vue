@@ -524,16 +524,37 @@ const formatDate = (dateString) => {
 
 const viewAssessmentDetail = (assessmentId) => {
   console.log('평가 상세 보기:', assessmentId)
-  alert(`평가 ID ${assessmentId}의 상세 정보를 확인합니다.`)
+  router.push({ 
+    name: 'assessment-detail', 
+    params: { id: assessmentId } 
+  })
 }
 
 const fetchAssessmentHistory = async () => {
   try {
     assessmentLoading.value = true
-    const response = await api.get('/assessments/history/')
+    console.log('평가 이력 조회 시작...')
+    
+    // 올바른 API 경로로 수정 (/api/assessments/history/ → /api/finance-academy/assessment/history/)
+    const response = await api.get('/finance-academy/assessment/history/')
+    console.log('API 응답:', response.data)
+    
     assessmentHistory.value = response.data
+    console.log('평가 이력 설정 완료:', assessmentHistory.value)
+    
   } catch (error) {
     console.error('평가 이력을 불러오는데 실패했습니다:', error)
+    
+    // 상세 에러 정보 출력
+    if (error.response) {
+      console.error('Error status:', error.response.status)
+      console.error('Error data:', error.response.data)
+      console.error('Error headers:', error.response.headers)
+    } else if (error.request) {
+      console.error('Request made but no response:', error.request)
+    } else {
+      console.error('Error message:', error.message)
+    }
   } finally {
     assessmentLoading.value = false
   }
