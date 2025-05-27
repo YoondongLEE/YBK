@@ -34,7 +34,7 @@
   브라우저가 비디오를 지원하지 않습니다.
 </video>
 
-![금융 길잡이 전체 시연](https://img.youtube.com/vi/7K6NapYJw54/0.jpg)](https://www.youtube.com/watch?v=7K6NapYJw54&t=172s)  
+[![금융 길잡이 전체 시연](https://img.youtube.com/vi/7K6NapYJw54/0.jpg)](https://www.youtube.com/watch?v=7K6NapYJw54&t=172s)  
 
 🎬 [YouTube에서 보기](https://www.youtube.com/watch?v=7K6NapYJw54&t=172s)
 
