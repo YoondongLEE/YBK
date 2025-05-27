@@ -388,7 +388,569 @@
 - **API 테스트**: Postman
 - **개발 환경**: VSCode
 
-## VIII. 기타(느낀 점, 후기 등)
+
+## VIII. API 명세서
+
+### 📋 목차
+1. [기본 정보](#기본-정보)
+2. [인증 API](#인증-api)
+3. [금융상품 API](#금융상품-api)
+4. [금융 아카데미 API](#금융-아카데미-api)
+5. [커뮤니티 API](#커뮤니티-api)
+6. [금융정보 API](#금융정보-api)
+7. [YouTube API](#youtube-api)
+8. [지도 API](#지도-api)
+
+---
+
+### 기본 정보
+
+#### Base URL
+```
+http://localhost:8000/api
+```
+
+#### 인증 방식
+- **JWT Token 인증**
+- Header: `Authorization: Token {token}`
+
+#### 응답 형식
+- **Content-Type**: `application/json`
+- **성공**: HTTP 200, 201
+- **실패**: HTTP 400, 401, 403, 404, 500
+
+---
+
+### 인증 API
+
+#### 1. 회원가입
+```http
+POST /accounts/signup/
+```
+
+**Request Body:**
+```json
+{
+  "username": "testuser",
+  "password1": "password123!",
+  "password2": "password123!",
+  "email": "test@example.com",
+  "first_name": "홍",
+  "last_name": "길동"
+}
+```
+
+**Response:**
+```json
+{
+  "key": "jwt_token_here",
+  "user": {
+    "id": 1,
+    "username": "testuser",
+    "email": "test@example.com",
+    "first_name": "홍",
+    "last_name": "길동"
+  }
+}
+```
+
+#### 2. 로그인
+```http
+POST /accounts/login/
+```
+
+**Request Body:**
+```json
+{
+  "username": "testuser",
+  "password": "password123!"
+}
+```
+
+**Response:**
+```json
+{
+  "key": "jwt_token_here",
+  "user": {
+    "id": 1,
+    "username": "testuser",
+    "email": "test@example.com"
+  }
+}
+```
+
+#### 3. 로그아웃
+```http
+POST /accounts/logout/
+```
+**Headers:** `Authorization: Token {token}`
+
+#### 4. 프로필 조회/수정
+```http
+GET /accounts/profile/
+PUT /accounts/profile/
+```
+
+**Response (GET):**
+```json
+{
+  "id": 1,
+  "username": "testuser",
+  "email": "test@example.com",
+  "age": 25,
+  "assets": 50000000,
+  "annual_income": 40000000,
+  "financial_goals": "투자",
+  "risk_tolerance": "보통"
+}
+```
+
+---
+
+### 금융상품 API
+
+#### 1. 예금 상품 목록 조회
+```http
+GET /deposits/deposit-products/
+```
+
+**Query Parameters:**
+- `bank`: 은행명 필터
+- `term`: 기간 필터 (6, 12, 24, 36개월)
+- `min_rate`: 최소 금리
+- `max_rate`: 최대 금리
+
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "fin_prdt_cd": "WR0001B",
+    "kor_co_nm": "우리은행",
+    "fin_prdt_nm": "WON적금",
+    "dcls_month": "202312",
+    "mtrt_int": "만기 후 이자율 정보",
+    "spcl_cnd": "우대조건",
+    "join_deny": 1,
+    "join_member": "개인",
+    "etc_note": "기타 유의사항",
+    "max_limit": 100000000,
+    "options": [
+      {
+        "fin_prdt_cd": "WR0001B",
+        "intr_rate_type_nm": "단리",
+        "intr_rate": 2.5,
+        "intr_rate2": 3.0,
+        "save_trm": "12"
+      }
+    ]
+  }
+]
+```
+
+#### 2. 적금 상품 목록 조회
+```http
+GET /deposits/saving-products/
+```
+
+#### 3. 상품 가입
+```http
+POST /deposits/subscribe/{product_id}/
+```
+
+**Request Body:**
+```json
+{
+  "term": 12,
+  "amount": 10000000
+}
+```
+
+#### 4. 가입 상품 목록
+```http
+GET /deposits/subscribed/
+```
+
+#### 5. 개인화 추천
+```http
+GET /accounts/recommendations/
+```
+
+**Response:**
+```json
+{
+  "message": "50명의 유사한 사용자 기반 추천",
+  "recommendations": [
+    {
+      "product": {
+        "id": 1,
+        "fin_prdt_nm": "추천상품명",
+        "kor_co_nm": "은행명",
+        "max_rate": 3.5
+      },
+      "recommendation_count": 15,
+      "type": "deposit"
+    }
+  ],
+  "similar_users_count": 50
+}
+```
+
+---
+
+### 금융 아카데미 API
+
+#### 1. 문제 카테고리 목록
+```http
+GET /finance-academy/categories/
+```
+
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "name": "예적금",
+    "description": "예금과 적금 관련 지식"
+  }
+]
+```
+
+#### 2. 랜덤 퀴즈 조회
+```http
+GET /finance-academy/quiz/{difficulty}/
+```
+
+**Path Parameters:**
+- `difficulty`: `youth` | `adult_basic` | `adult_advanced`
+
+**Response:**
+```json
+{
+  "questions": [
+    {
+      "id": 1,
+      "text": "예금자보호법에 따라 보호되는 예금액 한도는?",
+      "choices": [
+        {
+          "id": 1,
+          "text": "3,000만원",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "text": "5,000만원",
+          "is_correct": true
+        }
+      ],
+      "explanation": "예금자보호법에 따라...",
+      "category": "예적금",
+      "difficulty": "adult_basic"
+    }
+  ]
+}
+```
+
+#### 3. 문제 답안 제출
+```http
+POST /finance-academy/questions/{question_id}/submit/
+```
+
+**Request Body:**
+```json
+{
+  "choice_id": 2
+}
+```
+
+**Response:**
+```json
+{
+  "is_correct": true,
+  "selected_choice": {
+    "id": 2,
+    "text": "5,000만원"
+  },
+  "correct_choice": {
+    "id": 2,
+    "text": "5,000만원"
+  },
+  "explanation": "예금자보호법에 따라 예금은 5,000만원까지 보호됩니다."
+}
+```
+
+#### 4. 평가 응시
+```http
+POST /finance-academy/exam/{difficulty}/
+```
+
+**Response:**
+```json
+{
+  "exam_id": 1,
+  "questions": [...],
+  "time_limit": 1800
+}
+```
+
+#### 5. 평가 제출
+```http
+POST /finance-academy/exam/{exam_id}/submit/
+```
+
+**Request Body:**
+```json
+{
+  "answers": [
+    {
+      "question_id": 1,
+      "choice_id": 2
+    }
+  ]
+}
+```
+
+#### 6. 수료증 발급
+```http
+POST /finance-academy/certificate/
+```
+
+**Response:**
+```json
+{
+  "certificate_id": "CERT_2024_001",
+  "image_url": "/media/certificates/cert_001.png",
+  "issued_date": "2024-01-15",
+  "score": 85
+}
+```
+
+---
+
+### 커뮤니티 API
+
+#### 1. 게시글 목록 조회
+```http
+GET /community/posts/
+```
+
+**Query Parameters:**
+- `category`: 카테고리 필터
+- `search`: 검색어
+- `page`: 페이지 번호
+
+**Response:**
+```json
+{
+  "count": 25,
+  "next": "http://localhost:8000/api/community/posts/?page=2",
+  "previous": null,
+  "results": [
+    {
+      "id": 1,
+      "title": "예금 vs 적금 어떤게 좋을까요?",
+      "content": "내용...",
+      "author": "testuser",
+      "category": "질문",
+      "created_at": "2024-01-15T10:30:00Z",
+      "likes_count": 5,
+      "comments_count": 3,
+      "is_liked": false
+    }
+  ]
+}
+```
+
+#### 2. 게시글 작성
+```http
+POST /community/posts/
+```
+
+**Request Body:**
+```json
+{
+  "title": "게시글 제목",
+  "content": "게시글 내용",
+  "category": "질문"
+}
+```
+
+#### 3. 게시글 상세 조회
+```http
+GET /community/posts/{post_id}/
+```
+
+#### 4. 댓글 목록 조회
+```http
+GET /community/posts/{post_id}/comments/
+```
+
+#### 5. 댓글 작성
+```http
+POST /community/posts/{post_id}/comments/
+```
+
+**Request Body:**
+```json
+{
+  "content": "댓글 내용",
+  "parent_id": null
+}
+```
+
+#### 6. 좋아요 토글
+```http
+POST /community/posts/{post_id}/like/
+```
+
+---
+
+### 금융정보 API
+
+#### 1. 금/은 가격 데이터
+```http
+GET /finance-info/precious-metals/
+```
+
+**Query Parameters:**
+- `type`: `gold` | `silver`
+- `start_date`: YYYY-MM-DD
+- `end_date`: YYYY-MM-DD
+
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "date": "2024-01-15",
+    "gold_price": 2080.50,
+    "silver_price": 24.30
+  }
+]
+```
+
+#### 2. 금융상품 데이터 갱신
+```http
+GET /save-deposit-products/
+GET /save-saving-products/
+```
+
+---
+
+### YouTube API
+
+#### 1. 채널 검색
+```http
+GET /youtube/search-channels/
+```
+
+**Query Parameters:**
+- `q`: 검색어
+
+**Response:**
+```json
+{
+  "items": [
+    {
+      "id": "UC_channel_id",
+      "title": "채널명",
+      "description": "채널 설명",
+      "thumbnail": "thumbnail_url",
+      "subscriber_count": "10만명"
+    }
+  ]
+}
+```
+
+#### 2. 채널 저장
+```http
+POST /youtube/save-channel/
+```
+
+**Request Body:**
+```json
+{
+  "channel_id": "UC_channel_id",
+  "title": "채널명",
+  "description": "채널 설명"
+}
+```
+
+#### 3. 저장된 채널 목록
+```http
+GET /youtube/saved-channels/
+```
+
+---
+
+### 지도 API
+
+#### 1. 주변 은행 검색
+```http
+GET /map/nearby-banks/
+```
+
+**Query Parameters:**
+- `lat`: 위도
+- `lng`: 경도
+- `radius`: 검색 반경 (미터)
+
+**Response:**
+```json
+{
+  "banks": [
+    {
+      "name": "우리은행 강남점",
+      "address": "서울시 강남구...",
+      "phone": "02-1234-5678",
+      "lat": 37.5665,
+      "lng": 126.9780,
+      "distance": 250
+    }
+  ]
+}
+```
+
+---
+
+### 📝 에러 코드
+
+| 코드 | 설명 |
+|------|------|
+| 400 | Bad Request - 잘못된 요청 |
+| 401 | Unauthorized - 인증 필요 |
+| 403 | Forbidden - 권한 없음 |
+| 404 | Not Found - 리소스 없음 |
+| 500 | Internal Server Error - 서버 오류 |
+
+### 📄 응답 예시
+
+#### 성공 응답
+```json
+{
+  "status": "success",
+  "data": { ... },
+  "message": "요청이 성공적으로 처리되었습니다."
+}
+```
+
+#### 실패 응답
+```json
+{
+  "status": "error",
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "필수 필드가 누락되었습니다.",
+    "details": {
+      "username": ["이 필드는 필수입니다."]
+    }
+  }
+}
+```
+
+---
+
+## IX. 기타(느낀 점, 후기 등)
 
 - **김봉주**  
  > 취업 준비를 병행하느라 핵심 개발 업무를 대부분 페어에게 맡기게 되어 미안했지만, 기획·디자인·대외 협력 등 프로젝트 전반에 걸쳐 최선을 다했습니다.
