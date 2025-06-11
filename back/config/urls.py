@@ -7,6 +7,7 @@ def health_check(request):
     return JsonResponse({'status': 'healthy', 'message': 'Django server is running'})
 
 urlpatterns = [
+    path('', health_check, name='health_check'),
     path('admin/', admin.site.urls),
     path('api/', include('deposits.urls')),
     path('api/accounts/', include('dj_rest_auth.urls')),
