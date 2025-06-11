@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 from django.conf import settings
 import os
 from .models import Question, Choice, UserQuizAttempt, UserAnswer, QuestionCategory, Assessment, Certificate
@@ -442,88 +442,105 @@ def start_assessment(request):
 @permission_classes([IsAuthenticated])
 def submit_assessment(request):
     """평가 제출 및 채점"""
-    user = request.user
-    difficulty = request.data.get('difficulty')
-    answers = request.data.get('answers')  # {question_id: choice_id}
-    
-    if not all([difficulty, answers]):
-        return Response({'error': '필수 데이터가 누락되었습니다.'}, status=status.HTTP_400_BAD_REQUEST)
-    
-    # 정답 확인 및 채점
-    correct_count = 0
-    question_results = []
-    
-    for question_id, choice_id in answers.items():
-        try:
-            question = Question.objects.get(id=question_id)
-            selected_choice = Choice.objects.get(id=choice_id, question=question)
-            correct_choice = question.choices.filter(is_correct=True).first()
-            
-            is_correct = selected_choice.is_correct
-            if is_correct:
-                correct_count += 1
-            
-            question_results.append({
-                'question_id': question_id,
-                'question': question.text,
-                'user_answer': selected_choice.text,
-                'correct_answer': correct_choice.text if correct_choice else '',
-                'is_correct': is_correct,
-                'explanation': question.explanation
-            })
-        except (Question.DoesNotExist, Choice.DoesNotExist):
-            continue
-    
-    # 점수 계산 (100점 만점)
-    score_percentage = (correct_count / 10) * 100
-    passed = score_percentage >= 60
-    
-    # 등급 결정
-    grade = get_grade(difficulty, score_percentage)
-    
-    # 평가 결과 저장
-    assessment = Assessment.objects.create(
-        user=user,
-        difficulty=difficulty,
-        score=correct_count,
-        grade=grade,
-        passed=passed,
-        questions_data=question_results
-    )
-    
-    # 합격 시 수료증 자동 생성
-    certificate_info = None
-    if passed:
-        try:
-            generator = CertificateGenerator()
-            certificate = generator.create_certificate(
-                user=user,
-                difficulty=difficulty,
-                score=correct_count,
-                total_questions=10
-            )
-            certificate_info = {
-                'id': certificate.id,
-                'certificate_number': certificate.certificate_number,
-                'grade': certificate.grade
-            }
-        except Exception as e:
-            print(f"수료증 생성 실패: {e}")
-    
-    response_data = {
-        'assessment_id': assessment.id,
-        'score': correct_count,
-        'total_questions': 10,
-        'score_percentage': score_percentage,
-        'grade': grade,
-        'passed': passed,
-        'question_results': question_results
-    }
-    
-    if certificate_info:
-        response_data['certificate'] = certificate_info
-    
-    return Response(response_data)
+    try:
+        user = request.user
+        difficulty = request.data.get('difficulty')
+        answers = request.data.get('answers')  # {question_id: choice_id}
+        
+        print(f"[Debug] Assessment 제출 - 사용자: {user.username}, 난이도: {difficulty}")
+        
+        if not all([difficulty, answers]):
+            return Response({'error': '필수 데이터가 누락되었습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # 정답 확인 및 채점
+        correct_count = 0
+        question_results = []
+        
+        for question_id, choice_id in answers.items():
+            try:
+                question = Question.objects.get(id=question_id)
+                selected_choice = Choice.objects.get(id=choice_id, question=question)
+                correct_choice = question.choices.filter(is_correct=True).first()
+                
+                is_correct = selected_choice.is_correct
+                if is_correct:
+                    correct_count += 1
+                
+                question_results.append({
+                    'question_id': question_id,
+                    'question': question.text,
+                    'user_answer': selected_choice.text,
+                    'correct_answer': correct_choice.text if correct_choice else '',
+                    'is_correct': is_correct,
+                    'explanation': question.explanation
+                })
+            except (Question.DoesNotExist, Choice.DoesNotExist):
+                continue
+        
+        # 점수 계산 (100점 만점)
+        score_percentage = (correct_count / 10) * 100
+        passed = score_percentage >= 60
+        
+        # 등급 결정
+        grade = get_grade(difficulty, score_percentage)
+        
+        print(f"[Debug] 점수: {correct_count}/10, 등급: {grade}, 합격: {passed}")
+        
+        # 평가 결과 저장
+        assessment = Assessment.objects.create(
+            user=user,
+            difficulty=difficulty,
+            score=correct_count,
+            total_questions=10,
+            score_percentage=score_percentage,
+            grade=grade,
+            passed=passed,
+            questions_data=question_results
+        )
+        
+        print(f"[Debug] Assessment 저장 완료: {assessment.id}")
+        
+        # 합격 시 수료증 자동 생성
+        certificate_info = None
+        if passed:
+            try:
+                print(f"[Debug] 수료증 자동 생성 시작")
+                generator = CertificateGenerator()
+                certificate = generator.create_certificate(
+                    user=user,
+                    difficulty=difficulty,
+                    score=correct_count,
+                    total_questions=10
+                )
+                certificate_info = {
+                    'id': certificate.id,
+                    'certificate_number': certificate.certificate_number,
+                    'grade': certificate.grade
+                }
+                print(f"[Debug] 수료증 자동 생성 완료: {certificate.id}")
+            except Exception as e:
+                print(f"[Debug] 수료증 자동 생성 실패: {e}")
+        
+        response_data = {
+            'assessment_id': assessment.id,
+            'score': correct_count,
+            'total_questions': 10,
+            'score_percentage': score_percentage,
+            'grade': grade,
+            'passed': passed,
+            'question_results': question_results
+        }
+        
+        if certificate_info:
+            response_data['certificate'] = certificate_info
+        
+        return Response(response_data)
+        
+    except Exception as e:
+        print(f"[Debug] Assessment 제출 오류: {str(e)}")
+        import traceback
+        print(f"[Debug] 스택 트레이스: {traceback.format_exc()}")
+        return Response({'error': f'평가 제출 중 오류가 발생했습니다: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def get_grade(difficulty, score_percentage):
     """난이도별 등급 결정"""
@@ -555,38 +572,50 @@ def get_grade(difficulty, score_percentage):
 @permission_classes([IsAuthenticated])
 def assessment_history(request):
     """사용자의 평가 이력 조회"""
-    assessments = Assessment.objects.filter(user=request.user)
-    
-    results = []
-    for assessment in assessments:
-        results.append({
-            'id': assessment.id,
-            'difficulty': assessment.difficulty,
-            'score': assessment.score,
-            'grade': assessment.grade,
-            'passed': assessment.passed,
-            'score_percentage': assessment.score_percentage,
-            'taken_at': assessment.created_at
-        })
-    
-    return Response(results)
+    try:
+        assessments = Assessment.objects.filter(user=request.user).order_by('-created_at')
+        
+        results = []
+        for assessment in assessments:
+            results.append({
+                'id': assessment.id,
+                'difficulty': assessment.difficulty,
+                'score': assessment.score,
+                'total_questions': assessment.total_questions,
+                'grade': assessment.grade,
+                'passed': assessment.passed,
+                'score_percentage': assessment.score_percentage,
+                'taken_at': assessment.created_at
+            })
+        
+        return Response(results)
+        
+    except Exception as e:
+        print(f"[Debug] 평가 이력 조회 오류: {str(e)}")
+        return Response({'error': '평가 이력을 가져올 수 없습니다.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def assessment_detail(request, assessment_id):
     """평가 상세 결과 조회"""
-    assessment = get_object_or_404(Assessment, id=assessment_id, user=request.user)
-    
-    return Response({
-        'id': assessment.id,
-        'difficulty': assessment.difficulty,
-        'score': assessment.score,
-        'grade': assessment.grade,
-        'passed': assessment.passed,
-        'score_percentage': assessment.score_percentage,
-        'questions_data': assessment.questions_data,
-        'created_at': assessment.created_at
-    })
+    try:
+        assessment = get_object_or_404(Assessment, id=assessment_id, user=request.user)
+        
+        return Response({
+            'id': assessment.id,
+            'difficulty': assessment.difficulty,
+            'score': assessment.score,
+            'total_questions': assessment.total_questions,
+            'grade': assessment.grade,
+            'passed': assessment.passed,
+            'score_percentage': assessment.score_percentage,
+            'questions_data': assessment.questions_data,
+            'created_at': assessment.created_at
+        })
+        
+    except Exception as e:
+        print(f"[Debug] 평가 상세 조회 오류: {str(e)}")
+        return Response({'error': '평가 상세 정보를 가져올 수 없습니다.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # 수료증 관련 뷰들
 @api_view(['POST'])
@@ -594,6 +623,8 @@ def assessment_detail(request, assessment_id):
 def generate_certificate(request, assessment_id):
     """평가 결과를 바탕으로 수료증 생성"""
     try:
+        print(f"[Debug] 수료증 생성 요청 - Assessment ID: {assessment_id}, 사용자: {request.user.username}")
+        
         assessment = get_object_or_404(Assessment, id=assessment_id, user=request.user)
         
         if not assessment.passed:
@@ -601,12 +632,30 @@ def generate_certificate(request, assessment_id):
                 'error': '합격한 평가만 수료증을 발급할 수 있습니다.'
             }, status=status.HTTP_400_BAD_REQUEST)
         
+        # 기존 수료증 확인
+        existing_cert = Certificate.objects.filter(
+            user=request.user,
+            difficulty=assessment.difficulty
+        ).first()
+        
+        if existing_cert:
+            print(f"[Debug] 기존 수료증 발견: {existing_cert.id}")
+            return Response({
+                'certificate_id': existing_cert.id,
+                'certificate_number': existing_cert.certificate_number,
+                'grade': existing_cert.grade,
+                'file_path': existing_cert.file_path,
+                'message': '기존 수료증을 반환합니다.'
+            })
+        
+        # 새 수료증 생성
+        print(f"[Debug] 새 수료증 생성 시작")
         generator = CertificateGenerator()
         certificate = generator.create_certificate(
             user=request.user,
             difficulty=assessment.difficulty,
             score=assessment.score,
-            total_questions=assessment.total_questions
+            total_questions=assessment.total_questions or 10
         )
         
         return Response({
@@ -617,10 +666,14 @@ def generate_certificate(request, assessment_id):
             'message': '수료증이 성공적으로 생성되었습니다.'
         })
         
-    except ValueError as e:
-        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    except Assessment.DoesNotExist:
+        print(f"[Debug] Assessment를 찾을 수 없음 - ID: {assessment_id}")
+        return Response({'error': 'Assessment를 찾을 수 없습니다.'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
-        return Response({'error': '수료증 생성 중 오류가 발생했습니다.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        print(f"[Debug] 수료증 생성 오류: {str(e)}")
+        import traceback
+        print(f"[Debug] 스택 트레이스: {traceback.format_exc()}")
+        return Response({'error': f'수료증 생성 중 오류가 발생했습니다: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -685,19 +738,25 @@ def download_certificate(request, certificate_id):
 @permission_classes([IsAuthenticated])
 def user_certificates(request):
     """사용자의 수료증 목록 조회"""
-    certificates = Certificate.objects.filter(user=request.user)
-    
-    results = []
-    for cert in certificates:
-        results.append({
-            'id': cert.id,
-            'difficulty': cert.difficulty,
-            'certificate_number': cert.certificate_number,
-            'grade': cert.grade,
-            'score': cert.score,
-            'score_percentage': cert.score_percentage,
-            'created_at': cert.created_at,
-            'file_path': cert.file_path
-        })
-    
-    return Response(results)
+    try:
+        certificates = Certificate.objects.filter(user=request.user).order_by('-created_at')
+        
+        results = []
+        for cert in certificates:
+            results.append({
+                'id': cert.id,
+                'difficulty': cert.difficulty,
+                'certificate_number': cert.certificate_number,
+                'grade': cert.grade,
+                'score': cert.score,
+                'total_questions': cert.total_questions,
+                'score_percentage': cert.score_percentage,
+                'created_at': cert.created_at,
+                'file_path': cert.file_path
+            })
+        
+        return Response(results)
+        
+    except Exception as e:
+        print(f"[Debug] 수료증 목록 조회 오류: {str(e)}")
+        return Response({'error': '수료증 목록을 가져올 수 없습니다.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

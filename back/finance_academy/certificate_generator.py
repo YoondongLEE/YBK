@@ -6,17 +6,14 @@ from .models import Certificate
 
 class CertificateGenerator:
     def __init__(self):
-        # 프로젝트 내부의 폰트 경로 설정
+        # 프로젝트 루트의 fonts 디렉토리 사용
         self.font_dir = os.path.join(settings.BASE_DIR, 'fonts')
         
-        # 폰트 경로 설정 (프로젝트 내부 폰트 사용)
         try:
             self.regular_font_path = os.path.join(self.font_dir, 'NotoSansKR-Regular.ttf')
             self.bold_font_path = os.path.join(self.font_dir, 'NotoSansKR-Bold.ttf')
             
             print(f"[Debug] 폰트 디렉토리: {self.font_dir}")
-            print(f"[Debug] Regular 폰트 경로: {self.regular_font_path}")
-            print(f"[Debug] Bold 폰트 경로: {self.bold_font_path}")
             print(f"[Debug] Regular 폰트 존재: {os.path.exists(self.regular_font_path)}")
             print(f"[Debug] Bold 폰트 존재: {os.path.exists(self.bold_font_path)}")
             
@@ -24,46 +21,43 @@ class CertificateGenerator:
             print(f"[Debug] 폰트 경로 설정 오류: {e}")
     
     def get_font(self, size, bold=False):
-        """폰트 객체 반환 (한글 지원)"""
+        """한글 폰트 로드"""
         try:
             font_path = self.bold_font_path if bold else self.regular_font_path
             
             if os.path.exists(font_path):
-                print(f"[Debug] 폰트 로드 시도: {font_path}, size: {size}")
-                font = ImageFont.truetype(font_path, size)
-                print(f"[Debug] 폰트 로드 성공")
-                return font
+                print(f"[Debug] 폰트 로드 성공: {font_path}")
+                return ImageFont.truetype(font_path, size)
             else:
-                print(f"[Debug] 폰트 파일이 없음: {font_path}")
-                print(f"[Debug] 기본 폰트 사용")
+                print(f"[Debug] 폰트 파일 없음, 기본 폰트 사용")
                 return ImageFont.load_default()
                 
         except Exception as e:
-            print(f"[Debug] 폰트 로드 실패: {e}")
-            print(f"[Debug] 기본 폰트 사용")
+            print(f"[Debug] 폰트 로드 실패: {e}, 기본 폰트 사용")
             return ImageFont.load_default()
     
     def create_certificate(self, user, difficulty, score, total_questions=10):
-        """한글 지원 수료증 생성"""
+        """수료증 생성"""
         try:
             print(f"[Debug] 수료증 생성 시작 - 사용자: {user.username}")
             
-            # 캔버스 생성
+            # 800x600 캔버스 생성
             width, height = 800, 600
             image = Image.new('RGB', (width, height), 'white')
             draw = ImageDraw.Draw(image)
             
-            # 폰트 준비
-            title_font = self.get_font(36, bold=True)
-            subtitle_font = self.get_font(24, bold=True)
-            text_font = self.get_font(18)
-            name_font = self.get_font(28, bold=True)
+            # 폰트 설정
+            title_font = self.get_font(32, bold=True)
+            subtitle_font = self.get_font(22, bold=True)
+            text_font = self.get_font(16)
+            name_font = self.get_font(24, bold=True)
             
-            # 등급 및 점수 계산
+            # 점수 및 등급 계산
             score_percentage = (score / total_questions) * 100
             grade = self.get_grade(difficulty, score_percentage)
+            cert_number = self.generate_certificate_number()
             
-            # 배경 테두리
+            # 테두리 그리기
             draw.rectangle([20, 20, width-20, height-20], outline='black', width=3)
             draw.rectangle([30, 30, width-30, height-30], outline='gold', width=2)
             
@@ -77,44 +71,44 @@ class CertificateGenerator:
             subtitle_text = "금융 이해력 인증서"
             subtitle_bbox = draw.textbbox((0, 0), subtitle_text, font=subtitle_font)
             subtitle_width = subtitle_bbox[2] - subtitle_bbox[0]
-            draw.text(((width - subtitle_width) // 2, 110), subtitle_text, fill='black', font=subtitle_font)
+            draw.text(((width - subtitle_width) // 2, 100), subtitle_text, fill='black', font=subtitle_font)
             
-            # 수료증 번호
-            cert_number = self.generate_certificate_number()
+            # 인증서 번호
             number_text = f"인증서 번호: {cert_number}"
-            draw.text((60, 160), number_text, fill='black', font=text_font)
+            draw.text((60, 150), number_text, fill='black', font=text_font)
             
             # 성명
             name_text = f"성명: {user.username}"
-            draw.text((60, 200), name_text, fill='black', font=name_font)
+            draw.text((60, 190), name_text, fill='black', font=name_font)
             
             # 난이도
             difficulty_text = f"난이도: {self.get_difficulty_korean(difficulty)}"
-            draw.text((60, 240), difficulty_text, fill='black', font=text_font)
+            draw.text((60, 230), difficulty_text, fill='black', font=text_font)
             
-            # 점수 및 등급
+            # 점수
             score_text = f"점수: {score}/{total_questions}점 ({score_percentage:.1f}%)"
-            draw.text((60, 280), score_text, fill='black', font=text_font)
+            draw.text((60, 270), score_text, fill='black', font=text_font)
             
+            # 등급
             grade_text = f"등급: {grade}"
-            draw.text((60, 320), grade_text, fill='black', font=text_font)
+            draw.text((60, 310), grade_text, fill='black', font=text_font)
             
             # 발급일
             issue_date = datetime.now().strftime('%Y년 %m월 %d일')
             date_text = f"발급일: {issue_date}"
-            draw.text((60, 360), date_text, fill='black', font=text_font)
+            draw.text((60, 350), date_text, fill='black', font=text_font)
             
             # 인증 문구
             cert_text = "위 사람은 금융 이해력 평가를 통과하였음을 인증합니다."
             cert_bbox = draw.textbbox((0, 0), cert_text, font=text_font)
             cert_width = cert_bbox[2] - cert_bbox[0]
-            draw.text(((width - cert_width) // 2, 420), cert_text, fill='black', font=text_font)
+            draw.text(((width - cert_width) // 2, 410), cert_text, fill='black', font=text_font)
             
             # 발급기관
             org_text = "Youth Banking Korea"
             org_bbox = draw.textbbox((0, 0), org_text, font=subtitle_font)
             org_width = org_bbox[2] - org_bbox[0]
-            draw.text(((width - org_width) // 2, 480), org_text, fill='black', font=subtitle_font)
+            draw.text(((width - org_width) // 2, 460), org_text, fill='black', font=subtitle_font)
             
             # 파일 저장
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
