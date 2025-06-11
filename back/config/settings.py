@@ -3,6 +3,7 @@ from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 from decouple import config
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,25 +82,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Database 설정 - 배포용 수정
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('PGDATABASE'),
-            'USER': config('PGUSER'),
-            'PASSWORD': config('PGPASSWORD'),
-            'HOST': config('PGHOST'),
-            'PORT': config('PGPORT', default='5432'),
-        }
-    }
+# Database 설정 - DATABASE_URL 사용
+DATABASES = {
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -150,7 +140,7 @@ else:
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        # 배포 후 Vercel 도메인을 여기에 추가해야 합니다
+        "https://ybk-frontend.vercel.app",  # Vercel 도메인 추가
     ]
     CORS_ALLOW_ALL_ORIGINS = False
 
