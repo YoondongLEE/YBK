@@ -625,21 +625,61 @@ def generate_certificate(request, assessment_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def download_certificate(request, certificate_id):
-    """수료증 이미지 파일 다운로드"""
+    """수료증 이미지 파일 다운로드 (파일 없으면 자동 재생성)"""
     try:
+        print(f"[Debug] 수료증 다운로드 요청 - 사용자: {request.user.username}, ID: {certificate_id}")
+        
         certificate = get_object_or_404(Certificate, id=certificate_id, user=request.user)
         file_path = os.path.join(settings.MEDIA_ROOT, certificate.file_path)
         
-        if not os.path.exists(file_path):
-            raise Http404("수료증 파일을 찾을 수 없습니다.")
+        print(f"[Debug] 파일 경로: {file_path}")
+        print(f"[Debug] 파일 존재 여부: {os.path.exists(file_path)}")
         
-        with open(file_path, 'rb') as f:
-            response = HttpResponse(f.read(), content_type='image/png')
-            response['Content-Disposition'] = f'attachment; filename="{certificate.certificate_number}_수료증.png"'
-            return response
+        # 파일이 없으면 자동 재생성
+        if not os.path.exists(file_path):
+            print(f"[Debug] 파일이 없어서 재생성 시도")
             
+            try:
+                # CertificateGenerator로 재생성
+                generator = CertificateGenerator()
+                new_certificate = generator.create_certificate(
+                    user=request.user,
+                    difficulty=certificate.difficulty,
+                    score=certificate.score,
+                    total_questions=certificate.total_questions or 10
+                )
+                
+                # 새로운 파일 경로로 업데이트
+                file_path = os.path.join(settings.MEDIA_ROOT, new_certificate.file_path)
+                certificate.file_path = new_certificate.file_path
+                certificate.save()
+                
+                print(f"[Debug] 재생성 완료: {file_path}")
+                
+            except Exception as regenerate_error:
+                print(f"[Debug] 재생성 실패: {regenerate_error}")
+                raise Http404("수료증 파일을 재생성할 수 없습니다.")
+        
+        # 파일 다운로드
+        if os.path.exists(file_path):
+            print(f"[Debug] 파일 다운로드 시작")
+            with open(file_path, 'rb') as f:
+                response = HttpResponse(f.read(), content_type='image/png')
+                response['Content-Disposition'] = f'attachment; filename="{certificate.certificate_number}_수료증.png"'
+                print(f"[Debug] 다운로드 성공")
+                return response
+        else:
+            print(f"[Debug] 재생성 후에도 파일이 없음")
+            raise Http404("수료증 파일을 생성할 수 없습니다.")
+            
+    except Certificate.DoesNotExist:
+        print(f"[Debug] 수료증을 찾을 수 없음 - ID: {certificate_id}")
+        raise Http404("수료증을 찾을 수 없습니다.")
     except Exception as e:
-        raise Http404("수료증을 다운로드할 수 없습니다.")
+        print(f"[Debug] 다운로드 오류: {str(e)}")
+        import traceback
+        print(f"[Debug] 스택 트레이스: {traceback.format_exc()}")
+        raise Http404(f"수료증을 다운로드할 수 없습니다: {str(e)}")
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
