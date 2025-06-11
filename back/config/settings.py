@@ -12,10 +12,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-your-secret-key-here')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)  # 기본값을 False로 변경
 
-# 배포 환경 설정
-ALLOWED_HOSTS = ['*'] if DEBUG else ['localhost', '127.0.0.1', '.railway.app']
+# 배포 환경 설정 - Railway 도메인 명시적 추가
+ALLOWED_HOSTS = [
+    'localhost', 
+    '127.0.0.1', 
+    '.railway.app',
+    'ybk-production.up.railway.app',  # 구체적 도메인 추가
+    '*'  # 임시로 모든 호스트 허용
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -130,19 +136,12 @@ REST_FRAMEWORK = {
 
 # CORS 설정 - 배포용 수정
 CORS_ALLOW_CREDENTIALS = True
-if DEBUG:
-    CORS_ALLOWED_ORIGINS = [
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ]
-    CORS_ALLOW_ALL_ORIGINS = True
-else:
-    CORS_ALLOWED_ORIGINS = [
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "https://ybk-frontend.vercel.app",  # Vercel 도메인 추가
-    ]
-    CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://ybk-frontend.vercel.app",  # Vercel 도메인
+]
+CORS_ALLOW_ALL_ORIGINS = DEBUG  # DEBUG가 True일 때만 모든 Origin 허용
 
 CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 CORS_ALLOW_HEADERS = ['Authorization', 'Content-Type']
