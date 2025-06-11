@@ -686,11 +686,31 @@ def download_certificate(request, certificate_id):
         file_path = os.path.join(settings.MEDIA_ROOT, certificate.file_path)
         
         print(f"[Debug] 파일 경로: {file_path}")
+        print(f"[Debug] MEDIA_ROOT: {settings.MEDIA_ROOT}")
+        print(f"[Debug] 상대 경로: {certificate.file_path}")
         print(f"[Debug] 파일 존재 여부: {os.path.exists(file_path)}")
         
-        # 파일이 없으면 자동 재생성
+        # 파일이 없거나 손상된 경우 자동 재생성
+        need_regenerate = False
+        
         if not os.path.exists(file_path):
-            print(f"[Debug] 파일이 없어서 재생성 시도")
+            print(f"[Debug] 파일이 존재하지 않음 - 재생성 필요")
+            need_regenerate = True
+        else:
+            # 파일 크기 확인 (0바이트면 손상된 것)
+            try:
+                file_size = os.path.getsize(file_path)
+                print(f"[Debug] 파일 크기: {file_size} bytes")
+                if file_size == 0:
+                    print(f"[Debug] 파일이 비어있음 - 재생성 필요")
+                    need_regenerate = True
+            except Exception as size_error:
+                print(f"[Debug] 파일 크기 확인 실패: {size_error} - 재생성 필요")
+                need_regenerate = True
+        
+        # 재생성이 필요한 경우
+        if need_regenerate:
+            print(f"[Debug] 수료증 파일 재생성 시작")
             
             try:
                 # CertificateGenerator로 재생성
@@ -702,25 +722,46 @@ def download_certificate(request, certificate_id):
                     total_questions=certificate.total_questions or 10
                 )
                 
-                # 새로운 파일 경로로 업데이트
-                file_path = os.path.join(settings.MEDIA_ROOT, new_certificate.file_path)
+                # 기존 Certificate 객체의 파일 경로 업데이트
                 certificate.file_path = new_certificate.file_path
+                certificate.certificate_number = new_certificate.certificate_number
                 certificate.save()
+                
+                # 새로운 Certificate 객체 삭제 (중복 방지)
+                new_certificate.delete()
+                
+                # 새 파일 경로로 업데이트
+                file_path = os.path.join(settings.MEDIA_ROOT, certificate.file_path)
                 
                 print(f"[Debug] 재생성 완료: {file_path}")
                 
             except Exception as regenerate_error:
                 print(f"[Debug] 재생성 실패: {regenerate_error}")
+                import traceback
+                print(f"[Debug] 재생성 스택 트레이스: {traceback.format_exc()}")
                 raise Http404("수료증 파일을 재생성할 수 없습니다.")
         
         # 파일 다운로드
         if os.path.exists(file_path):
             print(f"[Debug] 파일 다운로드 시작")
-            with open(file_path, 'rb') as f:
-                response = HttpResponse(f.read(), content_type='image/png')
-                response['Content-Disposition'] = f'attachment; filename="{certificate.certificate_number}_수료증.png"'
-                print(f"[Debug] 다운로드 성공")
-                return response
+            try:
+                with open(file_path, 'rb') as f:
+                    file_data = f.read()
+                    print(f"[Debug] 파일 읽기 성공: {len(file_data)} bytes")
+                    
+                    response = HttpResponse(file_data, content_type='image/png')
+                    
+                    # 한글 파일명을 위한 인코딩
+                    filename = f"{certificate.certificate_number}_수료증.png"
+                    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+                    response['Content-Length'] = len(file_data)
+                    
+                    print(f"[Debug] 다운로드 응답 생성 완료")
+                    return response
+                    
+            except Exception as file_error:
+                print(f"[Debug] 파일 읽기 실패: {file_error}")
+                raise Http404("수료증 파일을 읽을 수 없습니다.")
         else:
             print(f"[Debug] 재생성 후에도 파일이 없음")
             raise Http404("수료증 파일을 생성할 수 없습니다.")
