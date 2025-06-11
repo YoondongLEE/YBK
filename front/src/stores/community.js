@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useAuthStore } from './auth';
 
-const API_URL = 'http://localhost:8000/api/community';
+const API_URL = 'https://ybk-production.up.railway.app/api/community';
 
 export const useCommunityStore = defineStore('community', {
   state: () => ({

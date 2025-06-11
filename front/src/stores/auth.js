@@ -3,9 +3,9 @@ import { ref, computed } from 'vue'
 import axios from 'axios'
 import router from '@/router'
 
-// 인증 전용 Axios 인스턴스
+// 인증 전용 Axios 인스턴스 - Railway Backend URL로 변경
 const authApi = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: 'https://ybk-production.up.railway.app/api',
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' }
 })

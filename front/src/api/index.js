@@ -1,8 +1,9 @@
 import axios from 'axios'
 
-// API 기본 URL 설정
+// API 기본 URL 설정 - Railway Backend URL로 변경
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  // baseURL: 'http://localhost:8000/api',
+  baseURL: 'https://ybk-production.up.railway.app/api',  // 변경된 부분
   headers: {
     'Content-Type': 'application/json',
   },
