@@ -1,5 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.http import JsonResponse
+
+def health_check(request):
+    """Railway Healthcheck를 위한 간단한 응답"""
+    return JsonResponse({'status': 'healthy', 'message': 'Django server is running'})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
