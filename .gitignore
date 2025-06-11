@@ -171,4 +171,13 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# 배포 관련 파일들 (새로 추가된 부분)
+.vercel
+.railway
+node_modules/
+front/dist/
+front/node_modules/
+.env.local
+.env.production
+
 # End of https://www.toptal.com/developers/gitignore/api/django
