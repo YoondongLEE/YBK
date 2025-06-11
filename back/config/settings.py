@@ -137,9 +137,10 @@ REST_FRAMEWORK = {
 # CORS 설정 - 배포용 수정
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://ybk-frontend.vercel.app",  # Vercel 도메인
+    "http://localhost:5173",                # 로컬 개발
+    "http://127.0.0.1:5173",               # 로컬 개발
+    "https://ybk-frontend.vercel.app",      # 기존 설정
+    "https://ybkfinalpjt.vercel.app",      # 실제 배포된 도메인 추가
 ]
 CORS_ALLOW_ALL_ORIGINS = DEBUG  # DEBUG가 True일 때만 모든 Origin 허용
 
