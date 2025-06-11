@@ -1145,7 +1145,11 @@ const updateProfile = async () => {
       updateData.preferred_bank = profileForm.value.preferred_bank;
     }
     
-    const response = await api.put('/accounts/profile/update/', updateData);
+    // 올바른 API 엔드포인트로 수정 (/update/ 제거)
+    const response = await api.put('/accounts/profile/', updateData);
+    
+    // localStorage 업데이트 추가
+    localStorage.setItem('user', JSON.stringify(response.data));
     
     // 업데이트 후 즉시 사용자 프로필을 다시 가져오기
     await fetchUserProfile();
@@ -1177,11 +1181,20 @@ const updateProfile = async () => {
 
 const fetchBanks = async () => {
   try {
-    const response = await api.get('/banks/');
+    // 올바른 API 엔드포인트로 수정
+    const response = await api.get('/deposits/banks/');
     banks.value = response.data;
     console.log('은행 정보 로드:', banks.value.length);
   } catch (error) {
     console.error('은행 정보 로드 실패:', error);
+    // 대체 엔드포인트 시도
+    try {
+      const fallbackResponse = await api.get('/banks/');
+      banks.value = fallbackResponse.data;
+      console.log('대체 경로로 은행 정보 로드:', banks.value.length);
+    } catch (fallbackError) {
+      console.error('모든 은행 정보 로드 경로 실패:', fallbackError);
+    }
   }
 };
 
