@@ -4,28 +4,70 @@ from PIL import Image, ImageDraw, ImageFont
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from .models import Certificate
+import urllib.request
 
 User = get_user_model()
 
 def load_font(size):
     """
-    Windows: malgun.ttf, macOS: AppleGothic.ttf 우선 로드,
-    실패 시 기본 폰트로 대체
+    한글 폰트를 로드합니다. 없으면 온라인에서 다운로드합니다.
     """
-    font_paths = [
+    # 폰트 저장 디렉토리
+    font_dir = os.path.join(settings.BASE_DIR, 'fonts')
+    os.makedirs(font_dir, exist_ok=True)
+    
+    # 로컬 폰트 경로들 (우선순위 순)
+    local_font_paths = [
+        # 다운로드된 폰트
+        os.path.join(font_dir, 'NanumGothic.ttf'),
+        os.path.join(font_dir, 'malgun.ttf'),
+        
+        # 시스템 폰트들
+        "/System/Library/Fonts/AppleGothic.ttf",  # macOS
+        "/Windows/Fonts/malgun.ttf",  # Windows
+        "/usr/share/fonts/truetype/nanum/NanumGothic.ttf",  # Linux (nanum)
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",  # Linux fallback
+        
+        # 상대 경로들
         "malgun.ttf",
         "AppleGothic.ttf",
-        "/System/Library/Fonts/AppleGothic.ttf",  # macOS 절대경로
-        "/Windows/Fonts/malgun.ttf",  # Windows 절대경로
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"  # Linux
+        "NanumGothic.ttf",
     ]
     
-    for font_path in font_paths:
+    # 로컬 폰트 먼저 시도
+    for font_path in local_font_paths:
         try:
-            return ImageFont.truetype(font_path, size)
-        except (IOError, OSError):
+            if os.path.exists(font_path):
+                return ImageFont.truetype(font_path, size)
+        except (IOError, OSError) as e:
+            print(f"폰트 로드 실패: {font_path} - {e}")
             continue
     
+    # 나눔고딕 폰트 다운로드 시도
+    nanum_font_path = os.path.join(font_dir, 'NanumGothic.ttf')
+    if not os.path.exists(nanum_font_path):
+        try:
+            print("나눔고딕 폰트 다운로드 중...")
+            nanum_url = "https://github.com/naver/nanumfont/raw/master/fonts/NanumGothic.ttf"
+            urllib.request.urlretrieve(nanum_url, nanum_font_path)
+            print(f"나눔고딕 폰트 다운로드 완료: {nanum_font_path}")
+            return ImageFont.truetype(nanum_font_path, size)
+        except Exception as e:
+            print(f"나눔고딕 폰트 다운로드 실패: {e}")
+    
+    # 구글 폰트 다운로드 시도
+    noto_font_path = os.path.join(font_dir, 'NotoSansKR.ttf')
+    if not os.path.exists(noto_font_path):
+        try:
+            print("Noto Sans KR 폰트 다운로드 중...")
+            noto_url = "https://fonts.gstatic.com/s/notosanskr/v36/PbykFmXiEBPT4ITbgNA5Cgm20xz64px-1LxgLeqmvuQM.ttf"
+            urllib.request.urlretrieve(noto_url, noto_font_path)
+            print(f"Noto Sans KR 폰트 다운로드 완료: {noto_font_path}")
+            return ImageFont.truetype(noto_font_path, size)
+        except Exception as e:
+            print(f"Noto Sans KR 폰트 다운로드 실패: {e}")
+    
+    print("모든 한글 폰트 로드 실패, 기본 폰트 사용")
     return ImageFont.load_default()
 
 
@@ -110,7 +152,7 @@ class CertificateGenerator:
         W, H = img.size
         print(f"[Debug] Template size: {W}×{H}")
 
-        # 폰트 설정 (튜닝된 크기)
+        # 폰트 설정 (한글 지원 폰트 사용)
         font_num    = load_font(15)  # 발급번호
         font_name   = load_font(18)  # 성명
         font_course = load_font(18)  # 학습 과정
@@ -123,6 +165,11 @@ class CertificateGenerator:
         user_name  = user.get_full_name() or user.username
         course_txt = f"{self.difficulty_kr.get(difficulty, '')} 과정"
         grade_txt  = f"{grade} ({self.grade_full_name.get(grade, '')})"
+
+        # 한글 텍스트 테스트
+        print(f"[Debug] 사용자명: {user_name}")
+        print(f"[Debug] 과정명: {course_txt}")
+        print(f"[Debug] 등급: {grade_txt}")
 
         # 1) 발급번호 (x=74.9%, y=7.3%)
         x_cert = W * 0.749 - draw.textlength(cert_txt, font=font_num)
@@ -148,5 +195,6 @@ class CertificateGenerator:
         filename = f"{user.username}_{difficulty}_{grade}_{datetime.now():%Y%m%d_%H%M%S}.png"
         output_path = os.path.join(self.output_dir, filename)
         img.save(output_path, 'PNG')
-
+        
+        print(f"[Debug] 수료증 생성 완료: {output_path}")
         return f"certificates/{filename}"
